@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 
-const MapPage = () => {
+const UnderConstruction = () => {
   return (
     <Container sx={{ mt: 4 }}>
       <Breadcrumbs
@@ -18,11 +18,15 @@ const MapPage = () => {
         <Link component={RouterLink} to="/" underline="hover" color="inherit">
           Home
         </Link>
-        <Typography color="text.primary">Map</Typography>
+        <Typography color="text.primary">Under Construction</Typography>
       </Breadcrumbs>
-      <img width={"100%"} src="/images/map.jpeg" alt="food truck" />
+      <img
+        width={"100%"}
+        src="/images/under-construction.jpeg"
+        alt="food truck"
+      />
     </Container>
   );
 };
 
-export default MapPage;
+export default UnderConstruction;
