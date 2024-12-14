@@ -1,0 +1,33 @@
+[
+    {
+      "title": "Schedule",
+      "description": "View the event schedule.",
+      "route": "/schedule",
+      "image": "/images/schedule.jpeg"
+    },
+    {
+      "title": "Food Trucks",
+      "description": "Explore food truck options.",
+      "route": "/food-trucks",
+      "image": "/images/food-truck.jpeg"
+    },
+    {
+      "title": "Map",
+      "description": "See the event map.",
+      "route": "/map",
+      "image": "/images/map.jpeg"
+    },
+    {
+      "title": "Emergency Services",
+      "description": "Contact information",
+      "route": "/emergency-services",
+      "image": "/images/emergency-services.jpeg"
+    },
+    {
+      "title": "Race Information",
+      "description": "Rules and races",
+      "route": "/race-information",
+      "image": "/images/race-information.jpeg"
+    }
+  ]
+  
