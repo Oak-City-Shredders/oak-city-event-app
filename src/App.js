@@ -8,6 +8,7 @@ import MapPage from "./components/MapPage";
 import FoodTrucksPage from "./components/FoodTrucksPage";
 import EmergencyServicesPage from "./components/EmergencyServicesPage";
 import RaceInformationPage from "./components/RaceInformationPage";
+import ScavengerHuntPage from "./components/ScavengerHuntPage";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/" element={<MainPage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/scavenger-hunt" element={<ScavengerHuntPage />} />
           <Route path="/food-trucks" element={<FoodTrucksPage />} />
           <Route
             path="/emergency-services"
