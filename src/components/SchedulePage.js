@@ -499,7 +499,13 @@ const items = [
   },
 ];
 
-const currentDayName = new Date().toLocaleString("en-US", { weekday: "long" });
+const defaultSchedule = () => {
+  const currentDayName = new Date().toLocaleString("en-US", {
+    weekday: "long",
+  });
+  const isCurrentDayInItems = items.some((day) => day.day === currentDayName);
+  return isCurrentDayInItems ? currentDayName : "Thursday";
+};
 
 const SchedulePage = () => {
   return (
@@ -517,7 +523,7 @@ const SchedulePage = () => {
         <Typography color="text.primary">Schedule</Typography>
       </Breadcrumbs>
       {items.map((day, index) => (
-        <Accordion defaultExpanded={day.day === currentDayName}>
+        <Accordion defaultExpanded={day.day === defaultSchedule()}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel1-content"
