@@ -22,7 +22,7 @@ const UnderConstruction = () => {
       </Breadcrumbs>
       <img
         width={"100%"}
-        src="/images/under-construction.jpeg"
+        src="/images/under-construction-small.webp"
         alt="food truck"
       />
     </Container>
