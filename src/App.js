@@ -9,6 +9,7 @@ import FoodTrucksPage from "./components/FoodTrucksPage";
 import EmergencyServicesPage from "./components/EmergencyServicesPage";
 import RaceInformationPage from "./components/RaceInformationPage";
 import ScavengerHuntPage from "./components/ScavengerHuntPage";
+import RafflesGiveawaysPage from "./components/RafflesGiveawaysPage";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
             element={<EmergencyServicesPage />}
           />
           <Route path="/race-information" element={<RaceInformationPage />} />
+          <Route path="/raffles-giveaways" element={<RafflesGiveawaysPage />} />
         </Routes>
       </Router>
     </div>

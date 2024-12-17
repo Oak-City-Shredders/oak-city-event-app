@@ -24,7 +24,7 @@ const CardLayout = ({ items, handleCardClick }) => {
                   component="img"
                   height="140"
                   image={item.image}
-                  alt="schedule"
+                  alt={item.title}
                 />
                 <CardContent>
                   <Typography gutterBottom variant="h5" component="div">

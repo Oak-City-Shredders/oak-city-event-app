@@ -3,36 +3,42 @@
     "title": "Schedule",
     "description": "View the event schedule.",
     "route": "/schedule",
-    "image": "/images/schedule.jpeg"
+    "image": "/images/schedule-small.webp"
   },
   {
     "title": "Map",
     "description": "See the event map.",
     "route": "/map",
-    "image": "/images/map.jpeg"
+    "image": "/images/map-small.webp"
   },
   {
     "title": "Scavenger Hunt",
     "description": "Look for tiny purple, green, or gold squirrels to win prizes.",
     "route": "/scavenger-hunt",
-    "image": "/images/scavenger-hunt.jpeg"
+    "image": "/images/scavenger-hunt-small.webp"
+  },
+  {
+    "title": "Raffles & Giveaways",
+    "description": "Win amazing prizes",
+    "route": "/raffles-giveaways",
+    "image": "/images/raffles-giveaways-small.webp"
   },
   {
     "title": "Food Trucks",
     "description": "Explore food truck options.",
     "route": "/food-trucks",
-    "image": "/images/food-truck.jpeg"
-  },
-  {
-    "title": "Emergency Services",
-    "description": "Contact information",
-    "route": "/emergency-services",
-    "image": "/images/emergency-services.jpeg"
+    "image": "/images/food-truck-small.webp"
   },
   {
     "title": "Race Information",
     "description": "Rules and races",
     "route": "/race-information",
-    "image": "/images/race-information.jpeg"
+    "image": "/images/race-information-small.webp"
+  },
+  {
+    "title": "Emergency Services",
+    "description": "Contact information",
+    "route": "/emergency-services",
+    "image": "/images/emergency-services-small.webp"
   }
 ]
