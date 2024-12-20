@@ -21,550 +21,158 @@ import SkateboardingIcon from "@mui/icons-material/Skateboarding";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Link as RouterLink } from "react-router-dom";
 
+// Icon Configuration
 const iconSize = 40;
-const clinicIcon = (
-  <SportsEsportsIcon sx={{ fontSize: iconSize, color: "#ff9914" }} />
-);
-const beerIcon = (
-  <SportsBarIcon sx={{ fontSize: iconSize, color: "#08bdbd" }} />
-);
-const welcomeIcon = (
-  <AccessibilityIcon sx={{ fontSize: iconSize, color: "#29bf12" }} />
-);
-const gateOpenIcon = (
-  <LockOpenIcon sx={{ fontSize: iconSize, color: "#f21b3f" }} />
-);
-const rumbleIcon = (
-  <SportsKabaddiIcon sx={{ fontSize: iconSize, color: "#5603ad" }} />
-);
-const groupRideIcon = (
-  <SkateboardingIcon sx={{ fontSize: iconSize, color: "#fface4" }} />
-);
-const comingSoonIcon = (
-  <AccessTimeIcon sx={{ fontSize: iconSize, color: "gray" }} />
-);
-
-const items = [
-  {
-    day: "Thursday",
-    items: [
-      {
-        time: "9:00 AM",
-        title: "Gate Opens",
-        description: "Check in at the front gate",
-        icon: gateOpenIcon,
-      },
-      {
-        time: "10:00 AM",
-        title: "Welcome Tour",
-        description: "with Supremo",
-        icon: welcomeIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Bonk Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "11:30 PM",
-        title: "Drops Trick Clinic",
-        description: "with Bodhi Harrison",
-        icon: clinicIcon,
-      },
-      {
-        time: "12:00 PM",
-        title: "Beer Tent Opens",
-        description: "provided by RBC",
-        icon: beerIcon,
-      },
-      {
-        time: "12:30 PM",
-        title: "Curb Nudge Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:00 PM",
-        title: "Body Varial Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:30 PM",
-        title: "Queen City Rumble",
-        description: "brought to you by the Charlotte Crew",
-        icon: rumbleIcon,
-      },
-      {
-        time: "3:00 PM",
-        title: "Snir's Best Ride Ever ",
-        description: "with the one and only",
-        icon: groupRideIcon,
-      },
-      {
-        time: "4:00 PM",
-        title: "Afternoon Skate Jam",
-        description: "Join the open jam session on the skate park ramps.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "5:00 PM",
-        title: "Live DJ Set",
-        description: "Enjoy beats from a local DJ to energize the crowd.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "6:00 PM",
-        title: "Intermediate Skate Showdown",
-        description: "Intermediate skaters battle it out for top honors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "7:00 PM",
-        title: "Dinner Break",
-        description: "Grab some delicious bites from food trucks and vendors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "8:00 PM",
-        title: "Pro Skaters Showcase",
-        description: "Watch the pros put on a breathtaking display of tricks.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "9:00 PM",
-        title: "Nighttime Freestyle BMX Show",
-        description: "BMX riders light up the park with jaw-dropping stunts.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "10:00 PM",
-        title: "Best Trick Contest",
-        description: "Showcase your best tricks under the lights for prizes.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Awards Presentation",
-        description: "Celebrate the top skaters and tricksters of the day.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "12:00 AM",
-        title: "Closing Ceremony",
-        description: "Wrap up the day with final thanks and a community toast.",
-        icon: comingSoonIcon,
-      },
-    ],
-  },
-  {
-    day: "Friday",
-    items: [
-      {
-        time: "9:00 AM",
-        title: "Gate Opens",
-        description: "Check in at the front gate",
-        icon: gateOpenIcon,
-      },
-      {
-        time: "10:00 AM",
-        title: "Welcome Tour",
-        description: "with Supremo",
-        icon: welcomeIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Bonk Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "11:30 PM",
-        title: "Drops Trick Clinic",
-        description: "with Bodhi Harrison",
-        icon: clinicIcon,
-      },
-      {
-        time: "12:00 PM",
-        title: "Beer Tent Opens",
-        description: "provided by RBC",
-        icon: beerIcon,
-      },
-      {
-        time: "12:30 PM",
-        title: "Curb Nudge Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:00 PM",
-        title: "Body Varial Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:30 PM",
-        title: "Queen City Rumble",
-        description: "brought to you by the Charlotte Crew",
-        icon: rumbleIcon,
-      },
-      {
-        time: "3:00 PM",
-        title: "Snir's Best Ride Ever ",
-        description: "with the one and only",
-        icon: groupRideIcon,
-      },
-      {
-        time: "4:00 PM",
-        title: "Afternoon Skate Jam",
-        description: "Join the open jam session on the skate park ramps.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "5:00 PM",
-        title: "Live DJ Set",
-        description: "Enjoy beats from a local DJ to energize the crowd.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "6:00 PM",
-        title: "Intermediate Skate Showdown",
-        description: "Intermediate skaters battle it out for top honors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "7:00 PM",
-        title: "Dinner Break",
-        description: "Grab some delicious bites from food trucks and vendors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "8:00 PM",
-        title: "Pro Skaters Showcase",
-        description: "Watch the pros put on a breathtaking display of tricks.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "9:00 PM",
-        title: "Nighttime Freestyle BMX Show",
-        description: "BMX riders light up the park with jaw-dropping stunts.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "10:00 PM",
-        title: "Best Trick Contest",
-        description: "Showcase your best tricks under the lights for prizes.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Awards Presentation",
-        description: "Celebrate the top skaters and tricksters of the day.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "12:00 AM",
-        title: "Closing Ceremony",
-        description: "Wrap up the day with final thanks and a community toast.",
-        icon: comingSoonIcon,
-      },
-    ],
-  },
-  {
-    day: "Saturday",
-    items: [
-      {
-        time: "9:00 AM",
-        title: "Gate Opens",
-        description: "Check in at the front gate",
-        icon: gateOpenIcon,
-      },
-      {
-        time: "10:00 AM",
-        title: "Welcome Tour",
-        description: "with Supremo",
-        icon: welcomeIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Bonk Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "11:30 PM",
-        title: "Drops Trick Clinic",
-        description: "with Bodhi Harrison",
-        icon: clinicIcon,
-      },
-      {
-        time: "12:00 PM",
-        title: "Beer Tent Opens",
-        description: "provided by RBC",
-        icon: beerIcon,
-      },
-      {
-        time: "12:30 PM",
-        title: "Curb Nudge Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:00 PM",
-        title: "Body Varial Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:30 PM",
-        title: "Queen City Rumble",
-        description: "brought to you by the Charlotte Crew",
-        icon: rumbleIcon,
-      },
-      {
-        time: "3:00 PM",
-        title: "Snir's Best Ride Ever ",
-        description: "with the one and only",
-        icon: groupRideIcon,
-      },
-      {
-        time: "4:00 PM",
-        title: "Afternoon Skate Jam",
-        description: "Join the open jam session on the skate park ramps.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "5:00 PM",
-        title: "Live DJ Set",
-        description: "Enjoy beats from a local DJ to energize the crowd.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "6:00 PM",
-        title: "Intermediate Skate Showdown",
-        description: "Intermediate skaters battle it out for top honors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "7:00 PM",
-        title: "Dinner Break",
-        description: "Grab some delicious bites from food trucks and vendors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "8:00 PM",
-        title: "Pro Skaters Showcase",
-        description: "Watch the pros put on a breathtaking display of tricks.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "9:00 PM",
-        title: "Nighttime Freestyle BMX Show",
-        description: "BMX riders light up the park with jaw-dropping stunts.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "10:00 PM",
-        title: "Best Trick Contest",
-        description: "Showcase your best tricks under the lights for prizes.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Awards Presentation",
-        description: "Celebrate the top skaters and tricksters of the day.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "12:00 AM",
-        title: "Closing Ceremony",
-        description: "Wrap up the day with final thanks and a community toast.",
-        icon: comingSoonIcon,
-      },
-    ],
-  },
-  {
-    day: "Sunday",
-    items: [
-      {
-        time: "9:00 AM",
-        title: "Gate Opens",
-        description: "Check in at the front gate",
-        icon: gateOpenIcon,
-      },
-      {
-        time: "10:00 AM",
-        title: "Welcome Tour",
-        description: "with Supremo",
-        icon: welcomeIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Bonk Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "11:30 PM",
-        title: "Drops Trick Clinic",
-        description: "with Bodhi Harrison",
-        icon: clinicIcon,
-      },
-      {
-        time: "12:00 PM",
-        title: "Beer Tent Opens",
-        description: "provided by RBC",
-        icon: beerIcon,
-      },
-      {
-        time: "12:30 PM",
-        title: "Curb Nudge Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:00 PM",
-        title: "Body Varial Trick Clinic",
-        description: "with The Mad Scientist",
-        icon: clinicIcon,
-      },
-      {
-        time: "1:30 PM",
-        title: "Queen City Rumble",
-        description: "brought to you by the Charlotte Crew",
-        icon: rumbleIcon,
-      },
-      {
-        time: "3:00 PM",
-        title: "Snir's Best Ride Ever ",
-        description: "with the one and only",
-        icon: groupRideIcon,
-      },
-      {
-        time: "4:00 PM",
-        title: "Afternoon Skate Jam",
-        description: "Join the open jam session on the skate park ramps.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "5:00 PM",
-        title: "Live DJ Set",
-        description: "Enjoy beats from a local DJ to energize the crowd.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "6:00 PM",
-        title: "Intermediate Skate Showdown",
-        description: "Intermediate skaters battle it out for top honors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "7:00 PM",
-        title: "Dinner Break",
-        description: "Grab some delicious bites from food trucks and vendors.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "8:00 PM",
-        title: "Pro Skaters Showcase",
-        description: "Watch the pros put on a breathtaking display of tricks.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "9:00 PM",
-        title: "Nighttime Freestyle BMX Show",
-        description: "BMX riders light up the park with jaw-dropping stunts.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "10:00 PM",
-        title: "Best Trick Contest",
-        description: "Showcase your best tricks under the lights for prizes.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "11:00 PM",
-        title: "Awards Presentation",
-        description: "Celebrate the top skaters and tricksters of the day.",
-        icon: comingSoonIcon,
-      },
-      {
-        time: "12:00 AM",
-        title: "Closing Ceremony",
-        description: "Wrap up the day with final thanks and a community toast.",
-        icon: comingSoonIcon,
-      },
-    ],
-  },
-];
-
-const defaultSchedule = () => {
-  const currentDayName = new Date().toLocaleString("en-US", {
-    weekday: "long",
-  });
-  const isCurrentDayInItems = items.some((day) => day.day === currentDayName);
-  return isCurrentDayInItems ? currentDayName : "Thursday";
+const ICONS = {
+  clinic: <SportsEsportsIcon sx={{ fontSize: iconSize, color: "#ff9914" }} />,
+  beer: <SportsBarIcon sx={{ fontSize: iconSize, color: "#08bdbd" }} />,
+  welcome: <AccessibilityIcon sx={{ fontSize: iconSize, color: "#29bf12" }} />,
+  gateOpen: <LockOpenIcon sx={{ fontSize: iconSize, color: "#f21b3f" }} />,
+  rumble: <SportsKabaddiIcon sx={{ fontSize: iconSize, color: "#5603ad" }} />,
+  groupRide: (
+    <SkateboardingIcon sx={{ fontSize: iconSize, color: "#fface4" }} />
+  ),
+  comingSoon: <AccessTimeIcon sx={{ fontSize: iconSize, color: "gray" }} />,
 };
 
+// API Configuration
+const API_KEY = process.env.REACT_APP_API_KEY;
+const CALENDAR_ID = process.env.REACT_APP_CALENDAR_ID;
+const MAX_RESULTS = 1000;
+
+// Helper Functions
+const fetchEvents = async () => {
+  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
+    CALENDAR_ID
+  )}/events?key=${API_KEY}&maxResults=${MAX_RESULTS}&singleEvents=true&orderBy=startTime&timeMin=${new Date().toISOString()}`;
+  try {
+    const response = await fetch(url);
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    return { items: [] };
+  }
+};
+
+const groupEventsByDays = (events) => {
+  const grouped = {};
+  events?.items?.forEach((event) => {
+    const startDate = event.start.date || event.start.dateTime.split("T")[0];
+    if (!grouped[startDate]) grouped[startDate] = [];
+
+    const formattedTime = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    }).format(new Date(event.start.dateTime || event.start.date));
+
+    grouped[startDate].push({
+      title: event.summary || "",
+      startTime: formattedTime,
+      endTime: event.end.dateTime || event.end.date,
+      description: event.description || "",
+      location: event.location || "",
+      icon: getIcon(event.summary),
+    });
+  });
+  return grouped;
+};
+
+const getIcon = (eventTitle = "") => {
+  const title = eventTitle.toLowerCase();
+  switch (true) {
+    case title.includes("clinic"):
+      return ICONS.clinic;
+    case title.includes("tour"):
+      return ICONS.welcome;
+    case title.includes("open"):
+      return ICONS.gateOpen;
+    default:
+      return ICONS.comingSoon;
+  }
+};
+
+const getDayName = (dateString) => {
+  return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+    new Date(dateString + "T00:00:00")
+  );
+};
+
+const isToday = (dateString) => {
+  return new Date().toISOString().split("T")[0] === dateString;
+};
+
+// Main Component
 const SchedulePage = () => {
+  const [items, setItems] = React.useState({});
+
+  React.useEffect(() => {
+    const loadEvents = async () => {
+      const rawEvents = await fetchEvents();
+      const groupedEvents = groupEventsByDays(rawEvents);
+      setItems(groupedEvents);
+    };
+    loadEvents();
+  }, []);
+
   return (
-    <Box sx={{ "padding-top": "5px", margin: "16px" }}>
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        sx={{
-          marginBottom: "12px",
-          marginLeft: "0",
-        }}
-      >
+    <Box sx={{ paddingTop: "5px", margin: "16px" }}>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: "12px" }}>
         <Link component={RouterLink} to="/" underline="hover" color="inherit">
           Home
         </Link>
         <Typography color="text.primary">Schedule</Typography>
       </Breadcrumbs>
-      {items.map((day, index) => (
-        <Accordion defaultExpanded={day.day === defaultSchedule()}>
+      {Object.keys(items).map((day) => (
+        <Accordion key={day} defaultExpanded={isToday(day)}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1-content"
-            id="panel1-header"
-            sx={{ "padding-bottom": "0" }}
+            aria-controls={`${day}-content`}
+            id={`${day}-header`}
+            sx={{ paddingBottom: 0 }}
           >
-            <Typography>{day.day}</Typography>
+            <Typography>{getDayName(day)}</Typography>
           </AccordionSummary>
-          <AccordionDetails sx={{ padding: "0" }}>
-            <List sx={{ padding: "0" }}>
-              {day.items.map((item, index) => (
-                <Box>
+          <AccordionDetails sx={{ padding: 0 }}>
+            <List sx={{ padding: 0 }}>
+              {items[day].map((item, index) => (
+                <Box key={index}>
                   <ListItem alignItems="flex-start">
                     <ListItemIcon>{item.icon}</ListItemIcon>
                     <ListItemText
-                      primary={item.time}
+                      primary={item.startTime}
                       secondary={
-                        <React.Fragment>
+                        <>
                           <Typography
-                            component="span"
                             variant="body1"
-                            sx={{ color: "text.primary", display: "inline" }}
+                            color="text.primary"
+                            component="span"
                           >
                             {item.title}
                           </Typography>
-                          {item.description ? (
+                          {item.description && (
                             <Typography
-                              component="span"
                               variant="caption"
-                              sx={{ color: "text.primary", display: "inline" }}
+                              color="text.secondary"
+                              component="span"
                             >
                               {" - " + item.description}
                             </Typography>
-                          ) : (
-                            <span></span>
                           )}
-                        </React.Fragment>
+                          {item.location && (
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                              component="span"
+                            >
+                              {" at " + item.location}
+                            </Typography>
+                          )}
+                        </>
                       }
                     />
                   </ListItem>
-                  {index < day.items.length - 1 ? <Divider /> : ""}
+                  {index < items[day].length - 1 && <Divider />}
                 </Box>
               ))}
             </List>
