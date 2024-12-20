@@ -20,7 +20,11 @@ const MapPage = () => {
         </Link>
         <Typography color="text.primary">Map</Typography>
       </Breadcrumbs>
-      <img width={"100%"} src="/images/map.jpeg" alt="food truck" />
+      <img
+        width={"100%"}
+        src="/images/lakeside-retreats-map.webp"
+        alt="Lakeside Retreats map"
+      />
     </Container>
   );
 };
