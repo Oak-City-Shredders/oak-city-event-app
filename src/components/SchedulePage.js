@@ -167,7 +167,7 @@ const SchedulePage = () => {
                               color="text.secondary"
                               component="span"
                             >
-                              {" at " + item.location}
+                              {" at the " + item.location}
                             </Typography>
                           )}
                         </>
