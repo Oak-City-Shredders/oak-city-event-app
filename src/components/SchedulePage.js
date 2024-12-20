@@ -138,7 +138,9 @@ const SchedulePage = () => {
               {items[day].map((item, index) => (
                 <Box key={index}>
                   <ListItem alignItems="flex-start">
-                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemIcon sx={{ alignSelf: "center", margin: 0 }}>
+                      {item.icon}
+                    </ListItemIcon>
                     <ListItemText
                       primary={item.startTime}
                       secondary={
