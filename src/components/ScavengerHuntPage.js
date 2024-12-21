@@ -26,13 +26,12 @@ const ScavengerHuntPage = () => {
         </Link>
         <Typography color="text.primary">Scavenger Hunt</Typography>
       </Breadcrumbs>
-      <Card>
+      <Card sx={{ m: 2 }}>
         <CardMedia
           component="img"
           height="225"
           image="/images/scavenger-hunt.webp"
           alt="Scavenger Hunt"
-          sx={{ p: 0 }}
         />
         <CardContent>
           <Typography variant="h4" gutterBottom>
