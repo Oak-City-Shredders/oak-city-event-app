@@ -37,7 +37,7 @@ const ScavengerHuntPage = () => {
           <Typography variant="h4" gutterBottom>
             Scavenger Hunt
           </Typography>
-          <Typography variant="body1" sx={{ "margin-bottom": "24px" }}>
+          <Typography variant="body1" sx={{ marginBottom: "24px" }}>
             Starting bright and early Thursday morning, the Scavenger Hunt kicks
             off and runs until the awards ceremony Saturday evening. Whether
             you’re a seasoned hunter or a first-timer, this is your chance to
@@ -46,7 +46,7 @@ const ScavengerHuntPage = () => {
           <Typography variant="h6" gutterBottom>
             🎁 Prizes:
           </Typography>
-          <Typography variant="body1" sx={{ "margin-bottom": "12px" }}>
+          <Typography variant="body1" sx={{ marginBottom: "12px" }}>
             Prizes include awesome gear like ElectroLytes, WTF Rails, Function
             Wrist Guards, an MTE Hub, gift cards, rail guards, fenders, and swag
             bags packed with goodies!
@@ -54,7 +54,7 @@ const ScavengerHuntPage = () => {
           <Typography variant="h6" gutterBottom>
             🌳 Where to Look:
           </Typography>
-          <Typography variant="body1" sx={{ "margin-bottom": "12px" }}>
+          <Typography variant="body1" sx={{ marginBottom: "12px" }}>
             The squirrels are scattered everywhere! From the Float Track to
             Stoke Park, and even down by the lake, you’ll need your wits, eyes,
             and maybe a little luck to find them all.
@@ -62,7 +62,11 @@ const ScavengerHuntPage = () => {
           <Typography variant="h6" gutterBottom>
             🎨 What to Look For:
           </Typography>
-          <Typography variant="body1" sx={{ "margin-bottom": "12px" }}>
+          <Typography
+            variant="body1"
+            component="div"
+            sx={{ marginBottom: "12px" }}
+          >
             There are three different squirrel colors, each with unique prizes:
             <List>
               <ListItem>
