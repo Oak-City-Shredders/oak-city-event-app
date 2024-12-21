@@ -29,7 +29,13 @@ const ScavengerHuntPage = () => {
       <Card sx={{ m: 2 }}>
         <CardMedia
           component="img"
-          height="225"
+          sx={{
+            height: {
+              xs: 225,
+              sm: 300,
+              md: 400,
+            },
+          }}
           image="/images/scavenger-hunt.webp"
           alt="Scavenger Hunt"
         />
