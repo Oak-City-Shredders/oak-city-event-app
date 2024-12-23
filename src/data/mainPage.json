@@ -40,5 +40,11 @@
     "description": "Contact information",
     "route": "/emergency-services",
     "image": "/images/emergency-services-small.webp"
+  },
+  {
+    "title": "Drip Schedule",
+    "description": "Daily outfit schedule",
+    "route": "/drip-schedule",
+    "image": "/images/drip-schedule-small.webp"
   }
 ]

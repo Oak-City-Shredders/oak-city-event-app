@@ -15,6 +15,7 @@ import EmergencyServicesPage from "./components/EmergencyServicesPage";
 import RaceInformationPage from "./components/RaceInformationPage";
 import ScavengerHuntPage from "./components/ScavengerHuntPage";
 import RafflesGiveawaysPage from "./components/RafflesGiveawaysPage";
+import DripSchedulePage from "./components/DripSchedulePage";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/emergency-services" element={<EmergencyServicesPage />} />
         <Route path="/race-information" element={<RaceInformationPage />} />
         <Route path="/raffles-giveaways" element={<RafflesGiveawaysPage />} />
+        <Route path="/drip-schedule" element={<DripSchedulePage />} />
       </Routes>
     </Router>
   );
