@@ -1,6 +1,6 @@
 
 # go here to see site
-[rideoakcity.com] (http://rideoakcity.com)
+[rideoakcity.com](http://rideoakcity.com)
 
 # Getting Started with Create React App
 
