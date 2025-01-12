@@ -1,10 +1,19 @@
 
-# go here to see site
-[rideoakcity.com](http://rideoakcity.com)
+# Introduction
+The app powers [rideoakcity.com](http://rideoakcity.com)
+
+# Overview
+This app is deployed when changes are made to `main` by `netlify`
+See deployments here [https://app.netlify.com/sites/ocsf5/deploys] (https://app.netlify.com/sites/ocsf5/deploys)
 
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+Prerequisites include `git` and `npm`
+
+`git clone ` the URL of this repo
+`npm ci`
 
 ## Available Scripts
 

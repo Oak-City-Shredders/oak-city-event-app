@@ -115,6 +115,8 @@ const SchedulePage = () => {
     loadEvents();
   }, []);
 
+  const hasEvents = Object.keys(items).length > 0;
+
   return (
     <Box sx={{ paddingTop: "5px", margin: "16px" }}>
       <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: "12px" }}>
@@ -123,6 +125,10 @@ const SchedulePage = () => {
         </Link>
         <Typography color="text.primary">Schedule</Typography>
       </Breadcrumbs>
+      {!hasEvents && 
+        <Typography>
+          No events scheduled.
+        </Typography>}
       {Object.keys(items).map((day) => (
         <Accordion key={day} defaultExpanded={isToday(day)}>
           <AccordionSummary
