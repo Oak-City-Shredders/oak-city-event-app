@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Group Rides",
+    "description": "",
+    "route": "/group-rides",
+    "image": "/images/group-rides-small.webp"
+  },
+  {
+    "title": "Oak City Shred Fest 5",
+    "description": "",
+    "route": "/ocsf5",
+    "image": "/images/schedule-small.webp"
+  }
+]

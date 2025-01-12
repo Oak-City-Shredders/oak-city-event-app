@@ -7,7 +7,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import Header from "./components/Header";
-import MainPage from "./components/MainPage";
+import HomePage from "./components/HomePage";
+import ShredFestPage from "./components/ShredFestPage";
 import SchedulePage from "./components/SchedulePage";
 import MapPage from "./components/MapPage";
 import FoodTrucksPage from "./components/FoodTrucksPage";
@@ -16,6 +17,7 @@ import RaceInformationPage from "./components/RaceInformationPage";
 import ScavengerHuntPage from "./components/ScavengerHuntPage";
 import RafflesGiveawaysPage from "./components/RafflesGiveawaysPage";
 import DripSchedulePage from "./components/DripSchedulePage";
+import GroupRideCalendar from "./components/GroupRideCalendar";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
@@ -33,7 +35,8 @@ const App = () => {
       <RouteChangeWatcher />
       <Header />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/ocsf5" element={<ShredFestPage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/scavenger-hunt" element={<ScavengerHuntPage />} />
@@ -42,6 +45,7 @@ const App = () => {
         <Route path="/race-information" element={<RaceInformationPage />} />
         <Route path="/raffles-giveaways" element={<RafflesGiveawaysPage />} />
         <Route path="/drip-schedule" element={<DripSchedulePage />} />
+        <Route path="/group-rides" element={<GroupRideCalendar />} />
       </Routes>
     </Router>
   );

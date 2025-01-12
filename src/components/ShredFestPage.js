@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CardLayout from "../components/CardLayout";
-import items from "../data/mainPage.json";
+import routes from "../data/routes.json";
 
-const MainPage = () => {
+const ShredFestPage = () => {
   const navigate = useNavigate();
   const handleCardClick = (route) => {
     navigate(route);
   };
 
-  return <CardLayout items={items} handleCardClick={handleCardClick} />;
+  return <CardLayout items={routes} handleCardClick={handleCardClick} />;
 };
 
-export default MainPage;
+export default ShredFestPage;

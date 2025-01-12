@@ -30,6 +30,9 @@ const CardLayout = ({ items, handleCardClick }) => {
                   <Typography gutterBottom variant="h5" component="div">
                     {item.title}
                   </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {item.description}
+                  </Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
