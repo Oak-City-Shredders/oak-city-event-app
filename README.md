@@ -1,6 +1,6 @@
 
-#go here to see site
-Oak City Shred Fest [http://rideoakcity.com]
+# go here to see site
+[rideoakcity.com] (http://rideoakcity.com)
 
 # Getting Started with Create React App
 
