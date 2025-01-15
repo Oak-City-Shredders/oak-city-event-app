@@ -17,7 +17,7 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
 import SkateboardingIcon from "@mui/icons-material/Skateboarding";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb";
 
 // Icon Configuration
 const iconSize = 40;

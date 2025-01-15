@@ -6,7 +6,7 @@ import { Link as RouterLink } from "react-router-dom";
 
 function Breadcrumb({ name }) {
   return (
-    <Breadcrumbs aria-label="breadcrumb">
+    <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 2 }}>
       <Link component={RouterLink} to="/" underline="hover" color="inherit">
         Home
       </Link>

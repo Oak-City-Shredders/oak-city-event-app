@@ -7,7 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb";
 
 const ScavengerHuntPage = () => {
   return (

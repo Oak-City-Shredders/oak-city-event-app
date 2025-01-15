@@ -1,8 +1,8 @@
 import React from "react";
 import { Container } from "@mui/material";
-import UnderConstruction from "./UnderConstruction";
+import UnderConstruction from "../components/UnderConstruction";
 
-const RafflesGiveawaysPage = () => {
+const RaceInformationPage = () => {
   return (
     <Container sx={{ mt: 2 }}>
       <UnderConstruction />
@@ -10,4 +10,4 @@ const RafflesGiveawaysPage = () => {
   );
 };
 
-export default RafflesGiveawaysPage;
+export default RaceInformationPage;

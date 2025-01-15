@@ -1,8 +1,8 @@
 import React from "react";
 import { Container } from "@mui/material";
-import UnderConstruction from "./UnderConstruction";
+import UnderConstruction from "../components/UnderConstruction";
 
-const RaceInformationPage = () => {
+const EmergencyServicesPage = () => {
   return (
     <Container sx={{ mt: 2 }}>
       <UnderConstruction />
@@ -10,4 +10,4 @@ const RaceInformationPage = () => {
   );
 };
 
-export default RaceInformationPage;
+export default EmergencyServicesPage;

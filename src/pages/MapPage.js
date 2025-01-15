@@ -1,6 +1,6 @@
 import React from "react";
 import { Container } from "@mui/material";
-import Breadcrumb from "./Breadcrumb";
+import Breadcrumb from "../components/Breadcrumb";
 
 const MapPage = () => {
   return (
