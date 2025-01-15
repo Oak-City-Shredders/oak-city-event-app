@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useMemo } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
@@ -18,7 +18,9 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
 import SkateboardingIcon from "@mui/icons-material/Skateboarding";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CircularProgress from "@mui/material/CircularProgress";
 import Breadcrumb from "../components/Breadcrumb";
+import useGoogleCalendar from "../hooks/useGoogleCalendar";
 
 // Icon Configuration
 const iconSize = 40;
@@ -34,24 +36,7 @@ const ICONS = {
   comingSoon: <AccessTimeIcon sx={{ fontSize: iconSize, color: "gray" }} />,
 };
 
-// API Configuration
-const API_KEY = process.env.REACT_APP_API_KEY;
 const CALENDAR_ID = process.env.REACT_APP_CALENDAR_ID;
-const MAX_RESULTS = 1000;
-
-// Helper Functions
-const fetchEvents = async () => {
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-    CALENDAR_ID
-  )}/events?key=${API_KEY}&maxResults=${MAX_RESULTS}&singleEvents=true&orderBy=startTime&timeMin=${new Date().toISOString()}`;
-  try {
-    const response = await fetch(url);
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching events:", error);
-    return { items: [] };
-  }
-};
 
 const groupEventsByDays = (events) => {
   const grouped = {};
@@ -103,81 +88,89 @@ const isToday = (dateString) => {
 
 // Main Component
 const SchedulePage = () => {
-  const [items, setItems] = React.useState({});
-
-  React.useEffect(() => {
-    const loadEvents = async () => {
-      const rawEvents = await fetchEvents();
-      const groupedEvents = groupEventsByDays(rawEvents);
-      setItems(groupedEvents);
-    };
-    loadEvents();
-  }, []);
-
-  const hasEvents = Object.keys(items).length > 0;
+  const { data: calendarData, loading, error } = useGoogleCalendar(CALENDAR_ID);
+  const groupedEvents = useMemo(() => {
+    return groupEventsByDays(calendarData);
+  }, [calendarData]);
 
   return (
     <Container>
       <Breadcrumb name={"Schedule"} />
-      {!hasEvents && <Typography>No events scheduled.</Typography>}
-      {Object.keys(items).map((day) => (
-        <Accordion key={day} defaultExpanded={isToday(day)}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls={`${day}-content`}
-            id={`${day}-header`}
-            sx={{ paddingBottom: 0 }}
-          >
-            <Typography>{getDayName(day)}</Typography>
-          </AccordionSummary>
-          <AccordionDetails sx={{ padding: 0 }}>
-            <List sx={{ padding: 0 }}>
-              {items[day].map((item, index) => (
-                <Box key={index}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemIcon sx={{ alignSelf: "center", margin: 0 }}>
-                      {item.icon}
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={item.startTime}
-                      secondary={
-                        <>
-                          <Typography
-                            variant="body1"
-                            color="text.primary"
-                            component="span"
-                          >
-                            {item.title}
-                          </Typography>
-                          {item.description && (
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Typography>
+          There are no events scheduled, please check back later
+        </Typography>
+      ) : (
+        Object.keys(groupedEvents).map((day) => (
+          <Accordion key={day} defaultExpanded={isToday(day)}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${day}-content`}
+              id={`${day}-header`}
+              sx={{ paddingBottom: 0 }}
+            >
+              <Typography>{getDayName(day)}</Typography>
+            </AccordionSummary>
+            <AccordionDetails sx={{ padding: 0 }}>
+              <List sx={{ padding: 0 }}>
+                {groupedEvents[day].map((item, index) => (
+                  <Box key={index}>
+                    <ListItem alignItems="flex-start">
+                      <ListItemIcon sx={{ alignSelf: "center", margin: 0 }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={item.startTime}
+                        secondary={
+                          <>
                             <Typography
-                              variant="caption"
-                              color="text.secondary"
+                              variant="body1"
+                              color="text.primary"
                               component="span"
                             >
-                              {" - " + item.description}
+                              {item.title}
                             </Typography>
-                          )}
-                          {item.location && (
-                            <Typography
-                              variant="caption"
-                              color="text.secondary"
-                              component="span"
-                            >
-                              {" at the " + item.location}
-                            </Typography>
-                          )}
-                        </>
-                      }
-                    />
-                  </ListItem>
-                  {index < items[day].length - 1 && <Divider />}
-                </Box>
-              ))}
-            </List>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+                            {item.description && (
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                component="span"
+                              >
+                                {" - " + item.description}
+                              </Typography>
+                            )}
+                            {item.location && (
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                component="span"
+                              >
+                                {" at the " + item.location}
+                              </Typography>
+                            )}
+                          </>
+                        }
+                      />
+                    </ListItem>
+                    {index < groupedEvents[day].length - 1 && <Divider />}
+                  </Box>
+                ))}
+              </List>
+            </AccordionDetails>
+          </Accordion>
+        ))
+      )}
     </Container>
   );
 };
