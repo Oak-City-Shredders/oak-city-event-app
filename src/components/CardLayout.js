@@ -1,17 +1,15 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid2";
 
 const CardLayout = ({ items, handleCardClick }) => {
   return (
-    <Box sx={{ p: 2, flexGrow: 1 }}>
+    <Container sx={{ mt: 2 }}>
       <Grid container spacing={2} className="safe-area">
         {items.map((item, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
@@ -36,7 +34,7 @@ const CardLayout = ({ items, handleCardClick }) => {
           </Grid>
         ))}
       </Grid>
-    </Box>
+    </Container>
   );
 };
 
