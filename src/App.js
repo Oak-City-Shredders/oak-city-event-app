@@ -7,7 +7,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import Header from "./components/Header";
-import MainPage from "./pages/MainPage";
+import HomePage from "./pages/HomePage";
 import SchedulePage from "./pages/SchedulePage";
 import MapPage from "./pages/MapPage";
 import FoodTrucksPage from "./pages/FoodTrucksPage";
@@ -16,6 +16,7 @@ import RaceInformationPage from "./pages/RaceInformationPage";
 import ScavengerHuntPage from "./pages/ScavengerHuntPage";
 import RafflesGiveawaysPage from "./pages/RafflesGiveawaysPage";
 import DripSchedulePage from "./pages/DripSchedulePage";
+import TrickCompPage from "./pages/TrickCompPage";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const App = () => {
       <RouteChangeWatcher />
       <Header />
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/scavenger-hunt" element={<ScavengerHuntPage />} />
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/race-information" element={<RaceInformationPage />} />
         <Route path="/raffles-giveaways" element={<RafflesGiveawaysPage />} />
         <Route path="/drip-schedule" element={<DripSchedulePage />} />
+        <Route path="/trick-comp" element={<TrickCompPage />} />
       </Routes>
     </Router>
   );

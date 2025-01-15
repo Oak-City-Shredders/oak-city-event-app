@@ -18,6 +18,12 @@
     "image": "/images/scavenger-hunt-small.webp"
   },
   {
+    "title": "Trick Comp",
+    "description": "",
+    "route": "/trick-comp",
+    "image": "/images/trick-comp-small.webp"
+  },
+  {
     "title": "Raffles & Giveaways",
     "description": "Win amazing prizes",
     "route": "/raffles-giveaways",
