@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import CardLayout from "../components/CardLayout";
 import layout from "../data/homePageLayout.json";
 
-const MainPage = () => {
+const HomePage = () => {
   const navigate = useNavigate();
   const handleCardClick = (route) => {
     navigate(route);
@@ -12,4 +12,4 @@ const MainPage = () => {
   return <CardLayout items={layout} handleCardClick={handleCardClick} />;
 };
 
-export default MainPage;
+export default HomePage;
