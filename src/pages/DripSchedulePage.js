@@ -1,6 +1,6 @@
 import React from "react";
-import { Container } from "@mui/material";
-import UnderConstruction from "./UnderConstruction";
+import Container from "@mui/material/Container";
+import UnderConstruction from "../components/UnderConstruction";
 
 const FoodTrucksPage = () => {
   return (

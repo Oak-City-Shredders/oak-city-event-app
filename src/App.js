@@ -7,15 +7,15 @@ import {
   useLocation,
 } from "react-router-dom";
 import Header from "./components/Header";
-import MainPage from "./components/MainPage";
-import SchedulePage from "./components/SchedulePage";
-import MapPage from "./components/MapPage";
-import FoodTrucksPage from "./components/FoodTrucksPage";
-import EmergencyServicesPage from "./components/EmergencyServicesPage";
-import RaceInformationPage from "./components/RaceInformationPage";
-import ScavengerHuntPage from "./components/ScavengerHuntPage";
-import RafflesGiveawaysPage from "./components/RafflesGiveawaysPage";
-import DripSchedulePage from "./components/DripSchedulePage";
+import MainPage from "./pages/MainPage";
+import SchedulePage from "./pages/SchedulePage";
+import MapPage from "./pages/MapPage";
+import FoodTrucksPage from "./pages/FoodTrucksPage";
+import EmergencyServicesPage from "./pages/EmergencyServicesPage";
+import RaceInformationPage from "./pages/RaceInformationPage";
+import ScavengerHuntPage from "./pages/ScavengerHuntPage";
+import RafflesGiveawaysPage from "./pages/RafflesGiveawaysPage";
+import DripSchedulePage from "./pages/DripSchedulePage";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
