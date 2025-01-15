@@ -18,9 +18,9 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
 import SkateboardingIcon from "@mui/icons-material/Skateboarding";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import CircularProgress from "@mui/material/CircularProgress";
 import Breadcrumb from "../components/Breadcrumb";
 import useGoogleCalendar from "../hooks/useGoogleCalendar";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 // Icon Configuration
 const iconSize = 40;
@@ -97,16 +97,7 @@ const SchedulePage = () => {
     <Container>
       <Breadcrumb name={"Schedule"} />
       {loading ? (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "50vh",
-          }}
-        >
-          <CircularProgress />
-        </Box>
+        <LoadingSpinner />
       ) : error ? (
         <Typography>
           There are no events scheduled, please check back later
