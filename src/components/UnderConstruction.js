@@ -4,7 +4,7 @@ import Breadcrumb from "./Breadcrumb";
 
 const UnderConstruction = () => {
   return (
-    <Container sx={{ mt: 2 }}>
+    <Container>
       <Breadcrumb name="Under Construction" />
       <img
         width={"100%"}

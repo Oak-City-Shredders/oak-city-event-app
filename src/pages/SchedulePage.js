@@ -9,6 +9,7 @@ import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
@@ -116,7 +117,7 @@ const SchedulePage = () => {
   const hasEvents = Object.keys(items).length > 0;
 
   return (
-    <Box sx={{ paddingTop: "5px", margin: "16px" }}>
+    <Container>
       <Breadcrumb name={"Schedule"} />
       {!hasEvents && <Typography>No events scheduled.</Typography>}
       {Object.keys(items).map((day) => (
@@ -177,7 +178,7 @@ const SchedulePage = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-    </Box>
+    </Container>
   );
 };
 

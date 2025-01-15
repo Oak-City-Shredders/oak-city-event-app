@@ -1,11 +1,11 @@
 import React from "react";
-import { Container } from "@mui/material";
+import Container from "@mui/material/Container";
 import Breadcrumb from "../components/Breadcrumb";
 
 const MapPage = () => {
   return (
-    <Container sx={{ mt: 2 }}>
-      <Breadcrumb />
+    <Container>
+      <Breadcrumb name={"Map"} />
       <img
         width={"100%"}
         src="/images/lakeside-retreats-map.webp"

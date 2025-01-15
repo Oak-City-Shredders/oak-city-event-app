@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "@mui/material/Box";
+import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
@@ -11,7 +11,7 @@ import Breadcrumb from "../components/Breadcrumb";
 
 const ScavengerHuntPage = () => {
   return (
-    <Container sx={{ m: 2 }}>
+    <Container>
       <Breadcrumb name={"Scavenger Hunt"} />
       <Card>
         <CardMedia
