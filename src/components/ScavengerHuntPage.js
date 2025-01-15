@@ -7,26 +7,13 @@ import CardContent from "@mui/material/CardContent";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-import { Link as RouterLink } from "react-router-dom";
+import Breadcrumb from "./Breadcrumb";
 
 const ScavengerHuntPage = () => {
   return (
-    <Container sx={{ mt: 2 }}>
-      <Breadcrumbs
-        aria-label="breadcrumb"
-        sx={{
-          marginBottom: "12px",
-          marginLeft: "18px",
-        }}
-      >
-        <Link component={RouterLink} to="/" underline="hover" color="inherit">
-          Home
-        </Link>
-        <Typography color="text.primary">Scavenger Hunt</Typography>
-      </Breadcrumbs>
-      <Card sx={{ m: 2 }}>
+    <Container sx={{ m: 2 }}>
+      <Breadcrumb name={"Scavenger Hunt"} />
+      <Card>
         <CardMedia
           component="img"
           sx={{

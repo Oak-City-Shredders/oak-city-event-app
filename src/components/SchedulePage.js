@@ -10,8 +10,6 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Box from "@mui/material/Box";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import SportsBarIcon from "@mui/icons-material/SportsBar";
@@ -19,7 +17,7 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import SportsKabaddiIcon from "@mui/icons-material/SportsKabaddi";
 import SkateboardingIcon from "@mui/icons-material/Skateboarding";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { Link as RouterLink } from "react-router-dom";
+import Breadcrumb from "./Breadcrumb";
 
 // Icon Configuration
 const iconSize = 40;
@@ -119,16 +117,8 @@ const SchedulePage = () => {
 
   return (
     <Box sx={{ paddingTop: "5px", margin: "16px" }}>
-      <Breadcrumbs aria-label="breadcrumb" sx={{ marginBottom: "12px" }}>
-        <Link component={RouterLink} to="/" underline="hover" color="inherit">
-          Home
-        </Link>
-        <Typography color="text.primary">Schedule</Typography>
-      </Breadcrumbs>
-      {!hasEvents && 
-        <Typography>
-          No events scheduled.
-        </Typography>}
+      <Breadcrumb name={"Schedule"} />
+      {!hasEvents && <Typography>No events scheduled.</Typography>}
       {Object.keys(items).map((day) => (
         <Accordion key={day} defaultExpanded={isToday(day)}>
           <AccordionSummary
