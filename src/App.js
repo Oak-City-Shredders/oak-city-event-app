@@ -17,6 +17,7 @@ import ScavengerHuntPage from "./pages/ScavengerHuntPage";
 import RafflesGiveawaysPage from "./pages/RafflesGiveawaysPage";
 import DripSchedulePage from "./pages/DripSchedulePage";
 import TrickCompPage from "./pages/TrickCompPage";
+import QuestsPage from "./pages/QuestsPage";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
@@ -44,6 +45,7 @@ const App = () => {
         <Route path="/raffles-giveaways" element={<RafflesGiveawaysPage />} />
         <Route path="/drip-schedule" element={<DripSchedulePage />} />
         <Route path="/trick-comp" element={<TrickCompPage />} />
+        <Route path="/quests" element={<QuestsPage />} />
       </Routes>
     </Router>
   );
