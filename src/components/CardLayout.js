@@ -25,7 +25,7 @@ const CardLayout = ({ items, handleCardClick }) => {
                   alt={item.title}
                 />
                 <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
+                  <Typography variant="h5" component="div">
                     {item.title}
                   </Typography>
                 </CardContent>
