@@ -24,6 +24,12 @@
     "image": "/images/trick-comp-small.webp"
   },
   {
+    "title": "Quests",
+    "description": "",
+    "route": "/quests",
+    "image": "/images/quests-small.webp"
+  },
+  {
     "title": "Raffles & Giveaways",
     "description": "Win amazing prizes",
     "route": "/raffles-giveaways",
