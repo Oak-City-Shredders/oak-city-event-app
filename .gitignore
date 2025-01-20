@@ -3,7 +3,9 @@
 # dependencies
 /node_modules
 /build
-/ios
+ios/App/App.xcworkspace
+ios/Pods
+ios/Podfile.lock
 /android
 /.pnp
 .pnp.js
