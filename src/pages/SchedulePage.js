@@ -31,7 +31,11 @@ const SchedulePage = () => {
         <LoadingSpinner />
       ) : error ? (
         <Typography>
-          There are no events scheduled, please check back later
+          Error loading calendar data, please check back later.
+        </Typography>
+      ) : !calendarData || calendarData.length === 0 ? (
+        <Typography>
+          There are currently no events available.
         </Typography>
       ) : (
         Object.keys(groupedEvents).map((day) => (
