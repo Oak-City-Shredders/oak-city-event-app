@@ -28,9 +28,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      # Sync Capacitor
-      - name: Sync Capacitor
-        run: npx cap sync ios
+      - name: Capacitor update
+        run: npx cap update
+
+      - name: Capacitor copy
+        run: npx cap copy
 
       # Install CocoaPods dependencies
       - name: Install CocoaPods
