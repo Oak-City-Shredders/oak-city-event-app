@@ -60,5 +60,5 @@ jobs:
       - name: Upload IPA
         uses: actions/upload-artifact@v3
         with:
-          name ios-app
-          path ios/App/build/*.ipa
+          name: ios-app
+          path: ios/App/build/*.ipa
