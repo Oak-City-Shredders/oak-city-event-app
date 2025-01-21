@@ -29,7 +29,7 @@ function useGoogleSheets(sheetId, range) {
     };
 
     if (sheetId) fetchData();
-  }, [sheetId]);
+  }, [sheetId, range]);
 
   return { data, loading, error };
 }
