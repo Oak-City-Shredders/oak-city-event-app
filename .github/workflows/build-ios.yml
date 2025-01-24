@@ -47,7 +47,7 @@ jobs:
                      -configuration Release \
                      archive \
                      -archivePath ios/App/build/App.xcarchive
-                     DEVELOPMENT_TEAM=$APPLE_TEAM_ID
+                     DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }}
 
       # Export the IPA file
       - name: Export IPA
@@ -56,7 +56,6 @@ jobs:
                      -archivePath ios/App/build/App.xcarchive \
                      -exportOptionsPlist ios/App/exportOptions.plist \
                      -exportPath ios/App/build
-                     DEVELOPMENT_TEAM=$APPLE_TEAM_ID
 
       # Upload the IPA as an artifact
       - name: Upload IPA
