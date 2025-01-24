@@ -22,6 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Set up Apple Developer certificate
+      - name: Set up Apple Developer certificate
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.P12_FILE_BASE64 }}
+          p12-password: ${{ secrets.P12_PASSWORD }}
+          provisioning-profile-base64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+
       # Build the React app
       - name: Build React app
         run: npm run build
@@ -37,7 +45,7 @@ jobs:
         run: |
           cd ios/App
           pod install
-
+          
       # Build the iOS app
       - name: Build iOS app
         run: |
@@ -47,7 +55,8 @@ jobs:
                      -configuration Release \
                      archive \
                      -archivePath ios/App/build/App.xcarchive
-                     DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }}
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
 
       # Export the IPA file
       - name: Export IPA
