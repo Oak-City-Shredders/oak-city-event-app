@@ -28,7 +28,13 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.P12_FILE_BASE64 }}
           p12-password: ${{ secrets.P12_PASSWORD }}
+
+      # Set up provisioning profile
+      - name: Set up provisioning profile
+        uses: apple-actions/import-provisioning-profile@v1
+        with:
           provisioning-profile-base64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+
 
       # Build the React app
       - name: Build React app
