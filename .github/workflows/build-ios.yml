@@ -47,6 +47,7 @@ jobs:
                      -configuration Release \
                      archive \
                      -archivePath ios/App/build/App.xcarchive
+                     DEVELOPMENT_TEAM=$APPLE_TEAM_ID
 
       # Export the IPA file
       - name: Export IPA
