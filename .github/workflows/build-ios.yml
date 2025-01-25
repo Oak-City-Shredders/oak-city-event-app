@@ -53,7 +53,7 @@ jobs:
                      -sdk iphoneos \
                      -configuration Release \
                      archive \
-                     -archivePath ios/App/build/App.xcarchive
+                     -archivePath ios/App/build/App.xcarchive \
                      DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }}
         env:
           DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
@@ -64,7 +64,7 @@ jobs:
           xcodebuild -exportArchive \
                      -archivePath ios/App/build/App.xcarchive \
                      -exportOptionsPlist ios/App/exportOptions.plist \
-                     -exportPath ios/App/build
+                     -exportPath ios/App/build \
                      DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }}
         env:
           DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
