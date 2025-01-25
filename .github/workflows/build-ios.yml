@@ -29,6 +29,13 @@ jobs:
           p12-file-base64: ${{ secrets.P12_FILE_BASE64 }}
           p12-password: ${{ secrets.P12_PASSWORD }}
 
+      - uses: Apple-Actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: com.oakcityshredfest.app
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
       # Build the React app
       - name: Build React app
         run: npm run build
