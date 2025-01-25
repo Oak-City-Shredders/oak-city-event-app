@@ -1,0 +1,26 @@
+[
+  {
+    "title": "716ers Food",
+    "description": "Featuring Buffalo NY-style fair like real Buffalo Wings, and fried crab sticks, this food truck is a must-have.  Coming out for their FOURTH Oak City Shred Fest, we have even converted them into shredding Squirrels.",
+    "route": "https://www.716ersfood.com/",
+    "image": "/images/ft-716ers.webp"
+  },
+  {
+    "title": "Bolt Energy Drinks and Coffee",
+    "description": "Featuring coffee drinks (lattes, espresso) and their featured one-of-a-kind signature BOLT energy drinks. Make sure and grab some delicious energy at this Oak City Stapple.  ",
+    "route": "https://boltdrinksandcoffee.com/",
+    "image": "/images/ft-Bolt.webp"
+  },
+  {
+    "title": "Roma Rican",
+    "description": "Welcome Roma Rican for the Second Year at Oak City Shred Fest. “A Taste of New York Down South”.  The meatball Sub is amazing! ",
+    "route": "https://www.romaricannc.com/",
+    "image": "/images/ft-Roma.webp"
+  },
+  {
+    "title": "Raleigh Brewing Company",
+    "description": "The Founding location of Oak City Onewheel and now a sponsor of Oak City Shred Fest.  Get a great local beer at one of the beer tents. ",
+    "route": "https://www.raleighbrewing.com/",
+    "image": "/images/ft-RBC.webp"
+  }
+]
