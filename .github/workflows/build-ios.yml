@@ -99,4 +99,12 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ios-app
+
+      - name: 'Upload app to TestFlight'
+        uses: apple-actions/upload-testflight-build@v1
+        with: 
+          app-path: 'ios/App/build/App.ipa' 
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
           path: ios/App/build/*.ipa
