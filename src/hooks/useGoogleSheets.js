@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchWithErrorHandling } from '../utils/fetchUtils';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_SHEETS_API_KEY;
 
@@ -14,10 +15,7 @@ function useGoogleSheets(sheetId, range) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
+        const response = await fetchWithErrorHandling(url);
         const result = await response.json();
 
         setData(result.values);
@@ -28,7 +26,11 @@ function useGoogleSheets(sheetId, range) {
       }
     };
 
-    if (sheetId) fetchData();
+    if (sheetId) {
+      fetchData();
+    } else {
+      setError(new Error("Missing data configuration."));
+    }
   }, [sheetId, range]);
 
   return { data, loading, error };
