@@ -4,6 +4,7 @@ import Container from "@mui/material/Container";
 import useGoogleSheets from "../hooks/useGoogleSheets";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Typography from "@mui/material/Typography";
+import { getErrorMessage } from "../utils/errorUtils";
 
 const RaceInformationPage = () => {
 
@@ -39,6 +40,7 @@ const RaceInformationPage = () => {
       ) : error ? (
         <Typography>
           Error loading racing data, please check back later.
+          {getErrorMessage(error)}
         </Typography>
       ) : !groupedCategories || groupedCategories.length === 0 ? (
         <Typography>
