@@ -55,8 +55,10 @@ jobs:
       - name: Add Calendar API Key
         env:
           API_KEY: ${{ secrets.CALENDAR_API_KEY }}
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
         run: |
           echo "REACT_APP_API_KEY=$API_KEY" >> .env
+          echo "REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
       
       # Build the React app
       - name: Build React app
