@@ -1,4 +1,4 @@
-name: Build iOS App
+name: Build and Deploy Apps
 
 on:
   workflow_dispatch:
@@ -63,7 +63,7 @@ jobs:
           echo "REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
           echo "REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
-      
+
       # Build the React app
       - name: Build React app
         run: npm run build
@@ -79,7 +79,7 @@ jobs:
         run: |
           cd ios/App
           pod install
-          
+
       # Build the iOS app
       - name: Build iOS app
         run: |
@@ -121,3 +121,46 @@ jobs:
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build the React app
+      - name: Build React app
+        run: npm run build
+
+      - name: Capacitor update
+        run: npx cap update android
+
+      - name: Capacitor copy
+        run: npx cap copy android
+
+      # Build the Android app (AAB)
+      - name: Build Android App
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      # Upload AAB to Google Play
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: "com.oakcityshredfest.app"
+          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
+          track: production
