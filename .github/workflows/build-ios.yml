@@ -68,11 +68,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Capacitor update
-        run: npx cap update
-
       - name: Capacitor copy
-        run: npx cap copy
+        run: npx cap copy ios
+
+      - name: Capacitor update
+        run: npx cap update ios
 
       # Install CocoaPods dependencies
       - name: Install CocoaPods
@@ -144,11 +144,11 @@ jobs:
       - name: Build React app
         run: npm run build
 
-      - name: Capacitor update
-        run: npx cap update android
-
       - name: Capacitor copy
         run: npx cap copy android
+
+      - name: Capacitor update
+        run: npx cap update android
 
       # Build the Android app (AAB)
       - name: Build Android App
