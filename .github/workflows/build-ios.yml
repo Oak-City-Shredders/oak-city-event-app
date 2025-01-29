@@ -163,4 +163,4 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: "com.oakcityshredfest.app"
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: production
+          track: qa
