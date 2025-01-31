@@ -3,10 +3,7 @@
 # dependencies
 /node_modules
 /build
-ios/App/App.xcworkspace
-ios/Pods
-ios/Podfile.lock
-/android
+
 /.pnp
 .pnp.js
 
@@ -29,3 +26,4 @@ yarn-error.log*
 
 # local env files
 .env
+android/android_upload_keystore.jks
