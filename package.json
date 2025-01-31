@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@capacitor-firebase/analytics": "^6.3.1",
-    "@capacitor-firebase/messaging": "^6.3.1",
     "@capacitor/android": "^6.2.0",
     "@capacitor/core": "^6.2.0",
     "@capacitor/ios": "^6.2.0",
