@@ -184,3 +184,4 @@ jobs:
           packageName: "com.oakcityshredfest.app"
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           track: internal
+          status: draft
