@@ -109,7 +109,7 @@ jobs:
 
       # Upload the IPA as an artifact
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-app
           path: ios/App/build/*.ipa
@@ -149,6 +149,12 @@ jobs:
 
       - name: Capacitor update
         run: npx cap update android
+
+      - name: Set Android versionCode
+        run: |
+          sed -i "s/versionCode [0-9]\+/versionCode $GITHUB_RUN_NUMBER/" android/app/build.gradle
+          sed -i "s/versionName \".*\"/versionName \"1.0.$GITHUB_RUN_NUMBER\"/" android/app/build.gradle
+          cat android/app/build.gradle
 
       # Build the Android app (AAB)
       - name: Build Android App
