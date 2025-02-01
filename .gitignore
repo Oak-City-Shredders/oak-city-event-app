@@ -27,3 +27,8 @@ yarn-error.log*
 # local env files
 .env
 android/android_upload_keystore.jks
+aps.cer
+CertificateSigningRequest.certSigningRequest
+GoogleService-Info.plist
+PushCertificate.p12
+ios/App/App/GoogleService-Info.plist

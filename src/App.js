@@ -18,24 +18,31 @@ import RafflesGiveawaysPage from "./pages/RafflesGiveawaysPage";
 import DripSchedulePage from "./pages/DripSchedulePage";
 import TrickCompPage from "./pages/TrickCompPage";
 import QuestsPage from "./pages/QuestsPage";
+import NotificationsPage from "./pages/Notifications";
+import useNotifications from "./hooks/useNotifications";
 
 const RouteChangeWatcher = () => {
   const location = useLocation();
 
   useEffect(() => {
+    //Scrolling down by 1 pixel can trigger the browser to adjust the layout and remove the address bar.
     window.scrollTo(0, 1);
   }, [location]);
 
   return null;
 };
 
+
 const App = () => {
+
+  const { notifications } = useNotifications(); 
+
   return (
     <Router>
       <RouteChangeWatcher />
       <Header />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage notifications={notifications} />} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/scavenger-hunt" element={<ScavengerHuntPage />} />
@@ -46,6 +53,7 @@ const App = () => {
         <Route path="/drip-schedule" element={<DripSchedulePage />} />
         <Route path="/trick-comp" element={<TrickCompPage />} />
         <Route path="/quests" element={<QuestsPage />} />
+        <Route path="/notifications" element={<NotificationsPage notifications={notifications}/>} />
       </Routes>
     </Router>
   );
