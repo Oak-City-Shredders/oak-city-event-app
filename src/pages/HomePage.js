@@ -1,3 +1,4 @@
+// src/HomePage.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import CardLayout from "../components/CardLayout";
@@ -7,9 +8,8 @@ import { Box } from "@mui/material";
 import { Capacitor } from "@capacitor/core";
 import useDeliveredNotifications from "../hooks/useDeliveredNotifications";
 
-const HomePage = ({ notifications }) => {
+const HomePage = ({ notifications, notificationPermission }) => {
   const navigate = useNavigate();
-  const { deliveredNotifications } = useDeliveredNotifications(); 
 
   const handleCardClick = (route) => {
     navigate(route);
@@ -33,7 +33,7 @@ const HomePage = ({ notifications }) => {
       }}
     >
         {  (Capacitor.isPluginAvailable("PushNotifications")) ? 
-            <Typography variant="h6">Show Messages { notifications.length + deliveredNotifications.length }</Typography>
+            <Typography variant="h6">Show Messages {"(" + notificationPermission + ")"} { notifications.length }</Typography>
             : ""
         }
   </Box>
