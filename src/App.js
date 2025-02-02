@@ -35,14 +35,15 @@ const RouteChangeWatcher = () => {
 
 const App = () => {
 
-  const { notifications } = useNotifications(); 
-
+  const { notifications, notificationPermission } = useNotifications(); 
+  console.log("# of Notifications:", notifications.length);
+  
   return (
     <Router>
       <RouteChangeWatcher />
       <Header />
       <Routes>
-        <Route path="/" element={<HomePage notifications={notifications} />} />
+        <Route path="/" element={<HomePage notifications={notifications} notificationPermission={notificationPermission}/>} />
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/scavenger-hunt" element={<ScavengerHuntPage />} />

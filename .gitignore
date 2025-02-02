@@ -32,3 +32,4 @@ CertificateSigningRequest.certSigningRequest
 GoogleService-Info.plist
 PushCertificate.p12
 ios/App/App/GoogleService-Info.plist
+android/app/google-services.json

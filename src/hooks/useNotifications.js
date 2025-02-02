@@ -1,113 +1,83 @@
 import { useEffect, useState } from "react";
-import { Capacitor } from "@capacitor/core";
 import { PushNotifications } from "@capacitor/push-notifications";
+import { App } from "@capacitor/app";
 
-function useNotifications() {
-  const nullEntry = [];
-  const [notifications, setNotifications] = useState(nullEntry);
+const useNotifications = () => {
+  const [pushToken, setPushToken] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationPermission, setNotificationPermission] = useState("unknown");
+
 
   useEffect(() => {
 
-    // Register once when the app initializes
-    if (Capacitor.isPluginAvailable("PushNotifications")) {
-      PushNotifications.checkPermissions().then((res) => {
-        if (res.receive !== "granted") {
-          PushNotifications.requestPermissions().then((res) => {
-            if (res.receive === "denied") {
-              console.log("Push Notification permission denied");
-            } else {
-              console.log("Push Notification permission granted");
-              register();
-            }
-          });
-        } else {
-          register();
+    // Listener for foreground notifications
+    PushNotifications.addListener("pushNotificationReceived", (notification) => {
+      console.log("Push received:", notification);
+      setNotifications((prev) => [...prev, notification]);
+    });
+
+    // Listener for when a notification is tapped
+    PushNotifications.addListener("pushNotificationActionPerformed", async (notification) => {
+      console.log("Notification tapped:", notification);
+      const delivered = await PushNotifications.getDeliveredNotifications();
+      console.log("Delivered notifications after tap:", delivered.notifications);
+      setNotifications(delivered.notifications);
+    });
+
+    // Fetch delivered notifications when app is resumed
+    App.addListener("resume", async () => {
+      console.log("App resumed - fetching delivered notifications.");
+      const delivered = await PushNotifications.getDeliveredNotifications();
+      console.log("Delivered notifications:", delivered.notifications);
+      setNotifications(delivered.notifications);
+      //await PushNotifications.clearAllDeliveredNotifications();
+    });
+
+    const registerNotifications = async () => {
+      try {
+        // Request permission
+        const permStatus = await PushNotifications.requestPermissions();
+        setNotificationPermission(permStatus.receive);
+        console.log("Push Notification permission status:", permStatus);
+
+        if (permStatus.receive !== "granted") {
+          console.log("Push Notification permission not granted!");
+          return;
         }
-      });
-    }
 
-    const register = () => {
-      console.log("Initializing Notifications");
-
-      // Check if the token exists in localStorage
-      const savedToken = localStorage.getItem('push_token');
-      if (!savedToken) {
-        // Register with Apple / Google to receive push via APNS/FCM
-        PushNotifications.register();
-
-        // On success, we should be able to receive notifications
-        PushNotifications.addListener("registration", (token) => {
-          console.log("Push registration success (token):" + token.value);
-           // Store the token in localStorage
-          localStorage.setItem('push_token', token.value);
+        // Listener for successful registration
+        await PushNotifications.addListener("registration", (token) => {
+          console.log("Push registration success, token:", token.value);
+          setPushToken(token.value);
         });
 
-        // Some issue with our setup and push will not work
-        PushNotifications.addListener("registrationError", (error) => {
-          alert("Error on registration: " + JSON.stringify(error));
-          console.log("Error on registration: " + JSON.stringify(error));
+        // Listener for registration errors
+        await PushNotifications.addListener("registrationError", (error) => {
+          console.error("Push registration error:", error);
         });
-      } else {
-        console.log('Using saved push token:', savedToken);
+
+        // Register for push notifications
+        await PushNotifications.register();
+
+        const delivered = await PushNotifications.getDeliveredNotifications();
+        console.log("Delivered notifications:", delivered.notifications);
+        setNotifications(delivered.notifications);
+
+        
+
+      } catch (error) {
+        console.error("Push Notification setup failed:", error);
       }
     };
 
-    // Listener for notifications when app is in the foreground
-    const handlePushNotificationReceived = (notification) => {
-      console.log("Push received: " + JSON.stringify(notification));
-      setNotifications((notifications) => [
-        ...notifications,
-        {
-          id: notification.id,
-          title: notification.title,
-          body: notification.body,
-          type: "foreground",
-        },
-      ]);
-    };
+    registerNotifications();
 
-    // Listener for actions performed on notifications
-    const handlePushNotificationActionPerformed = (notification) => {
-      console.log("Push notification action performed: " + JSON.stringify(notification));
-      setNotifications((notifications) => [
-        ...notifications,
-        {
-          id: notification.notification.data.id,
-          title: notification.notification.data.title,
-          body: notification.notification.data.body,
-          type: "action",
-        },
-      ]);
-    };
-
-    // Add listeners on mount
-    if (Capacitor.isPluginAvailable("PushNotifications")) {
-      PushNotifications.addListener(
-        "pushNotificationReceived",
-        handlePushNotificationReceived
-      );
-      PushNotifications.addListener(
-        "pushNotificationActionPerformed",
-        handlePushNotificationActionPerformed
-      );
-    }
-
-    // Clean up listeners on unmount
     return () => {
-      if (Capacitor.isPluginAvailable("PushNotifications")) {
-        PushNotifications.removeListener(
-          "pushNotificationReceived",
-          handlePushNotificationReceived
-        );
-        PushNotifications.removeListener(
-          "pushNotificationActionPerformed",
-          handlePushNotificationActionPerformed
-        );
-      }
+      //PushNotifications.removeAllListeners();
     };
   }, []);
 
-  return { notifications };
-}
+  return { pushToken, notifications, notificationPermission };
+};
 
 export default useNotifications;
