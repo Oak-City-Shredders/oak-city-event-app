@@ -130,12 +130,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Use preinstalled Java 21
-        run: |
-          echo "Using Java 21 from runner image"
-          export JAVA_HOME=${JAVA_HOME_21_X64}
-          export PATH=$JAVA_HOME/bin:$PATH
-          java -version
+      # Set up Google Services JSON
+      - name: Set up google-services.json from secret
+        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
       # Set up Node.js
       - name: Set up Node.js
