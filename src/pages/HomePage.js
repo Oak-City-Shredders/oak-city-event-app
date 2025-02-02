@@ -6,7 +6,6 @@ import layout from "../data/homePageLayout.json";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import { Capacitor } from "@capacitor/core";
-import useDeliveredNotifications from "../hooks/useDeliveredNotifications";
 
 const HomePage = ({ notifications, notificationPermission }) => {
   const navigate = useNavigate();
