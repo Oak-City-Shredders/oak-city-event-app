@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { fetchWithErrorHandling } from '../utils/fetchUtils';
 
-const API_KEY = process.env.REACT_APP_API_KEY;
+const API_KEY = process.env.REACT_APP_CALENDAR_API_KEY;
 
 function useGoogleCalendar(calendarId, maxResults = 500) {
   const [data, setData] = useState(null);
@@ -16,10 +17,7 @@ function useGoogleCalendar(calendarId, maxResults = 500) {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
+        const response = await fetchWithErrorHandling(url);
         const result = await response.json();
         setData(result);
       } catch (error) {

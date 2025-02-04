@@ -15,6 +15,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import useGoogleCalendar from "../hooks/useGoogleCalendar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { groupEventsByDays, isToday, getDayName } from "../utils/calenderUtils";
+import { getErrorMessage } from "../utils/errorUtils";
 
 const CALENDAR_ID = process.env.REACT_APP_CALENDAR_ID;
 
@@ -32,6 +33,7 @@ const SchedulePage = () => {
       ) : error ? (
         <Typography>
           Error loading calendar data, please check back later.
+          {getErrorMessage(error)}
         </Typography>
       ) : !calendarData || calendarData.length === 0 ? (
         <Typography>
