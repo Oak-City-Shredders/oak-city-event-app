@@ -1,0 +1,171 @@
+name: PR Check
+
+on:
+  pull_request:
+   
+name: Build and Test Apps
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install the Apple certificate and provisioning profile
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.P12_FILE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          PP_PATH=$RUNNER_TEMP/build_pp.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+          # import certificate and provisioning profile from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+          echo -n "$BUILD_PROVISION_PROFILE_BASE64" | base64 --decode -o $PP_PATH
+
+          # create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+          # import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+
+          # apply provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Add Calendar API Key
+        env:
+          CALENDAR_API_KEY: ${{ secrets.CALENDAR_API_KEY }}
+          CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
+          GOOGLE_SHEET_RACING_INFO_ID: ${{ secrets.GOOGLE_SHEET_RACING_INFO_ID }}
+          GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+        run: |
+          echo "REACT_APP_CALENDAR_API_KEY=$CALENDAR_API_KEY" >> .env
+          echo "REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
+          echo "REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
+          echo "REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
+
+      # Build the React app
+      - name: Build React app
+        run: npm run build
+
+      - name: Capacitor copy
+        run: npx cap copy ios
+
+      - name: Capacitor update
+        run: npx cap update ios
+
+      # Install CocoaPods dependencies
+      - name: Install CocoaPods
+        run: |
+          cd ios/App
+          pod install
+
+      # Build the iOS app
+      - name: Build iOS app
+        run: |
+          xcodebuild -workspace ios/App/App.xcworkspace \
+                     -scheme App \
+                     -sdk iphoneos \
+                     -configuration Release \
+                     archive \
+                     -archivePath ios/App/build/App.xcarchive \
+                     DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
+                     CURRENT_PROJECT_VERSION=$GITHUB_RUN_NUMBER \
+                     -allowProvisioningUpdates
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+
+      # Export the IPA file
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive \
+                     -archivePath ios/App/build/App.xcarchive \
+                     -exportOptionsPlist ios/App/exportOptions.plist \
+                     -exportPath ios/App/build \
+                     DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
+                     -allowProvisioningUpdates
+        env:
+          DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Google Services JSON
+      - name: Set up google-services.json from secret
+        run: echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Build the React app
+      - name: Build React app
+        run: npm run build
+
+      - name: Capacitor copy
+        run: npx cap copy android
+
+      - name: Capacitor update
+        run: npx cap update android
+
+      - name: Set Android versionCode
+        run: |
+          sed -i "s/versionCode [0-9]\+/versionCode $GITHUB_RUN_NUMBER/" android/app/build.gradle
+          sed -i "s/versionName \".*\"/versionName \"1.0.$GITHUB_RUN_NUMBER\"/" android/app/build.gradle
+          cat android/app/build.gradle
+
+      # Build the Android app (AAB)
+      - name: Build Android App
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign app APK
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: android/app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          alias: ${{ secrets.ANDROID_SIGNING_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        env:
+          # override default build-tools version (33.0.0) -- optional
+          BUILD_TOOLS_VERSION: "34.0.0"
+          
