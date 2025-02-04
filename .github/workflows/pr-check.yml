@@ -2,8 +2,6 @@ name: PR Check
 
 on:
   pull_request:
-   
-name: Build and Test Apps
 
 jobs:
   build-ios:
