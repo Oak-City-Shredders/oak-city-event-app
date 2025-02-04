@@ -2,9 +2,14 @@
 # Introduction
 The app powers [rideoakcity.com](http://rideoakcity.com)
 
+[Sign up to test on iOS (IPhone)](https://testflight.apple.com/join/eyFSk5n2)
+
 # Overview
 This app is deployed when changes are made to `main` by `netlify`
-See deployments here [https://app.netlify.com/sites/ocsf5/deploys] (https://app.netlify.com/sites/ocsf5/deploys)
+See deployments here [https://app.netlify.com/sites/ocsf5/deploys](https://app.netlify.com/sites/ocsf5/deploys)
+
+Android and iOS deployments can be triggered using this [GitHub Action](https://github.com/Oak-City-Shredders/oak-city-event-app/actions/workflows/build-ios.yml)
+
 
 # Getting Started with Create React App
 
