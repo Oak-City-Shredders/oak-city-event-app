@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { PushNotifications } from "@capacitor/push-notifications";
 import { App } from "@capacitor/app";
+import { Capacitor } from "@capacitor/core";
 
 const useNotifications = () => {
   const [pushToken, setPushToken] = useState(null);
@@ -10,6 +11,8 @@ const useNotifications = () => {
 
   useEffect(() => {
 
+    if (!Capacitor.isPluginAvailable("PushNotifications")) return;
+    
     // Listener for foreground notifications
     PushNotifications.addListener("pushNotificationReceived", (notification) => {
       console.log("Push received:", notification);
@@ -73,7 +76,6 @@ const useNotifications = () => {
     registerNotifications();
 
     return () => {
-      //PushNotifications.removeAllListeners();
     };
   }, []);
 
