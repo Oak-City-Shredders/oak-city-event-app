@@ -1,30 +1,34 @@
 {
   "name": "ocsf-app",
-  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@capacitor/app": "^6.0.0",
-    "@capacitor/android": "^6.2.0",
-    "@capacitor/core": "^6.2.0",
-    "@capacitor-firebase/messaging": "^6.2.0",
-    "@capacitor/ios": "^6.2.0",
-    "@capacitor/push-notifications": "^6.0.0",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@fontsource/roboto": "^5.1.0",
-    "@mui/icons-material": "^6.1.10",
-    "@mui/material": "^6.1.10",
-    "cra-template": "1.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.0.2",
-    "react-scripts": "5.0.1"
+    "@capacitor/android": "^7.0.1",
+    "@capacitor/app": "7.0.0",
+    "@capacitor/core": "7.0.1",
+    "@capacitor/haptics": "7.0.0",
+    "@capacitor/ios": "^7.0.1",
+    "@capacitor/keyboard": "7.0.0",
+    "@capacitor/push-notifications": "^7.0.0",
+    "@capacitor/status-bar": "7.0.0",
+    "@ionic/react": "^8.0.0",
+    "@ionic/react-router": "^8.0.0",
+    "@types/react-router": "^5.1.20",
+    "@types/react-router-dom": "^5.3.3",
+    "ionicons": "^7.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router": "^5.3.4",
+    "react-router-dom": "^5.3.4"
   },
+  "version": "0.1.1",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test.e2e": "cypress run",
+    "test.unit": "vitest",
+    "lint": "eslint"
   },
   "eslintConfig": {
     "extends": [
@@ -45,8 +49,23 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@capacitor/cli": "^6.2.0",
-    "typescript": "^4.9.5"
-  }
+    "@capacitor/cli": "7.0.1",
+    "@testing-library/dom": ">=7.21.4",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-legacy": "^5.0.0",
+    "@vitejs/plugin-react": "^4.0.1",
+    "cypress": "^13.5.0",
+    "eslint": "^8.35.0",
+    "eslint-plugin-react": "^7.32.2",
+    "jsdom": "^22.1.0",
+    "terser": "^5.4.0",
+    "typescript": "^5.1.6",
+    "vite": "~5.2.0",
+    "vitest": "^0.34.6"
+  },
+  "description": "Oak City Shred Fest Events"
 }
