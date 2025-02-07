@@ -1,0 +1,7 @@
+{
+  "name": "Oak City Shred Fest",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
