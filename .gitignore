@@ -33,3 +33,5 @@ GoogleService-Info.plist
 PushCertificate.p12
 ios/App/App/GoogleService-Info.plist
 android/app/google-services.json
+ios/Oak_City_Shred_Fest.mobileprovision
+ios/provisioning_profile.b64
