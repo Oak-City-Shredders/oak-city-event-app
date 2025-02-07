@@ -1,7 +1,7 @@
-name: Build and Deploy Apps
+name: Build Apps
 
 on:
-  workflow_dispatch:
+  workflow_call:
 
 jobs:
   build-ios:
@@ -190,13 +190,3 @@ jobs:
         env:
           # override default build-tools version (33.0.0) -- optional
           BUILD_TOOLS_VERSION: "34.0.0"
-    
-      # Upload AAB to Google Play
-      - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_CREDS }}
-          packageName: "com.oakcityshredfest.app"
-          releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: internal
-          status: draft
