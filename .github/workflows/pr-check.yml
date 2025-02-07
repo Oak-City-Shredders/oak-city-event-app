@@ -65,6 +65,11 @@ jobs:
           echo "REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
 
+      # Restore GoogleService-Info.plist from secret
+      - name: Restore GoogleService-Info.plist
+        run: |
+          echo "${{ secrets.FIREBASE_PLIST_BASE64 }}" | base64 --decode > ios/App/App/GoogleService-Info.plist
+
       # Build the React app
       - name: Build React app
         run: npm run build
