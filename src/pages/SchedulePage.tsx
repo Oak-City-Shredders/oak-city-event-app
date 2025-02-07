@@ -2,18 +2,19 @@ import React, { useMemo } from "react";
 import { IonAccordion, IonAccordionGroup, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonLabel, IonList, IonItem, IonText, IonLoading, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import useGoogleCalendar from "../hooks/useGoogleCalendar"; // Assuming custom hook for Google Calendar
 import { groupEventsByDays, isToday, getDayName } from "../utils/calenderUtils";
-import { alarm, analytics } from "ionicons/icons";
-import { an } from "vitest/dist/reporters-5f784f42";
 import { getErrorMessage } from "../utils/errorUtils";
-
-//import { CalendarOutline } from "ionicons/icons";
+import { useIonRouter } from "@ionic/react";
 
 const CALENDAR_ID: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || '';
 const SchedulePage: React.FC = () => {
+  const router = useIonRouter();
   const { data: calendarData, loading, error } = useGoogleCalendar(CALENDAR_ID);
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
   }, [calendarData]);
+  const navigateToMap = (eventLocation: string) => {
+    router.push(`/map/${eventLocation}`);
+  };
 
   return (
     <IonPage>
@@ -58,7 +59,11 @@ const SchedulePage: React.FC = () => {
                           <p>
                             <strong>{item.title}</strong>
                             {item.description && ` - ${item.description}`}
-                            {item.location && ` at the ${item.location}`}
+                            {item.location && (
+                              <span onClick={() => navigateToMap(item.location)}>
+                                {` at the ${item.location}`}
+                              </span>
+                            )}
                           </p>
                         </IonLabel>
                       </IonItem>

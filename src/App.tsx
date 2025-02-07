@@ -10,7 +10,7 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { map, calendar, triangle, alarm, home } from 'ionicons/icons';
+import { map, calendar, alarm, home } from 'ionicons/icons';
 import Home from './pages/Home';
 import Map from './pages/Map';
 import SchedulePage from './pages/SchedulePage';
@@ -73,8 +73,8 @@ const App: React.FC = () => {
             <Route exact path="/home">
               <Home />
             </Route>
-            <Route exact path="/map">
-              <Map />
+            <Route exact path="/map/:locationName?">
+              <Map/>
             </Route>
             <Route path="/schedule">
               <SchedulePage />
