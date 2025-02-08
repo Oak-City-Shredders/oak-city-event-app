@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IonContent, IonPage, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCheckbox, IonLabel, IonItem } from "@ionic/react";
+import { IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import questList from "../data/quests.json";
 
@@ -22,6 +23,11 @@ const QuestsPage: React.FC = () => {
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Side Quests</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent>
         <IonCard>
           <img
