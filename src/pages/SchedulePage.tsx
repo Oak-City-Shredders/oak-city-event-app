@@ -24,6 +24,11 @@ const SchedulePage: React.FC = () => {
             </IonToolbar>
           </IonHeader>
       <IonContent>
+      <IonItem>
+        <IonLabel class="ion-text-wrap">
+          This schedule is subject to change. Please check back for updates.
+        </IonLabel>
+      </IonItem>
         {loading ? (
           <IonLoading isOpen={loading} message={"Loading..."} />
         ) : error ? (

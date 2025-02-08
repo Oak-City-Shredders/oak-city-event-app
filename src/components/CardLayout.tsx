@@ -10,9 +10,9 @@ interface CardLayoutProps {
 const CardLayout: React.FC<CardLayoutProps> = ({ items, handleCardClick }) => {
   return (
     <IonGrid>
-      <IonRow className="safe-area">
+      <IonRow>
         {items.map((item: LayoutItem, index: number) => (
-          <IonCol size="12" sizeMd="6" sizeLg="3" key={index}>
+          <IonCol size="12" sizeMd="6" sizeLg="4" key={index}>
             <IonCard onClick={() => handleCardClick(item.route)}>
               <IonImg src={item.image} alt={item.title} />
               <IonCardContent>

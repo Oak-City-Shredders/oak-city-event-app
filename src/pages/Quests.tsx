@@ -41,13 +41,14 @@ const QuestsPage: React.FC = () => {
             </IonCardHeader>
             <div>
               {quests.map((quest:any) => (
-                <IonItem key={quest.id} style={{ marginBottom: "10px" }}>
+                <IonItem key={quest.id}>
                   <IonCheckbox
+                    labelPlacement="start"
                     checked={quest.completed}
                     color="success"
                     onIonChange={() => toggleQuestCompletion(quest.id)}
-                  />
-                  <IonLabel>{quest.text}</IonLabel>
+                  >
+                  {quest.text}</IonCheckbox>
                 </IonItem>
               ))}
             </div>
