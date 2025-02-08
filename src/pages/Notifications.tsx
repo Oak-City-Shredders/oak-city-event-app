@@ -18,7 +18,7 @@ interface SheetNotification {
 
 const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) => {
 
-  const SHEET_ID = import.meta.env.VITE_REACT_APP_GOOGLE_SHEET_NOTIFICATION_ID as string;
+  const SHEET_ID = "1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI";
   const RANGE = "Notifications!A:E"; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const { data: sheetsData, loading, error } = useGoogleSheets(SHEET_ID, RANGE);
