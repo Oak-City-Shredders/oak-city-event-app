@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { IonHeader, IonToolbar, IonPage, IonContent, IonList, IonItem, IonLabel, IonText, IonSpinner, IonTitle } from "@ionic/react";
+import { IonListHeader, IonHeader, IonToolbar, IonPage, IonContent, IonList, IonItem, IonLabel, IonText, IonSpinner, IonTitle } from "@ionic/react";
 import useGoogleSheets from "../hooks/useGoogleSheets";
 import { getErrorMessage } from "../utils/errorUtils";
 
@@ -62,7 +62,10 @@ const Raceing: React.FC = () => {
         ) : (
           groupedCategories.map((category) => (
             <IonList key={category.id}>
-              <IonTitle>{category.name}</IonTitle>
+              <IonListHeader>
+                <IonLabel>{category.name}</IonLabel>
+              </IonListHeader>
+              <IonTitle></IonTitle>
               {category.racers.map((racer, index) => (
                 <IonItem key={index}>
                   <IonLabel>
