@@ -3,6 +3,9 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem,
 import { PushNotificationSchema } from "@capacitor/push-notifications";
 import useGoogleSheets from "../hooks/useGoogleSheets";
 import { useMemo } from "react";
+import dayjs from 'dayjs'
+import relativeTime from "dayjs/plugin/relativeTime";
+
 
 interface NotificationsPageProps {
   notifications: PushNotificationSchema[];
@@ -13,13 +16,16 @@ interface SheetNotification {
   message: string;
   topic: string;
   published: string;
+  date: string;
   result: string;
 }
 
-const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) => {
+dayjs.extend(relativeTime);
 
+const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) => {
+  dayjs.extend(relativeTime);
   const SHEET_ID = "1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI";
-  const RANGE = "Notifications!A:E"; // Adjust range based on racer data (e.g., A:C for 3 columns)
+  const RANGE = "Notifications!A:F"; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const { data: sheetsData, loading, error } = useGoogleSheets(SHEET_ID, RANGE);
 
@@ -27,14 +33,15 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
     if (!sheetsData) return [];
 
     return sheetsData.slice(1) // Skip header row
-      .map(([title, message, topic, published, result]: string[]) => ({
+      .map(([title, message, topic, published, date, result]: string[]) => ({
         title,
         message,
         topic,
         published,
+        date,
         result,
       }))
-      .filter((notification) => notification.published === "Publish")
+      .filter((notification) => notification.published === "Publish" && notification.result === "Success")
       .reverse();; // Only keep published rows
   }, [sheetsData]);
 
@@ -56,6 +63,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
             {sheetNotifications.map((notification, index) => (
               <IonItem key={index}>
                 <IonLabel>
+                  <p>{dayjs().to(notification.date)}</p>
                   <strong>{notification.title}</strong>
                   <p>{notification.message}</p>
                 </IonLabel>

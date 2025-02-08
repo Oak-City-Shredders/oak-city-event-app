@@ -11,16 +11,26 @@ import { App } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
 import { CapacitorHttp } from '@capacitor/core';
 import type { HttpResponse } from '@capacitor/core';
+
+const API_URL = "https://register-push-notification-604117514059.us-central1.run.app";
+const TOPIC = "all_users";
+const LOCAL_STORAGE_KEY = "push_notification_token";
+
 interface UseNotificationsReturn {
  pushToken: string | null;
  notifications: PushNotificationSchema[];
  notificationPermission: PermissionState;
+ removeNotification: (notification: PushNotificationSchema) => void;
 }
 
 const useNotifications = (): UseNotificationsReturn => {
   const [pushToken, setPushToken] = useState<string | null>(null);
   const [notifications, setNotifications] = useState<PushNotificationSchema[]>([]);
   const [notificationPermission, setNotificationPermission] = useState<PermissionState>("prompt");
+
+  const removeNotification = (notification: PushNotificationSchema) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
+  }
 
   useEffect(() => {
     if (!Capacitor.isPluginAvailable("PushNotifications")) return;
@@ -36,37 +46,43 @@ const useNotifications = (): UseNotificationsReturn => {
     });
 
     PushNotifications.addListener('registration', async (token: Token) => {
-      const API_URL = "https://register-push-notification-604117514059.us-central1.run.app";
-      const TOPIC = "all_users";
+      
 
       console.log('Push registration success, token: ' + token.value);
-      const LOCAL_STORAGE_KEY = "push_notification_token";
+
 
       const storedToken = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (storedToken !== token.value) {
         console.log("New token detected, sending to server...");
-        console.log("fetching:", API_URL);        
+        console.log("fetching:", API_URL); 
+        const topic = TOPIC;       
+        await registerTopic(topic, token);
+        //await registerTopic("dev", token);
+        
+      } else {
+        console.log("Token unchanged, no need to update server.");
+     }
+
+      async function registerTopic(topic: string, token: Token) {
         try {
           const options = {
             url: API_URL,
             headers: { 'Content-Type': 'application/json' },
-            data: { token: token.value, topic: TOPIC },
+            data: { token: token.value, topic },
           };
-        
+
           const response: HttpResponse = await CapacitorHttp.post(options);
           console.log('Response:', response);
-          
+
           if (!response.status || response.status < 200 || response.status >= 300) {
             throw new Error(`Failed to register token. Status: ${response.status}`);
           }
           console.log("Token registered successfully:", token);
           localStorage.setItem(LOCAL_STORAGE_KEY, token.value);
-        
+
         } catch (error) {
           console.error("Error:", error);
         }
-      } else {
-        console.log("Token unchanged, no need to update server.");
       }
     });
 
@@ -78,21 +94,14 @@ const useNotifications = (): UseNotificationsReturn => {
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         console.log('Push received: ' + JSON.stringify(notification));
-        setNotifications((prev) => [...prev, notification]);
+        setNotifications((prev) => [notification, ...prev].slice(0, 3));
       }
     );
     
     // Listener for when a notification is tapped
-    const notificationTapped = async (notification: ActionPerformed) => {
-      console.log("Notification tapped:", notification);
-      // TODO: Navigate to notifications page
-      /*try {
-        const delivered = await PushNotifications.getDeliveredNotifications();
-        console.log("Delivered notifications after tap:", delivered.notifications);
-        setNotifications((prev) => delivered.notifications);
-      } catch (error) {
-        console.error("Error fetching delivered notifications:", error);
-      }*/
+    const notificationTapped = async (actionPerformed: ActionPerformed) => {
+      console.log("Notification tapped:", actionPerformed);
+      // TODO: Navigate to notifications page?
     };
     PushNotifications.addListener("pushNotificationActionPerformed", notificationTapped);
 
@@ -126,11 +135,12 @@ const useNotifications = (): UseNotificationsReturn => {
     return () => {
       PushNotifications.removeAllListeners();
       App.removeAllListeners();
+      console.log("useNotifications cleanup - all listeners removed");
     };
   }, []);
 
   return { 
-    pushToken, notifications, notificationPermission 
+    pushToken, notifications, notificationPermission, removeNotification 
    };
 };
 

@@ -2,6 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
+  IonBadge,
   IonLabel,
   IonRouterOutlet,
   IonTabBar,
@@ -55,15 +56,10 @@ import './theme/variables.css';
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 //import '@ionic/react/css/palettes/dark.system.css';
 
-
-
 setupIonicReact();
 
-
-
-
 const App: React.FC = () => {
-  const { notifications, notificationPermission } = useNotifications();
+  const { notifications, removeNotification } = useNotifications();
   
   return (
     <IonApp>
@@ -71,10 +67,10 @@ const App: React.FC = () => {
         <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/home">
-              <Home />
+              <Home notifications={notifications} removeNotification={removeNotification} />
             </Route>
             <Route exact path="/map/:locationName?">
-              <Map/>
+              <Map />
             </Route>
             <Route path="/schedule">
               <SchedulePage />
@@ -124,7 +120,10 @@ const App: React.FC = () => {
               <IonLabel>Schedule</IonLabel>
             </IonTabButton>
             <IonTabButton tab="notifcations" href="/notifications">
-              <IonIcon aria-hidden="true" icon={alarm} />
+              <IonIcon icon={alarm}  />
+              {notifications.length > 0 && (
+                <IonBadge color="danger">{notifications.length}</IonBadge>
+              )}
               <IonLabel>Notifications </IonLabel>
             </IonTabButton>
           </IonTabBar>
