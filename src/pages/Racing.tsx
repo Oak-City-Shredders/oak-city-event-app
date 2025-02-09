@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { IonListHeader, IonHeader, IonToolbar, IonPage, IonContent, IonList, IonItem, IonLabel, IonText, IonSpinner, IonTitle } from "@ionic/react";
+import { RefresherEventDetail, IonRefresher, IonRefresherContent, IonListHeader, IonHeader, IonToolbar, IonPage, IonContent, IonList, IonItem, IonLabel, IonText, IonSpinner, IonTitle } from "@ionic/react";
 import useGoogleSheets from "../hooks/useGoogleSheets";
 import { getErrorMessage } from "../utils/errorUtils";
 
@@ -18,7 +18,7 @@ const Raceing: React.FC = () => {
   const SHEET_ID = import.meta.env.VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = "Sheet1!A:C"; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-  const { data: sheetsData, loading, error } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data: sheetsData, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
 
   const groupedCategories: Category[] | undefined = useMemo(() => {
     if (!sheetsData) return undefined;
@@ -41,14 +41,23 @@ const Raceing: React.FC = () => {
     }));
   }, [sheetsData]);
 
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
+  };
+
   return (
     <IonPage>
-        <IonHeader>
-                <IonToolbar>
-                  <IonTitle>Registered Racers</IonTitle>
-                </IonToolbar>
-              </IonHeader>
+      <IonHeader>
+        <IonToolbar>
+          <IonTitle>Registered Racers</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+
       <IonContent fullscreen className="ion-padding">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
 
         {loading ? (
           <IonSpinner name="dots" />

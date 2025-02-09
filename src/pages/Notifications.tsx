@@ -1,5 +1,5 @@
 import React from "react";
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel } from "@ionic/react";
+import { RefresherEventDetail, IonRefresher, IonRefresherContent, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel } from "@ionic/react";
 import { PushNotificationSchema } from "@capacitor/push-notifications";
 import useGoogleSheets from "../hooks/useGoogleSheets";
 import { useMemo } from "react";
@@ -27,7 +27,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
   const SHEET_ID = "1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI";
   const RANGE = "Notifications!A:F"; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-  const { data: sheetsData, loading, error } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data: sheetsData, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
 
   const sheetNotifications: SheetNotification[] = useMemo(() => {
     if (!sheetsData) return [];
@@ -45,6 +45,11 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
       .reverse();; // Only keep published rows
   }, [sheetsData]);
 
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+      await refetch(); // Call the refetch function from useGoogleSheets
+      event.detail.complete(); // Notify Ionic that the refresh is complete
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -54,11 +59,15 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
       </IonHeader>
       
       <IonContent className="ion-padding">
+      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         {loading ? (
           <p>Loading notifications...</p>
         ) : error ? (
           <p>Error loading notifications</p>
         ) : sheetNotifications.length > 0 ? (
+          
           <IonList>
             {sheetNotifications.map((notification, index) => (
               <IonItem key={index}>
