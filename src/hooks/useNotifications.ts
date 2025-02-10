@@ -15,6 +15,7 @@ import type { HttpResponse } from '@capacitor/core';
 const API_URL = "https://register-push-notification-604117514059.us-central1.run.app";
 const TOPIC = "all_users";
 const LOCAL_STORAGE_KEY = "push_notification_token";
+const MAX_PREVIEW_MESSAGES = 3;
 
 interface UseNotificationsReturn {
  pushToken: string | null;
@@ -24,13 +25,40 @@ interface UseNotificationsReturn {
 }
 
 const useNotifications = (): UseNotificationsReturn => {
+  
+  // TODO
   const [pushToken, setPushToken] = useState<string | null>(null);
+  
   const [notifications, setNotifications] = useState<PushNotificationSchema[]>([]);
+  
+  // TODO
   const [notificationPermission, setNotificationPermission] = useState<PermissionState>("prompt");
 
   const removeNotification = (notification: PushNotificationSchema) => {
     setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
   }
+
+  const loadNotifications = async () => {
+    try {
+      const result = await PushNotifications.getDeliveredNotifications();
+      
+      // Merge the notifcations delivered in the background with any that
+      // have already been received by listeners
+      setNotifications((prev) => {
+        PushNotifications.removeAllDeliveredNotifications();  // clean up the ones they haven't clicked on
+        // remove any duplicates
+        const merged = [...result.notifications, ...prev].reduce<PushNotificationSchema[]>((acc, item) => {
+          if (!acc.some(existing => existing.id === item.id)) {
+            acc.push(item);
+        }
+        return acc;
+        }, [])
+        return merged.slice(0, MAX_PREVIEW_MESSAGES) //only display 4 max
+      });
+    } catch (error) {
+      console.error("Error fetching delivered notifications", error);
+    }
+  };
 
   useEffect(() => {
     if (!Capacitor.isPluginAvailable("PushNotifications")) return;
@@ -46,11 +74,9 @@ const useNotifications = (): UseNotificationsReturn => {
     });
 
     PushNotifications.addListener('registration', async (token: Token) => {
-      
 
       console.log('Push registration success, token: ' + token.value);
-
-
+      loadNotifications();
       const storedToken = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (storedToken !== token.value) {
         console.log("New token detected, sending to server...");
@@ -94,43 +120,33 @@ const useNotifications = (): UseNotificationsReturn => {
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         console.log('Push received: ' + JSON.stringify(notification));
-        setNotifications((prev) => [notification, ...prev].slice(0, 3));
+        setNotifications((prev) => [notification, ...prev].slice(0, MAX_PREVIEW_MESSAGES));
+        loadNotifications();
       }
     );
     
     // Listener for when a notification is tapped
     const notificationTapped = async (actionPerformed: ActionPerformed) => {
-      console.log("Notification tapped:", actionPerformed);
       // TODO: Navigate to notifications page?
+      console.log("actionPerformed.notification.id: " + actionPerformed.notification.id);
+        setNotifications((prev) =>{
+          var r = prev;
+          if (!prev.find(n => n.id === actionPerformed.notification.id)) {
+            r.unshift(actionPerformed.notification);
+          }
+          return r.slice(0, MAX_PREVIEW_MESSAGES); 
+        });
+      //}
     };
+    
     PushNotifications.addListener("pushNotificationActionPerformed", notificationTapped);
 
     // Fetch delivered notifications when app is resumed
-    /*
     const appResumed = async () => {
       console.log("App resumed - fetching delivered notifications.");
-      try {
-        const delivered = await PushNotifications.getDeliveredNotifications();
-        console.log("Delivered notifications:", delivered.notifications);
-        setNotifications(delivered.notifications);
-      } catch (error) {
-        console.error("Error fetching delivered notifications on resume:", error);
-      }
+      loadNotifications();
     };
     App.addListener("resume", appResumed);
-    */
-    
-    // This isn't used but could be used in the future to access notfications the user has not clicked on
-    // Possibly use this to highlight the most recent notification in the UI
-    /*
-      try {
-        const delivered = await PushNotifications.getDeliveredNotifications();
-        console.log("Delivered notifications:", delivered.notifications);
-        setNotifications(delivered.notifications);
-      } catch (error) {
-        console.error("Error fetching initial delivered notifications:", error);
-      }
-    */
 
     return () => {
       PushNotifications.removeAllListeners();
