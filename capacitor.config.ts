@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.oakcityshredfest.app',
   appName: 'Oak City Shred Fest',
   webDir: 'build',
+  zoomEnabled: true,
   plugins: {
     PushNotifications: {
       presentationOptions: ["badge", "sound", "alert"],
