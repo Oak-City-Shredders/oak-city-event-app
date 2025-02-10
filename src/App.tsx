@@ -26,7 +26,7 @@ import Raceing from './pages/Racing';
 import DripSchedule from './pages/DripSchedule';
 import EmergencyServices from './pages/EmergencyServices';
 import Login from "./pages/Login";
-import { AuthProvider, useAuth } from "./context/AuthContext"; // Import the AuthContext
+import { AuthProvider } from "./context/AuthContext";
 
 
 /* Core CSS required for Ionic components to work properly */
