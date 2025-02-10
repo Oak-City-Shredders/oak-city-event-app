@@ -3,8 +3,8 @@ import './Home.css';
 import CardLayout from "../components/CardLayout";
 import { useIonRouter } from "@ionic/react";
 import { homePageLayout } from "../data/homePageLayout";
-import { IonList, IonItem, IonLabel, IonIcon, IonCard, IonButton, IonBadge } from "@ionic/react";
-import { notificationsOutline, timeOutline, flagOutline, closeOutline } from "ionicons/icons";
+import { IonButtons, IonList, IonItem, IonLabel, IonIcon, IonCard, IonButton, IonBadge } from "@ionic/react";
+import { personCircleOutline, notificationsOutline, timeOutline, flagOutline, closeOutline } from "ionicons/icons";
 import { PushNotificationSchema } from "@capacitor/push-notifications";
 
 
@@ -34,11 +34,20 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     router.push(route, "forward"); // "forward" for a page transition effect
   };
 
+  const handleAuthClick = () => {
+    router.push("/login", "forward");
+  };
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color={"primary"}>
           <IonTitle>Oak City Shred Fest 5</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={handleAuthClick}>
+              <IonIcon icon={personCircleOutline} size="large" />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
