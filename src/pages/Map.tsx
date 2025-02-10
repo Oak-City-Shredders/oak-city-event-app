@@ -1,4 +1,4 @@
-import { 
+import {
   IonImg,
   IonContent,
   IonHeader,
@@ -6,12 +6,14 @@ import {
   IonTitle,
   IonToolbar,
   IonBadge,
-  IonIcon } from '@ionic/react';
+  IonIcon
+} from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import { TransformWrapper, TransformComponent, useTransformEffect, ReactZoomPanPinchState } from 'react-zoom-pan-pinch';
 
- interface LocationItem {
+interface LocationItem {
   id: number;
   name: string;
   x: number;
@@ -22,34 +24,55 @@ interface RouteParams {
   locationName: string;
 }
 
+const ZoomableContent = ({ updateState }: { updateState: (state: ReactZoomPanPinchState) => void }) => {
+  useTransformEffect(({ state, instance }) => {
+    console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
+    updateState(state);
+    return () => {
+      // unmount
+    };
+  });
+
+  return (
+    <div style={{ height: window.innerHeight }}>
+      <IonImg
+        src="/images/lakeside-retreats-map.webp"
+        alt="Lakeside Retreats map"
+      />
+    </div>
+  );
+};
+
 const Map: React.FC = () => {
-
-  const { locationName } = useParams<RouteParams>(); // Get the location name from the URL
-
-  const locations = [
-    { id: 1, name: 'StOak Park', x: 230, y: 680 },
-    { id: 2, name: 'Float Track', x: 600, y: 550 },
+  const { locationName } = useParams<RouteParams>();
+  const locations: LocationItem[] = [
+    { id: 1, name: 'StOak Park', x: 200, y: 550 },
+    { id: 2, name: 'Float Track', x: 500, y: 450 },
     { id: 3, name: 'Water Station', x: 230, y: 620 },
-    { id: 4, name: 'Lakeside Stage', x: 340, y: 350 },
+    { id: 4, name: 'Lakeside Stage', x: 310, y: 250 },
     { id: 5, name: 'Front Gate', x: 150, y: 975 },
-    { id: 5, name: 'Qualifier', x: 450, y: 675 },
+    { id: 6, name: 'Qualifier', x: 405, y: 485 },
   ];
 
-  const selectedLocation = locations.find(loc => loc.name === decodeURIComponent(locationName));
-  const mapImageRef = useRef<HTMLIonImgElement | null>(null);
-  const [mapWidth, setMapWidth] = useState(0);
-  const [mapHeight, setMapHeight] = useState(0);
+  const selectedLocation = locations .find(loc => loc.name === decodeURIComponent(locationName));
 
-  const handleImageLoad = () => {
-    if (mapImageRef.current) {
-      const imgElement = mapImageRef.current.shadowRoot?.querySelector('img');
-      if (imgElement) {
-        setMapWidth(imgElement.offsetWidth);
-        setMapHeight(imgElement.offsetHeight);
-      }
+  const updateTransformState = useCallback((state: ReactZoomPanPinchState) => {
+    if (selectedLocation){
+      const clientWidth = (ionContentRef.current) ? ionContentRef.current.offsetWidth : 1000;
+      const clientHeight = (ionContentRef.current) ? ionContentRef.current.offsetWidth : 1000;
+      const adjustedX = Math.floor((clientWidth * selectedLocation.x) / 1000);
+      const adjustedY = Math.floor((clientHeight * selectedLocation.y) / 1000);
+
+      setLabelTransform((prev) => ({ x: ((adjustedX * state.scale) + (state.positionX)), y: ((adjustedY * state.scale) + (state.positionY)), scale: prev.scale }))
     }
-  };
+  }, []);
 
+  const ionContentRef = useRef<HTMLIonContentElement | null>(null);
+  
+  type LabelTransform = { x: number; y: number, scale: number };
+  const [labelTransform, setLabelTransform] = useState<LabelTransform>({ x: 0, y: 0, scale: 1 });
+
+  
   return (
     <IonPage>
       <IonHeader>
@@ -57,31 +80,22 @@ const Map: React.FC = () => {
           <IonTitle>Map</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent fullscreen>
-        <IonImg
-        onIonImgDidLoad={handleImageLoad}
-        ref={mapImageRef}
-        src="/images/lakeside-retreats-map.webp"
-        alt="Lakeside Retreats map"
-      />
-        {selectedLocation && <div
-          key={selectedLocation.id}
-          style={{
-            position: 'absolute',
-            top: `${(selectedLocation.y / 1000) * mapHeight}px`,  // Scale Y coordinate
-            left: `${(selectedLocation.x / 1000) * mapWidth}px`, // Scale X coordinate
-            backgroundColor: 'blue',
-            borderRadius: '50%',
-            width: '10px',
-            height: '10px',
-          }}
-        >
-          <IonBadge
-            color="primary"
-          >
-            <IonIcon icon={locationOutline}  /> {selectedLocation.name}
-          </IonBadge>
-        </div>}
+      <IonContent fullscreen ref={ionContentRef}>
+        <div style={{ position: 'relative' }}>
+          { selectedLocation &&  (<IonBadge style={{
+            position: 'absolute', top: `${labelTransform.y}px`,
+            left: `${labelTransform.x}px`, zIndex: 10
+          }} color="primary">
+            <IonIcon icon={locationOutline} />{selectedLocation.name}
+          </IonBadge>)}
+
+          <TransformWrapper minPositionY={Math.floor(400 * labelTransform.scale)}>
+            <TransformComponent >
+              <ZoomableContent updateState={updateTransformState} />
+            </TransformComponent>
+          </TransformWrapper>
+        </div>
+
       </IonContent>
     </IonPage>
   );
