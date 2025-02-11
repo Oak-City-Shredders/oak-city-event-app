@@ -1,4 +1,6 @@
 import { Redirect, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { SplashScreen } from '@capacitor/splash-screen';
 import {
   IonApp,
   IonIcon,
@@ -63,6 +65,9 @@ setupIonicReact();
 
 const App: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
   
   return (
     <AuthProvider>
