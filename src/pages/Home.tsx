@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonImg, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
 import CardLayout from "../components/CardLayout";
 import { useIonRouter } from "@ionic/react";
@@ -41,7 +41,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   return (
     <IonPage>
-      <IonHeader>
+      <IonHeader translucent={true} > 
         <IonToolbar color={"primary"}>
           <IonTitle>Oak City Shred Fest 5</IonTitle>
           <IonButtons slot="end">
@@ -52,6 +52,14 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
+      <IonHeader collapse="condense">
+          <IonToolbar>
+            <IonImg
+            src="/images/OCSF5+Web+Logo.webp"
+          alt="Under Construction"
+            />
+          </IonToolbar>
+        </IonHeader>
         {notifications.length > 0 && (<IonCard className="ion-padding">
           <IonList>
             {notifications.map((notification) => (
