@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { loginUser, registerUser, resetPassword, logoutUser } from "../auth";
-import { IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel, IonPage, IonContent, IonText } from "@ionic/react";
+import { IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel, IonPage, IonContent, IonText } from "@ionic/react";
 import { useAuth } from "../context/AuthContext";
 
 const Login: React.FC = () => {
@@ -57,20 +57,19 @@ const Login: React.FC = () => {
 
     return (
         <IonPage>
+            <IonHeader translucent={true} > 
+                <IonToolbar color={"primary"}>
+                    <IonTitle>{user ? "Your Profile" : "Sign In"}</IonTitle>
+                </IonToolbar>
+            </IonHeader>
             <IonContent className="ion-padding">
                 {user ? (
                     <>
-                    <IonToolbar>
-                        <IonTitle>Your Profile</IonTitle>
-                    </IonToolbar>
                     <IonLabel position="floating">{user.email}</IonLabel>
                     <IonButton expand="full" onClick={handleSignOut}>Sign Out</IonButton>
                     </>
                 ) : (
                     <>
-                        <IonToolbar>
-                            <IonTitle>Sign In</IonTitle>
-                        </IonToolbar>
                         <IonItem>
                             <IonInput placeholder="Email" type="email" value={email} onIonInput={(e: any) => setEmail(e.target.value)} />
                         </IonItem>

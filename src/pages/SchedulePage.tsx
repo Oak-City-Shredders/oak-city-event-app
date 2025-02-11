@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
-import { RefresherEventDetail, IonAccordion, IonAccordionGroup, IonRefresher, IonRefresherContent, IonContent, IonLabel, IonList, IonItem, IonText, IonLoading, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { RefresherEventDetail, IonIcon, IonAccordion, IonAccordionGroup, IonRefresher, IonRefresherContent, IonContent, IonLabel, IonList, IonItem, IonText, IonLoading, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { locationOutline } from 'ionicons/icons';
 import useGoogleCalendar from "../hooks/useGoogleCalendar"; // Assuming custom hook for Google Calendar
-import { groupEventsByDays, isToday, getDayName } from "../utils/calenderUtils";
+import { groupEventsByDays, isToday, getFormattedDate } from "../utils/calenderUtils";
 import { getErrorMessage } from "../utils/errorUtils";
 import { useIonRouter } from "@ionic/react";
 
@@ -17,17 +18,17 @@ const SchedulePage: React.FC = () => {
   };
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-      await refetch(); // Call the refetch function from useGoogleSheets
-      event.detail.complete(); // Notify Ionic that the refresh is complete
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
     <IonPage>
       <IonHeader>
-            <IonToolbar>
-              <IonTitle>Schedule</IonTitle>
-            </IonToolbar>
-          </IonHeader>
+        <IonToolbar>
+          <IonTitle>Schedule</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent>
         <IonItem>
           <IonLabel class="ion-text-wrap">
@@ -42,9 +43,7 @@ const SchedulePage: React.FC = () => {
         ) : error ? (
           <IonText>
             Error loading calendar data, please check back later.
-
-            { getErrorMessage(error) }
-            
+            {getErrorMessage(error)}
           </IonText>
         ) : !calendarData || calendarData.length === 0 ? (
           <IonText>
@@ -55,27 +54,23 @@ const SchedulePage: React.FC = () => {
             {Object.keys(groupedEvents).map((day) => (
               <IonAccordion key={day} value={day} defaultChecked={isToday(day)}>
                 <IonItem slot="header" color="light">
-                
-                  <IonLabel>{getDayName(day)}</IonLabel>
-                
-              </IonItem>
-              
+                  <IonLabel>{getFormattedDate(day)}</IonLabel>
+                </IonItem>
+
                 <div slot="content">
                   <IonList>
                     {groupedEvents[day].map((item, index) => (
                       <IonItem key={index} lines={index < groupedEvents[day].length - 1 ? "full" : "none"}>
-                        
                         {item.icon}
-                        
                         <IonLabel>
                           <h2>{item.startTime}</h2>
                           <p>
                             <strong>{item.title}</strong>
-                            {item.description && ` - ${item.description}`}
+                            {item.description && ` - ${item.description} `}
                             {item.location && (
-                              <span onClick={() => navigateToMap(item.location)}>
-                                {` at the ${item.location}`}
-                              </span>
+                              <IonLabel onClick={() => navigateToMap(item.location)}>
+                               {` at the `}  <span style={{textDecoration: "underline"}}><IonIcon icon={locationOutline} />{item.location}</span>
+                              </IonLabel>
                             )}
                           </p>
                         </IonLabel>
