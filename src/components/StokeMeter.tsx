@@ -15,9 +15,10 @@ const checklistItems: StokeItem[] = [
   { id: 1, text: "Installed the App", completed: true },
   { id: 2, text: "Bought ticket", link: "https://oakcityshredfest.com" },
   { id: 3, text: "Signed Waiver", link: "https://waiver.fr/p-cSoyb" },
-  { id: 4, text: "Planned lodging", link: "https://yourlink.com/lodging" },
-  { id: 5, text: "Packed gear"},
+  { id: 4, text: "Planned lodging", link: "https://www.oakcityshredfest.com/close-to-the-farm" },
   { id: 6, text: "Ordered Shred Fest jersey (info coming soon!)"},
+  { id: 5, text: "Charged Device"},
+  { id: 5, text: "Packed gear"},
 ];
 
 export default function StokeMeter() {
