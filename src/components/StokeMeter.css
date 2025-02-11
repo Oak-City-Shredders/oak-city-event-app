@@ -1,0 +1,12 @@
+.custom-progress-container {
+    border: 2px solid #ff9800; /* Border color matching the stoke theme */
+    border-radius: 10px;
+    padding: 4px;
+    background: #ffffff;
+  }
+  
+  .custom-progress-bar {
+    height: 20px; /* Adjust thickness */
+    border-radius: 8px;
+  }
+  

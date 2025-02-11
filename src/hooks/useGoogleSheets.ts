@@ -7,7 +7,7 @@ interface GoogleSheetsHook {
   data: string[][] | null;
   loading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>; // Add refetch function to interface
+  refetch: () => Promise<void>;
 }
 
 function useGoogleSheets(sheetId: string | undefined, range: string): GoogleSheetsHook {

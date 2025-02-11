@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { IonAccordion, IonAccordionGroup, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonIcon, IonLabel, IonList, IonItem, IonText, IonLoading, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
+import { RefresherEventDetail, IonAccordion, IonAccordionGroup, IonRefresher, IonRefresherContent, IonContent, IonLabel, IonList, IonItem, IonText, IonLoading, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/react";
 import useGoogleCalendar from "../hooks/useGoogleCalendar"; // Assuming custom hook for Google Calendar
 import { groupEventsByDays, isToday, getDayName } from "../utils/calenderUtils";
 import { getErrorMessage } from "../utils/errorUtils";
@@ -8,12 +8,17 @@ import { useIonRouter } from "@ionic/react";
 const CALENDAR_ID: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || '';
 const SchedulePage: React.FC = () => {
   const router = useIonRouter();
-  const { data: calendarData, loading, error } = useGoogleCalendar(CALENDAR_ID);
+  const { data: calendarData, loading, error, refetch } = useGoogleCalendar(CALENDAR_ID);
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
   }, [calendarData]);
   const navigateToMap = (eventLocation: string) => {
     router.push(`/map/${eventLocation}`);
+  };
+
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+      await refetch(); // Call the refetch function from useGoogleSheets
+      event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
@@ -24,11 +29,14 @@ const SchedulePage: React.FC = () => {
             </IonToolbar>
           </IonHeader>
       <IonContent>
-      <IonItem>
-        <IonLabel class="ion-text-wrap">
-          This schedule is subject to change. Please check back for updates.
-        </IonLabel>
-      </IonItem>
+        <IonItem>
+          <IonLabel class="ion-text-wrap">
+            This schedule is subject to change. Refresh (or swipe down) for the latest changes.
+          </IonLabel>
+        </IonItem>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         {loading ? (
           <IonLoading isOpen={loading} message={"Loading..."} />
         ) : error ? (
