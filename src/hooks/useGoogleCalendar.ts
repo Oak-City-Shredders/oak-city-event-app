@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchWithErrorHandling } from "../utils/fetchUtils";
 
 const API_KEY = import.meta.env.VITE_REACT_APP_CALENDAR_API_KEY;
@@ -21,6 +21,7 @@ interface UseGoogleCalendarReturn {
   data: GoogleCalendarEvent[];
   loading: boolean;
   error: Error | null;
+  refetch: () => Promise<void>;
 }
 
 function useGoogleCalendar(calendarId: string, maxResults: number = 500): UseGoogleCalendarReturn {
@@ -28,7 +29,7 @@ function useGoogleCalendar(calendarId: string, maxResults: number = 500): UseGoo
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
+   const fetchData = useCallback(async () => {
     if (!calendarId) return;
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
       calendarId
@@ -58,7 +59,12 @@ function useGoogleCalendar(calendarId: string, maxResults: number = 500): UseGoo
     fetchData();
   }, [calendarId, maxResults]);
 
-  return { data, loading, error };
+  // Fetch data on initial render
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, loading, error, refetch: fetchData };
 }
 
 export default useGoogleCalendar;
