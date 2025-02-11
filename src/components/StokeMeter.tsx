@@ -13,17 +13,18 @@ interface StokeItem {
 
 const checklistItems: StokeItem[] = [
   { id: 1, text: "Installed the App", completed: true },
+  { id: 8, text: "Cleared your calendar 4/24-4/27" },
   { id: 2, text: "Bought ticket", link: "https://oakcityshredfest.com" },
   { id: 3, text: "Signed Waiver", link: "https://waiver.fr/p-cSoyb" },
   { id: 4, text: "Planned lodging", link: "https://www.oakcityshredfest.com/close-to-the-farm" },
-  { id: 6, text: "Ordered Shred Fest jersey (info coming soon!)"},
+  { id: 6, text: "Ordered Shred Fest jersey"},
   { id: 5, text: "Charged Device"},
-  { id: 5, text: "Packed gear"},
+  { id: 7, text: "Packed gear"},
 ];
 
 export default function StokeMeter() {
   const [isListVisible, setIsListVisible] = useState(false);
-  const [stokeItems, setStokeItemsToStorage] = useLocalStorage<StokeItem[]>("stoke-meter2", checklistItems);
+  const [stokeItems, setStokeItemsToStorage] = useLocalStorage<StokeItem[]>("stoke-meter-v3a", checklistItems);
   
   const handleCheck = (id: number) => {
     setStokeItemsToStorage(prev => prev.map(i => i.id === id ? { ...i, completed: !i.completed } : i));
@@ -68,15 +69,15 @@ export default function StokeMeter() {
             >
               <IonItem>
                 <IonCheckbox
+                  labelPlacement="end"
                   checked={item.completed}
                   onIonChange={() => handleCheck(item.id)}
                   disabled={item.id === 1}
-                />
-                <IonLabel className="ml-2">
-                  <a href={item.link} target="_blank" rel="noopener noreferrer">
+                >
+                  <IonLabel><a href={item.link} target="_blank" rel="noopener noreferrer">
                     {item.text}
-                  </a>
-                </IonLabel>
+                  </a></IonLabel>
+                </IonCheckbox>
               </IonItem>
             </motion.div>
             
