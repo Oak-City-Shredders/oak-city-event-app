@@ -6,6 +6,7 @@ import { homePageLayout } from "../data/homePageLayout";
 import { IonButtons, IonList, IonItem, IonLabel, IonIcon, IonCard, IonButton, IonBadge } from "@ionic/react";
 import { personCircleOutline, notificationsOutline, timeOutline, flagOutline, closeOutline } from "ionicons/icons";
 import { PushNotificationSchema } from "@capacitor/push-notifications";
+import StokeMeter from "../components/StokeMeter"
 
 
 const iconMap = {
@@ -67,6 +68,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             ))}
           </IonList>
         </IonCard>)}
+        <StokeMeter />
         <CardLayout items={homePageLayout} handleCardClick={handleCardClick} />
       </IonContent>
     </IonPage>
