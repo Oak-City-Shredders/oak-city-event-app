@@ -36,7 +36,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   };
 
   const handleAuthClick = () => {
-    router.push("/login", "forward");
+    router.push("/login", "root");
   };
 
   return (
