@@ -13,7 +13,7 @@ import { updateTopicSubscription } from "../utils/notificationUtils";
 
 export const PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY = "push_notification_token";
 
-\const MAX_PREVIEW_MESSAGES = 3;
+const MAX_PREVIEW_MESSAGES = 3;
 
 interface UseNotificationsReturn {
   pushToken: string | null;
