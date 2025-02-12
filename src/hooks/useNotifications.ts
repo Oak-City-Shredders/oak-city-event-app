@@ -9,30 +9,28 @@ import {
 } from "@capacitor/push-notifications";
 import { App } from "@capacitor/app";
 import { Capacitor } from "@capacitor/core";
-import { CapacitorHttp } from '@capacitor/core';
-import type { HttpResponse } from '@capacitor/core';
+import { updateTopicSubscription } from "../utils/notificationUtils";
 
-const API_URL = "https://register-push-notification-604117514059.us-central1.run.app";
-const TOPIC = "all_users";
-const LOCAL_STORAGE_KEY = "push_notification_token";
-const MAX_PREVIEW_MESSAGES = 3;
+export const PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY = "push_notification_token";
+
+\const MAX_PREVIEW_MESSAGES = 3;
 
 interface UseNotificationsReturn {
- pushToken: string | null;
- notifications: PushNotificationSchema[];
- notificationPermission: PermissionState;
- removeNotification: (notification: PushNotificationSchema) => void;
+  pushToken: string | null;
+  notifications: PushNotificationSchema[];
+  notificationPermission: PermissionState;
+  removeNotification: (notification: PushNotificationSchema) => void;
 }
 
 const useNotifications = (): UseNotificationsReturn => {
-  
-  // TODO
-  const [pushToken, setPushToken] = useState<string | null>(null);
-  
+
+
   const [notifications, setNotifications] = useState<PushNotificationSchema[]>([]);
-  
+
   // TODO
   const [notificationPermission, setNotificationPermission] = useState<PermissionState>("prompt");
+  // TODO
+  const [pushToken, setPushToken] = useState<string | null>(null);
 
   const removeNotification = (notification: PushNotificationSchema) => {
     setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
@@ -41,7 +39,6 @@ const useNotifications = (): UseNotificationsReturn => {
   const loadNotifications = async () => {
     try {
       const result = await PushNotifications.getDeliveredNotifications();
-      
       // Merge the notifcations delivered in the background with any that
       // have already been received by listeners
       setNotifications((prev) => {
@@ -50,8 +47,8 @@ const useNotifications = (): UseNotificationsReturn => {
         const merged = [...result.notifications, ...prev].reduce<PushNotificationSchema[]>((acc, item) => {
           if (!acc.some(existing => existing.id === item.id)) {
             acc.push(item);
-        }
-        return acc;
+          }
+          return acc;
         }, [])
         return merged.slice(0, MAX_PREVIEW_MESSAGES) //only display 4 max
       });
@@ -74,41 +71,20 @@ const useNotifications = (): UseNotificationsReturn => {
     });
 
     PushNotifications.addListener('registration', async (token: Token) => {
-
       console.log('Push registration success, token: ' + token.value);
       loadNotifications();
-      const storedToken = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const storedToken = localStorage.getItem(PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY);
       if (storedToken !== token.value) {
         console.log("New token detected, sending to server...");
-        console.log("fetching:", API_URL); 
-        const topic = TOPIC;       
-        await registerTopic(topic, token);
-        //await registerTopic("dev", token);
-        
+        try {
+          await updateTopicSubscription("all_users", token.value, true);
+          localStorage.setItem(PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY, token.value);
+        }
+        catch (error) {
+          console.error("Registration Error:", error);
+        }
       } else {
         console.log("Token unchanged, no need to update server.");
-     }
-
-      async function registerTopic(topic: string, token: Token) {
-        try {
-          const options = {
-            url: API_URL,
-            headers: { 'Content-Type': 'application/json' },
-            data: { token: token.value, topic },
-          };
-
-          const response: HttpResponse = await CapacitorHttp.post(options);
-          console.log('Response:', response);
-
-          if (!response.status || response.status < 200 || response.status >= 300) {
-            throw new Error(`Failed to register token. Status: ${response.status}`);
-          }
-          console.log("Token registered successfully:", token);
-          localStorage.setItem(LOCAL_STORAGE_KEY, token.value);
-
-        } catch (error) {
-          console.error("Error:", error);
-        }
       }
     });
 
@@ -124,21 +100,21 @@ const useNotifications = (): UseNotificationsReturn => {
         loadNotifications();
       }
     );
-    
+
     // Listener for when a notification is tapped
     const notificationTapped = async (actionPerformed: ActionPerformed) => {
       // TODO: Navigate to notifications page?
       console.log("actionPerformed.notification.id: " + actionPerformed.notification.id);
-        setNotifications((prev) =>{
-          var r = prev;
-          if (!prev.find(n => n.id === actionPerformed.notification.id)) {
-            r.unshift(actionPerformed.notification);
-          }
-          return r.slice(0, MAX_PREVIEW_MESSAGES); 
-        });
+      setNotifications((prev) => {
+        var r = prev;
+        if (!prev.find(n => n.id === actionPerformed.notification.id)) {
+          r.unshift(actionPerformed.notification);
+        }
+        return r.slice(0, MAX_PREVIEW_MESSAGES);
+      });
       //}
     };
-    
+
     PushNotifications.addListener("pushNotificationActionPerformed", notificationTapped);
 
     // Fetch delivered notifications when app is resumed
@@ -155,9 +131,9 @@ const useNotifications = (): UseNotificationsReturn => {
     };
   }, []);
 
-  return { 
-    pushToken, notifications, notificationPermission, removeNotification 
-   };
+  return {
+    pushToken, notifications, notificationPermission, removeNotification
+  };
 };
 
 export default useNotifications;
