@@ -50,7 +50,7 @@ const ScavengerHunt: React.FC = () => {
 
             <IonCardSubtitle>🌳 Where to Look:</IonCardSubtitle>
             <p>
-              The squirrels are scattered everywhere! From the Float Track to
+              The squirrels are scattered everywhere! From the FloatTrack to
               Stoke Park, and even down by the lake, you’ll need your wits,
               eyes, and maybe a little luck to find them all.
             </p>
