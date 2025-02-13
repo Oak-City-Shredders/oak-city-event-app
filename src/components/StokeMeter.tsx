@@ -24,23 +24,23 @@ interface StokeItem {
 
 const checklistItems: StokeItem[] = [
   { id: 1, text: 'Installed the App', completed: true },
-  { id: 8, text: 'Cleared your calendar 4/24-4/27' },
-  { id: 2, text: 'Bought ticket', link: 'https://oakcityshredfest.com' },
-  { id: 3, text: 'Signed Waiver', link: 'https://waiver.fr/p-cSoyb' },
+  { id: 2, text: 'Cleared your calendar 4/24-4/27' },
+  { id: 3, text: 'Bought ticket', link: 'https://oakcityshredfest.com' },
+  { id: 4, text: 'Signed Waiver', link: 'https://waiver.fr/p-cSoyb' },
   {
-    id: 4,
+    id: 5,
     text: 'Planned lodging',
     link: 'https://www.oakcityshredfest.com/close-to-the-farm',
   },
   { id: 6, text: 'Ordered Shred Fest jersey' },
-  { id: 5, text: 'Charged Device' },
-  { id: 7, text: 'Packed gear' },
+  { id: 7, text: 'Charged Device' },
+  { id: 8, text: 'Packed gear' },
 ];
 
 export default function StokeMeter() {
   const [isListVisible, setIsListVisible] = useState(false);
   const [stokeItems, setStokeItemsToStorage] = useLocalStorage<StokeItem[]>(
-    'stoke-meter-v3a',
+    'stoke-meter-v3b',
     checklistItems
   );
 
@@ -90,23 +90,27 @@ export default function StokeMeter() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: item.id * 0.1 }}
                 >
-                  <IonItem>
+                  <IonItem style={{ alignItems: "center" }}>
                     <IonCheckbox
-                      labelPlacement="end"
                       checked={item.completed}
                       onIonChange={() => handleCheck(item.id)}
                       disabled={item.id === 1}
-                    >
-                      <IonLabel>
+                      style={{ flexGrow: 1 }} // Makes checkbox take up available space
+                    />
+                    <div style={{ textAlign: "right", minWidth: "fit-content" }}>
+                      {item.link ? (
                         <a
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
+                          style={{ whiteSpace: "nowrap" }}
                         >
                           {item.text}
                         </a>
-                      </IonLabel>
-                    </IonCheckbox>
+                      ) : (
+                        <span style={{ whiteSpace: "nowrap" }}>{item.text}</span>
+                      )}
+                    </div>
                   </IonItem>
                 </motion.div>
               ))}
