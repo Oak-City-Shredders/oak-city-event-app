@@ -1,13 +1,33 @@
-import { IonContent, IonHeader, IonImg, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import './Home.css';
+import "./Home.css";
 import CardLayout from "../components/CardLayout";
-import { useIonRouter } from "@ionic/react";
 import { homePageLayout } from "../data/homePageLayout";
-import { IonButtons, IonList, IonItem, IonLabel, IonIcon, IonCard, IonButton, IonBadge } from "@ionic/react";
-import { personCircleOutline, notificationsOutline, timeOutline, flagOutline, closeOutline } from "ionicons/icons";
+import {
+  IonContent,
+  IonHeader,
+  IonImg,
+  IonMenu,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
+  IonCard,
+  IonButton,
+  useIonRouter,
+} from "@ionic/react";
+import {
+  personCircleOutline,
+  notificationsOutline,
+  timeOutline,
+  flagOutline,
+  closeOutline,
+} from "ionicons/icons";
 import { PushNotificationSchema } from "@capacitor/push-notifications";
-import StokeMeter from "../components/StokeMeter"
-
+import StokeMeter from "../components/StokeMeter";
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -28,7 +48,6 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
-
   const router = useIonRouter();
 
   const handleCardClick = (route: string) => {
@@ -40,46 +59,87 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   };
 
   return (
-    <IonPage>
-      <IonHeader translucent={true} > 
-        <IonToolbar color={"primary"}>
-          <IonTitle>Oak City Shred Fest 5</IonTitle>
-          <IonButtons slot="end">
-            <IonButton onClick={handleAuthClick}>
-              <IonIcon icon={personCircleOutline} size="large" />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-      <IonHeader collapse="condense">
+    <>
+      <IonMenu contentId="main-content">
+        <IonHeader>
           <IonToolbar>
-            <IonImg
-            src="/images/OCSF5+Web+Logo.webp"
-          alt="Under Construction"
-            />
+            <IonTitle>Navigation</IonTitle>
           </IonToolbar>
         </IonHeader>
-        {notifications.length > 0 && (<IonCard className="ion-padding">
+        <IonContent>
           <IonList>
-            {notifications.map((notification) => (
-              <IonItem key={notification.id}>
-                <IonIcon icon={getIconForNotification(notification)} slot="start" />
-                <IonLabel>
-                  <h2>{notification.title}</h2>
-                  <p>{notification.body}</p>
-                </IonLabel>
-                <IonButton fill="clear" onClick={() => removeNotification(notification)}>
-                  <IonIcon icon={closeOutline} />
-                </IonButton>
+            {homePageLayout.map((item, index) => (
+              <IonItem
+                button
+                key={index}
+                onClick={() => {
+                  handleCardClick(item.route);
+                  document.querySelector("ion-menu")?.close();
+                }}
+              >
+                <IonLabel>{item.title}</IonLabel>
               </IonItem>
             ))}
           </IonList>
-        </IonCard>)}
-        <StokeMeter />
-        <CardLayout items={homePageLayout} handleCardClick={handleCardClick} />
-      </IonContent>
-    </IonPage>
+        </IonContent>
+      </IonMenu>
+      <IonPage id="main-content">
+        <IonHeader translucent={true}>
+          <IonToolbar color={"primary"}>
+            <IonTitle style={{ "text-align": "center" }}>
+              Oak City Shred Fest 5
+            </IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={handleAuthClick}>
+                <IonIcon icon={personCircleOutline} size="large" />
+              </IonButton>
+            </IonButtons>
+            <IonButtons slot="start">
+              <IonMenuButton></IonMenuButton>
+            </IonButtons>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent fullscreen>
+          <IonHeader collapse="condense">
+            <IonToolbar>
+              <IonImg
+                src="/images/OCSF5+Web+Logo.webp"
+                alt="Under Construction"
+              />
+            </IonToolbar>
+          </IonHeader>
+          {notifications.length > 0 && (
+            <IonCard className="ion-padding">
+              <IonList>
+                {notifications.map((notification) => (
+                  <IonItem key={notification.id}>
+                    <IonIcon
+                      icon={getIconForNotification(notification)}
+                      slot="start"
+                    />
+                    <IonLabel>
+                      <h2>{notification.title}</h2>
+                      <p>{notification.body}</p>
+                    </IonLabel>
+                    <IonButton
+                      fill="clear"
+                      onClick={() => removeNotification(notification)}
+                    >
+                      <IonIcon icon={closeOutline} />
+                    </IonButton>
+                  </IonItem>
+                ))}
+              </IonList>
+            </IonCard>
+          )}
+          <StokeMeter />
+          <CardLayout
+            items={homePageLayout}
+            handleCardClick={handleCardClick}
+          />
+        </IonContent>
+      </IonPage>
+    </>
   );
 };
 
