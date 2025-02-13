@@ -10,8 +10,6 @@ import {
   IonItemDivider,
   IonRefresher,
   IonRefresherContent,
-  IonHeader,
-  IonToolbar,
   IonPage,
   IonContent,
   IonList,
@@ -27,6 +25,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
 import { Capacitor } from '@capacitor/core';
+import PageHeader from '../components/PageHeader';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -126,12 +125,7 @@ const Raceing: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Registered Racers</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
+      <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
         {Capacitor.isPluginAvailable('PushNotifications') && (
           <IonCard>

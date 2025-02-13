@@ -12,14 +12,12 @@ import {
   IonItem,
   IonRefresher,
   IonRefresherContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   RefresherEventDetail,
 } from '@ionic/react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
+import PageHeader from '../components/PageHeader';
 
 interface Quest {
   id: number;
@@ -40,20 +38,20 @@ const QuestsPage: React.FC = () => {
   const sheetQuestsUpdatedWithLocal: Quest[] = !data
     ? []
     : data
-        .slice(1) // Skip header row
-        .map(([id, text]: string[]) => ({
-          id: Number(id),
-          text,
-          completed: false,
-        }))
-        .map((spreadSheetQuest: Quest) => {
-          const localQuest = locallyStoredQuests.find(
-            (q) => q.id === spreadSheetQuest.id
-          );
-          return localQuest
-            ? { ...spreadSheetQuest, completed: localQuest.completed }
-            : spreadSheetQuest;
-        });
+      .slice(1) // Skip header row
+      .map(([id, text]: string[]) => ({
+        id: Number(id),
+        text,
+        completed: false,
+      }))
+      .map((spreadSheetQuest: Quest) => {
+        const localQuest = locallyStoredQuests.find(
+          (q) => q.id === spreadSheetQuest.id
+        );
+        return localQuest
+          ? { ...spreadSheetQuest, completed: localQuest.completed }
+          : spreadSheetQuest;
+      });
 
   const toggleQuestCompletion = (id: number) => {
     setQueststoLocalStorage(
@@ -70,11 +68,7 @@ const QuestsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Side Quests</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Side Quests" />
       <IonContent>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />

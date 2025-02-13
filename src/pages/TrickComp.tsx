@@ -1,16 +1,12 @@
 import React from 'react';
 import { IonContent, IonPage } from '@ionic/react';
 import UnderConstruction from '../components/UnderConstruction';
-import { IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 const TrickCompPage: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Trick Comp</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title='Trick Comp' />
       <IonContent>
         <UnderConstruction />
       </IonContent>
