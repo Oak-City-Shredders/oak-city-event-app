@@ -1,10 +1,16 @@
-import { Redirect, Route } from 'react-router-dom';
+// React & React Router
 import { useEffect } from 'react';
+import { Redirect, Route } from 'react-router-dom';
+import { IonReactRouter } from '@ionic/react-router';
+
+// Capacitor
 import { SplashScreen } from '@capacitor/splash-screen';
+
+// Ionic Core
 import {
   IonApp,
-  IonIcon,
   IonBadge,
+  IonIcon,
   IonLabel,
   IonRouterOutlet,
   IonTabBar,
@@ -12,23 +18,29 @@ import {
   IonTabs,
   setupIonicReact,
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
-import { map, calendar, alarm, home } from 'ionicons/icons';
-import Home from './pages/Home';
-import Map from './pages/Map';
-import SchedulePage from './pages/SchedulePage';
-import ScavengerHunt from './pages/ScavengerHunt';
+
+// Ionicons
+import { alarm, calendar, home, map } from 'ionicons/icons';
+
+// Context & Hooks
+import { AuthProvider } from './context/AuthContext';
 import useNotifications from './hooks/useNotifications';
-import Notifications from './pages/Notifications';
-import TrickCompPage from './pages/TrickComp';
-import QuestsPage from './pages/Quests';
-import Raffles from './pages/Raffles';
-import FoodTrucks from './pages/FoodTrucks';
-import Raceing from './pages/Racing';
+
+// Pages
+import About from './pages/About';
 import DripSchedule from './pages/DripSchedule';
 import EmergencyServices from './pages/EmergencyServices';
+import FoodTrucks from './pages/FoodTrucks';
+import Home from './pages/Home';
 import Login from './pages/Login';
-import { AuthProvider } from './context/AuthContext';
+import Map from './pages/Map';
+import Notifications from './pages/Notifications';
+import QuestsPage from './pages/Quests';
+import Raceing from './pages/Racing';
+import Raffles from './pages/Raffles';
+import ScavengerHunt from './pages/ScavengerHunt';
+import SchedulePage from './pages/SchedulePage';
+import TrickCompPage from './pages/TrickComp';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -46,7 +58,7 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/* Theme variables */
+// Theme
 import './theme/variables.css';
 
 /**
@@ -74,15 +86,39 @@ const App: React.FC = () => {
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
-              <Route exact path="/login" component={Login} />
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route path="/drip-schedule">
+                <DripSchedule />
+              </Route>
+              <Route path="/emergency-services">
+                <EmergencyServices />
+              </Route>
+              <Route path="/food-trucks">
+                <FoodTrucks />
+              </Route>
               <Route exact path="/home">
                 <Home
                   notifications={notifications}
                   removeNotification={removeNotification}
                 />
               </Route>
+              <Route exact path="/login" component={Login} />
               <Route exact path="/map/:locationName?">
                 <Map />
+              </Route>
+              <Route path="/notifications">
+                <Notifications notifications={notifications} />
+              </Route>
+              <Route path="/quests">
+                <QuestsPage />
+              </Route>
+              <Route path="/race-information">
+                <Raceing />
+              </Route>
+              <Route path="/raffles-giveaways">
+                <Raffles />
               </Route>
               <Route path="/schedule">
                 <SchedulePage />
@@ -90,29 +126,8 @@ const App: React.FC = () => {
               <Route path="/scavenger-hunt">
                 <ScavengerHunt />
               </Route>
-              <Route path="/race-information">
-                <Raceing />
-              </Route>
-              <Route path="/food-trucks">
-                <FoodTrucks />
-              </Route>
-              <Route path="/raffles-giveaways">
-                <Raffles />
-              </Route>
-              <Route path="/emergency-services">
-                <EmergencyServices />
-              </Route>
-              <Route path="/drip-schedule">
-                <DripSchedule />
-              </Route>
-              <Route path="/quests">
-                <QuestsPage />
-              </Route>
               <Route path="/trick-comp">
                 <TrickCompPage />
-              </Route>
-              <Route path="/notifications">
-                <Notifications notifications={notifications} />
               </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
