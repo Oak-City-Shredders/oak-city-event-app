@@ -59,14 +59,13 @@ export default function StokeMeter() {
 
   return (
     <IonCard>
-      <IonCardHeader>
+      <IonCardHeader onClick={onToggleView}>
         <IonCardTitle>Stoke Meter</IonCardTitle>
         <IonCardSubtitle>Are you ready for the fest?</IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent>
-        <motion.div className="cursor-pointer" whileTap={{ scale: 1.02 }}>
+        <motion.div className="cursor-pointer" whileTap={{ scale: 1.02 }} onClick={onToggleView}>
           <div
-            onClick={onToggleView}
             className="custom-progress-container mb-4"
           >
             <IonProgressBar value={progress} className="custom-progress-bar" />
