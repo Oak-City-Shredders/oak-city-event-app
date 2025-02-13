@@ -86,7 +86,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
-            <IonTitle style={{ 'text-align': 'center' }}>
+            <IonTitle style={{ textAlign: 'center' }}>
               Oak City Shred Fest 5
             </IonTitle>
             <IonButtons slot="end">

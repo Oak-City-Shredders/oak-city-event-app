@@ -56,7 +56,7 @@ const Map: React.FC = () => {
   const { locationName } = useParams<RouteParams>();
   const locations: LocationItem[] = [
     { id: 1, name: 'StOak Park', x: 200, y: 550 },
-    { id: 2, name: 'Float Track', x: 500, y: 450 },
+    { id: 2, name: 'FloatTrack', x: 500, y: 450 },
     { id: 3, name: 'Water Station', x: 230, y: 620 },
     { id: 4, name: 'Lakeside Stage', x: 310, y: 250 },
     { id: 5, name: 'Front Gate', x: 150, y: 975 },
