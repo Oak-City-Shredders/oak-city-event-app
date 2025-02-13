@@ -1,11 +1,32 @@
-import React, { useMemo, useState } from "react";
-import { RefresherEventDetail, IonCardHeader, IonCard, IonCardContent, IonCardSubtitle, IonToggle, IonItemGroup, IonItemDivider, IonRefresher, IonRefresherContent, IonHeader, IonToolbar, IonPage, IonContent, IonList, IonItem, IonLabel, IonText, IonSpinner, IonTitle } from "@ionic/react";
-import useGoogleSheets from "../hooks/useGoogleSheets";
-import { getErrorMessage } from "../utils/errorUtils";
-import useLocalStorage from "../hooks/useLocalStorage"
-import { updateTopicSubscription } from "../utils/notificationUtils";
-import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from "../hooks/useNotifications";
-import { Capacitor } from "@capacitor/core";
+import React, { useMemo, useState } from 'react';
+import {
+  RefresherEventDetail,
+  IonCardHeader,
+  IonCard,
+  IonCardContent,
+  IonCardSubtitle,
+  IonToggle,
+  IonItemGroup,
+  IonItemDivider,
+  IonRefresher,
+  IonRefresherContent,
+  IonHeader,
+  IonToolbar,
+  IonPage,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonText,
+  IonSpinner,
+  IonTitle,
+} from '@ionic/react';
+import useGoogleSheets from '../hooks/useGoogleSheets';
+import { getErrorMessage } from '../utils/errorUtils';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { updateTopicSubscription } from '../utils/notificationUtils';
+import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
+import { Capacitor } from '@capacitor/core';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -22,51 +43,74 @@ interface Category {
   racers: Racer[];
 }
 
-const RACING_TOPIC = "racing";
+const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
+  const [racingNotificationsError, setRacingNotificationsError] = useState('');
+  const [notificationSettings, setNotificationsSettings] =
+    useLocalStorage<NotificationSettings>('notificationSettings', {
+      racingEnabled: false,
+    });
 
-  const [racingNotificationsError, setRacingNotificationsError] = useState("");
-  const [notificationSettings, setNotificationsSettings] = useLocalStorage<NotificationSettings>("notificationSettings", { racingEnabled: false });
+  const SHEET_ID = import.meta.env
+    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
+  const RANGE = 'Sheet1!A:C'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-  const SHEET_ID = import.meta.env.VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = "Sheet1!A:C"; // Adjust range based on racer data (e.g., A:C for 3 columns)
-
-  const { data: sheetsData, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const {
+    data: sheetsData,
+    loading,
+    error,
+    refetch,
+  } = useGoogleSheets(SHEET_ID, RANGE);
 
   const toggleNotification = async () => {
-    const storedToken = localStorage.getItem(PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY);
+    const storedToken = localStorage.getItem(
+      PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY
+    );
     if (!storedToken) {
-      setRacingNotificationsError("Notifcation settings error. Did you enable notifications?");
+      setRacingNotificationsError(
+        'Notifcation settings error. Did you enable notifications?'
+      );
       return;
     }
 
     try {
-      await updateTopicSubscription(RACING_TOPIC, storedToken, !notificationSettings.racingEnabled);
-      setNotificationsSettings(prev => ({
+      await updateTopicSubscription(
+        RACING_TOPIC,
+        storedToken,
+        !notificationSettings.racingEnabled
+      );
+      setNotificationsSettings((prev) => ({
         ...prev,
-        racingEnabled: !prev.racingEnabled
+        racingEnabled: !prev.racingEnabled,
       }));
-      setRacingNotificationsError("");
+      setRacingNotificationsError('');
     } catch (error) {
-      console.log("Error updating registration for racing topic");
-      setRacingNotificationsError("Error updating registration for racing notifications");
+      console.log('Error updating registration for racing topic');
+      setRacingNotificationsError(
+        'Error updating registration for racing notifications'
+      );
     }
-  }
+  };
 
   const groupedCategories: Category[] | undefined = useMemo(() => {
     if (!sheetsData) return undefined;
 
-    const data: { category: string; racer: Racer }[] = sheetsData.slice(1).map(([category, racer, team]: string[]) => ({
-      category,
-      racer: { name: racer, team },
-    }));
+    const data: { category: string; racer: Racer }[] = sheetsData
+      .slice(1)
+      .map(([category, racer, team]: string[]) => ({
+        category,
+        racer: { name: racer, team },
+      }));
 
-    const grouped = data.reduce<Record<string, Racer[]>>((acc, { category, racer }) => {
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(racer);
-      return acc;
-    }, {});
+    const grouped = data.reduce<Record<string, Racer[]>>(
+      (acc, { category, racer }) => {
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(racer);
+        return acc;
+      },
+      {}
+    );
 
     return Object.entries(grouped).map(([name, racers], id) => ({
       id,
@@ -89,24 +133,28 @@ const Raceing: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="ion-padding">
-        {(Capacitor.isPluginAvailable("PushNotifications")) && (
+        {Capacitor.isPluginAvailable('PushNotifications') && (
           <IonCard>
-          <IonCardHeader>
-            <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonToggle
+            <IonCardHeader>
+              <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
+            </IonCardHeader>
+            <IonCardContent>
+              <IonToggle
                 checked={notificationSettings.racingEnabled}
                 onIonChange={() => toggleNotification()}
               >
                 Enable race notifications
-            </IonToggle>
-            {racingNotificationsError && (
-            <IonItem>
-              <IonLabel color={"danger"}>{racingNotificationsError}</IonLabel>
-            </IonItem>)}
-          </IonCardContent>
-        </IonCard>)}
+              </IonToggle>
+              {racingNotificationsError && (
+                <IonItem>
+                  <IonLabel color={'danger'}>
+                    {racingNotificationsError}
+                  </IonLabel>
+                </IonItem>
+              )}
+            </IonCardContent>
+          </IonCard>
+        )}
 
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
@@ -121,25 +169,33 @@ const Raceing: React.FC = () => {
           </IonText>
         ) : !groupedCategories || groupedCategories.length === 0 ? (
           <IonText>No racers are currently available to be shown.</IonText>
-        ) : (<>
-          <IonList>
-            {groupedCategories.map((category) => (
-              <IonItemGroup defaultChecked={true} key={category.id} >
-                <IonItemDivider slot="header" color="secondary">
-                  <IonText class={"ion-text-nowrap"} slot="start">{`${category.name}`}</IonText>
-                  <IonText slot="end">{`(${category.racers.length})`}</IonText>
-                </IonItemDivider>
-                <div slot="content">
-                  <IonList>
-                    {category.racers.map((racer, index) => (
-                      <IonItem key={index}>
-                        <IonLabel>{racer.name} {racer.team ? `[${racer.team}]` : ""}</IonLabel>
-                      </IonItem>
-                    ))}
-                  </IonList>
-                </div>
-              </IonItemGroup>))}
-          </IonList></>
+        ) : (
+          <>
+            <IonList>
+              {groupedCategories.map((category) => (
+                <IonItemGroup defaultChecked={true} key={category.id}>
+                  <IonItemDivider slot="header" color="secondary">
+                    <IonText
+                      class={'ion-text-nowrap'}
+                      slot="start"
+                    >{`${category.name}`}</IonText>
+                    <IonText slot="end">{`(${category.racers.length})`}</IonText>
+                  </IonItemDivider>
+                  <div slot="content">
+                    <IonList>
+                      {category.racers.map((racer, index) => (
+                        <IonItem key={index}>
+                          <IonLabel>
+                            {racer.name} {racer.team ? `[${racer.team}]` : ''}
+                          </IonLabel>
+                        </IonItem>
+                      ))}
+                    </IonList>
+                  </div>
+                </IonItemGroup>
+              ))}
+            </IonList>
+          </>
         )}
       </IonContent>
     </IonPage>

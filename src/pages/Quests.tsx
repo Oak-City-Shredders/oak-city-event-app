@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   IonText,
   IonSpinner,
@@ -15,11 +15,11 @@ import {
   IonHeader,
   IonToolbar,
   IonTitle,
-  RefresherEventDetail
-} from "@ionic/react";
-import useLocalStorage from "../hooks/useLocalStorage";
-import useGoogleSheets from "../hooks/useGoogleSheets";
-import { getErrorMessage } from "../utils/errorUtils";
+  RefresherEventDetail,
+} from '@ionic/react';
+import useLocalStorage from '../hooks/useLocalStorage';
+import useGoogleSheets from '../hooks/useGoogleSheets';
+import { getErrorMessage } from '../utils/errorUtils';
 
 interface Quest {
   id: number;
@@ -28,23 +28,31 @@ interface Quest {
 }
 
 const QuestsPage: React.FC = () => {
-  const SHEET_ID = import.meta.env.VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = "Quests!A:B"; // Adjust range based on racer data (e.g., A:C for 3 columns)
+  const SHEET_ID = import.meta.env
+    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
+  const RANGE = 'Quests!A:B'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
-  const [locallyStoredQuests, setQueststoLocalStorage] = useLocalStorage<Quest[]>("quests", []);
+  const [locallyStoredQuests, setQueststoLocalStorage] = useLocalStorage<
+    Quest[]
+  >('quests', []);
 
-  const sheetQuestsUpdatedWithLocal: Quest[] = (!data)
+  const sheetQuestsUpdatedWithLocal: Quest[] = !data
     ? []
-    : data.slice(1) // Skip header row
+    : data
+        .slice(1) // Skip header row
         .map(([id, text]: string[]) => ({
           id: Number(id),
           text,
-          completed: false
+          completed: false,
         }))
         .map((spreadSheetQuest: Quest) => {
-          const localQuest = locallyStoredQuests.find(q => q.id === spreadSheetQuest.id);
-          return localQuest ? { ...spreadSheetQuest, completed: localQuest.completed } : spreadSheetQuest;
+          const localQuest = locallyStoredQuests.find(
+            (q) => q.id === spreadSheetQuest.id
+          );
+          return localQuest
+            ? { ...spreadSheetQuest, completed: localQuest.completed }
+            : spreadSheetQuest;
         });
 
   const toggleQuestCompletion = (id: number) => {
@@ -75,7 +83,11 @@ const QuestsPage: React.FC = () => {
           <img
             src="/images/quests-small.webp"
             alt="Quests"
-            style={{ width: "100%", maxHeight: "400px", objectFit: "cover" }}
+            style={{
+              width: '100%',
+              maxHeight: '400px',
+              objectFit: 'cover',
+            }}
           />
           <IonCardContent>
             <IonCardHeader>

@@ -6,12 +6,17 @@ import {
   IonTitle,
   IonToolbar,
   IonBadge,
-  IonIcon
+  IonIcon,
 } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import React, { useRef, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import { TransformWrapper, TransformComponent, useTransformEffect, ReactZoomPanPinchState } from 'react-zoom-pan-pinch';
+import {
+  TransformWrapper,
+  TransformComponent,
+  useTransformEffect,
+  ReactZoomPanPinchState,
+} from 'react-zoom-pan-pinch';
 
 interface LocationItem {
   id: number;
@@ -24,7 +29,11 @@ interface RouteParams {
   locationName: string;
 }
 
-const ZoomableContent = ({ updateState }: { updateState: (state: ReactZoomPanPinchState) => void }) => {
+const ZoomableContent = ({
+  updateState,
+}: {
+  updateState: (state: ReactZoomPanPinchState) => void;
+}) => {
   useTransformEffect(({ state, instance }) => {
     console.log(state); // { previousScale: 1, scale: 1, positionX: 0, positionY: 0 }
     updateState(state);
@@ -54,25 +63,38 @@ const Map: React.FC = () => {
     { id: 6, name: 'Qualifier', x: 405, y: 485 },
   ];
 
-  const selectedLocation = locations .find(loc => loc.name === decodeURIComponent(locationName));
+  const selectedLocation = locations.find(
+    (loc) => loc.name === decodeURIComponent(locationName)
+  );
 
   const updateTransformState = useCallback((state: ReactZoomPanPinchState) => {
-    if (selectedLocation){
-      const clientWidth = (ionContentRef.current) ? ionContentRef.current.offsetWidth : 1000;
-      const clientHeight = (ionContentRef.current) ? ionContentRef.current.offsetWidth : 1000;
+    if (selectedLocation) {
+      const clientWidth = ionContentRef.current
+        ? ionContentRef.current.offsetWidth
+        : 1000;
+      const clientHeight = ionContentRef.current
+        ? ionContentRef.current.offsetWidth
+        : 1000;
       const adjustedX = Math.floor((clientWidth * selectedLocation.x) / 1000);
       const adjustedY = Math.floor((clientHeight * selectedLocation.y) / 1000);
 
-      setLabelTransform((prev) => ({ x: ((adjustedX * state.scale) + (state.positionX)), y: ((adjustedY * state.scale) + (state.positionY)), scale: prev.scale }))
+      setLabelTransform((prev) => ({
+        x: adjustedX * state.scale + state.positionX,
+        y: adjustedY * state.scale + state.positionY,
+        scale: prev.scale,
+      }));
     }
   }, []);
 
   const ionContentRef = useRef<HTMLIonContentElement | null>(null);
-  
-  type LabelTransform = { x: number; y: number, scale: number };
-  const [labelTransform, setLabelTransform] = useState<LabelTransform>({ x: 0, y: 0, scale: 1 });
 
-  
+  type LabelTransform = { x: number; y: number; scale: number };
+  const [labelTransform, setLabelTransform] = useState<LabelTransform>({
+    x: 0,
+    y: 0,
+    scale: 1,
+  });
+
   return (
     <IonPage>
       <IonHeader>
@@ -82,20 +104,29 @@ const Map: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen ref={ionContentRef}>
         <div style={{ position: 'relative' }}>
-          { selectedLocation &&  (<IonBadge style={{
-            position: 'absolute', top: `${labelTransform.y}px`,
-            left: `${labelTransform.x}px`, zIndex: 10
-          }} color="primary">
-            <IonIcon icon={locationOutline} />{selectedLocation.name}
-          </IonBadge>)}
+          {selectedLocation && (
+            <IonBadge
+              style={{
+                position: 'absolute',
+                top: `${labelTransform.y}px`,
+                left: `${labelTransform.x}px`,
+                zIndex: 10,
+              }}
+              color="primary"
+            >
+              <IonIcon icon={locationOutline} />
+              {selectedLocation.name}
+            </IonBadge>
+          )}
 
-          <TransformWrapper minPositionY={Math.floor(400 * labelTransform.scale)}>
-            <TransformComponent >
+          <TransformWrapper
+            minPositionY={Math.floor(400 * labelTransform.scale)}
+          >
+            <TransformComponent>
               <ZoomableContent updateState={updateTransformState} />
             </TransformComponent>
           </TransformWrapper>
         </div>
-
       </IonContent>
     </IonPage>
   );

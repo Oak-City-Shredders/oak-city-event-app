@@ -20,7 +20,7 @@ export const fetchWithErrorHandling = async (
     // Handle non-2xx status codes
     if (!response.ok) {
       const errorData: ErrorDetails = await response.json();
-      const errorMessage = errorData?.error?.message || "An error occurred";
+      const errorMessage = errorData?.error?.message || 'An error occurred';
 
       // Create a custom error object with the relevant data
       const error: CustomError = new Error(errorMessage);
@@ -34,7 +34,7 @@ export const fetchWithErrorHandling = async (
     return response; // Return parsed response on success
   } catch (error) {
     // Log the error for debugging (optional)
-    console.error("Fetch error:", error);
+    console.error('Fetch error:', error);
 
     // Re-throw the error with additional context
     throw error;

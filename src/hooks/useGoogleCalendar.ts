@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { fetchWithErrorHandling } from "../utils/fetchUtils";
+import { useEffect, useState, useCallback } from 'react';
+import { fetchWithErrorHandling } from '../utils/fetchUtils';
 
 const API_KEY = import.meta.env.VITE_REACT_APP_CALENDAR_API_KEY;
 
@@ -24,12 +24,15 @@ interface UseGoogleCalendarReturn {
   refetch: () => Promise<void>;
 }
 
-function useGoogleCalendar(calendarId: string, maxResults: number = 500): UseGoogleCalendarReturn {
+function useGoogleCalendar(
+  calendarId: string,
+  maxResults: number = 500
+): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-   const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     if (!calendarId) return;
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
       calendarId
@@ -38,22 +41,21 @@ function useGoogleCalendar(calendarId: string, maxResults: number = 500): UseGoo
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-     
-        try {
-          setLoading(true);
-          const response = await fetchWithErrorHandling(url);
-          const result = await response.json();
-          setData(result.items); // Assuming the calendar response has an 'items' field
-        } catch (error: unknown) {
-          if (error instanceof Error) {
-            setError(error);
-          } else {
-            setError(new Error('An unknown error occurred'));
-          }
-        } finally {
-          setLoading(false);
+
+      try {
+        setLoading(true);
+        const response = await fetchWithErrorHandling(url);
+        const result = await response.json();
+        setData(result.items); // Assuming the calendar response has an 'items' field
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error);
+        } else {
+          setError(new Error('An unknown error occurred'));
         }
-      
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();

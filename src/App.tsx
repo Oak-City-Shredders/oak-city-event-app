@@ -10,7 +10,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  setupIonicReact
+  setupIonicReact,
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { map, calendar, alarm, home } from 'ionicons/icons';
@@ -27,9 +27,8 @@ import FoodTrucks from './pages/FoodTrucks';
 import Raceing from './pages/Racing';
 import DripSchedule from './pages/DripSchedule';
 import EmergencyServices from './pages/EmergencyServices';
-import Login from "./pages/Login";
-import { AuthProvider } from "./context/AuthContext";
-
+import Login from './pages/Login';
+import { AuthProvider } from './context/AuthContext';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -68,7 +67,7 @@ const App: React.FC = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
-  
+
   return (
     <AuthProvider>
       <IonApp>
@@ -77,7 +76,10 @@ const App: React.FC = () => {
             <IonRouterOutlet>
               <Route exact path="/login" component={Login} />
               <Route exact path="/home">
-                <Home notifications={notifications} removeNotification={removeNotification} />
+                <Home
+                  notifications={notifications}
+                  removeNotification={removeNotification}
+                />
               </Route>
               <Route exact path="/map/:locationName?">
                 <Map />
@@ -130,7 +132,7 @@ const App: React.FC = () => {
                 <IonLabel>Schedule</IonLabel>
               </IonTabButton>
               <IonTabButton tab="notifcations" href="/notifications">
-                <IonIcon icon={alarm}  />
+                <IonIcon icon={alarm} />
                 {notifications.length > 0 && (
                   <IonBadge color="danger">{notifications.length}</IonBadge>
                 )}
@@ -141,7 +143,7 @@ const App: React.FC = () => {
         </IonReactRouter>
       </IonApp>
     </AuthProvider>
-  )
+  );
 };
 
 export default App;

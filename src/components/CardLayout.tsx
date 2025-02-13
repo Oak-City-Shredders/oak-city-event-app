@@ -1,6 +1,15 @@
-import React from "react";
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonImg, IonGrid, IonRow, IonCol } from "@ionic/react";
-import { LayoutItem } from "../data/homePageLayout";
+import React from 'react';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonImg,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from '@ionic/react';
+import { LayoutItem } from '../data/homePageLayout';
 
 interface CardLayoutProps {
   items: LayoutItem[];

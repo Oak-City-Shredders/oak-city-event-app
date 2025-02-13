@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { FirebaseAuthentication, User } from "@capacitor-firebase/authentication";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import {
+  FirebaseAuthentication,
+  User,
+} from '@capacitor-firebase/authentication';
 
 interface AuthContextType {
   user: User | null;
@@ -9,21 +12,26 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Listen for authentication state changes
-    const unsubscribe = FirebaseAuthentication.addListener("authStateChange", (state) => {
-      setUser(state.user ?? null);
-      setLoading(false);
-    });
+    const unsubscribe = FirebaseAuthentication.addListener(
+      'authStateChange',
+      (state) => {
+        setUser(state.user ?? null);
+        setLoading(false);
+      }
+    );
 
     // Cleanup listener on unmount
     return () => {
-        FirebaseAuthentication.removeAllListeners();
-    }
+      FirebaseAuthentication.removeAllListeners();
+    };
   }, []);
 
   // Sign out function
@@ -42,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

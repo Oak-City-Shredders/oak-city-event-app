@@ -10,7 +10,7 @@ interface Error {
 }
 
 export const getErrorMessage = (error: Error): string => {
-  return `Error ${error.status || ""}: ${error.details?.message || error.message}\nReason: ${
-    error.details?.errors?.[0]?.reason || "Unknown"
-  }`;
+  return `Error ${error.status || ''}: ${
+    error.details?.message || error.message
+  }\nReason: ${error.details?.errors?.[0]?.reason || 'Unknown'}`;
 };

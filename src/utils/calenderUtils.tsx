@@ -1,4 +1,3 @@
-
 import { IonIcon } from '@ionic/react';
 import { build, lockOpen, accessibility, alarm } from 'ionicons/icons';
 import { GoogleCalendarEvent } from '../hooks/useGoogleCalendar';
@@ -39,25 +38,27 @@ const ICONS: Record<string, JSX.Element> = {
 };
 
 // Function to group events by date
-export const groupEventsByDays = (events: GoogleCalendarEvent[]): GroupedEvents => {
+export const groupEventsByDays = (
+  events: GoogleCalendarEvent[]
+): GroupedEvents => {
   const grouped: GroupedEvents = {};
 
   events?.forEach((event) => {
-    const startDate = event.start.date || event.start.dateTime.split("T")[0];
+    const startDate = event.start.date || event.start.dateTime.split('T')[0];
     if (!grouped[startDate]) grouped[startDate] = [];
 
-    const formattedTime = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "numeric",
+    const formattedTime = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
       hour12: true,
     }).format(new Date(event.start.dateTime || event.start.date));
 
     grouped[startDate].push({
-      title: event.summary || "",
+      title: event.summary || '',
       startTime: formattedTime,
       endTime: event.end.dateTime || event.end.date,
-      description: event.description || "",
-      location: event.location || "",
+      description: event.description || '',
+      location: event.location || '',
       icon: getIcon(event.summary),
     });
   });
@@ -66,21 +67,29 @@ export const groupEventsByDays = (events: GoogleCalendarEvent[]): GroupedEvents 
 };
 
 // Function to get the icon for a given event title
-export const getIcon = (eventTitle: string = ""): JSX.Element => {
+export const getIcon = (eventTitle: string = ''): JSX.Element => {
   const title = eventTitle.toLowerCase();
 
   // Return the icon if found, otherwise return the default
-  return ICONS[Object.keys(ICONS).find(key => title.includes(key)) || 'default'] || <IonIcon aria-hidden="true" slot="start" icon={alarm} />;
+  return (
+    ICONS[
+      Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
+    ] || <IonIcon aria-hidden="true" slot="start" icon={alarm} />
+  );
 };
 
 // Function to get the name of the day for a given date
 export const getFormattedDate = (dateString: string): string => {
-  const dayName = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-    new Date(dateString + "T00:00:00"));
-  return `${dayName} - ${new Date(dateString).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
+  const dayName = new Intl.DateTimeFormat('en-US', {
+    weekday: 'long',
+  }).format(new Date(dateString + 'T00:00:00'));
+  return `${dayName} - ${new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  })}`;
 };
 
 // Function to check if the given date is today
 export const isToday = (dateString: string): boolean => {
-  return new Date().toISOString().split("T")[0] === dateString;
+  return new Date().toISOString().split('T')[0] === dateString;
 };

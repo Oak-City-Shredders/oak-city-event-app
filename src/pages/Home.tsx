@@ -1,6 +1,6 @@
-import "./Home.css";
-import CardLayout from "../components/CardLayout";
-import { homePageLayout } from "../data/homePageLayout";
+import './Home.css';
+import CardLayout from '../components/CardLayout';
+import { homePageLayout } from '../data/homePageLayout';
 import {
   IonContent,
   IonHeader,
@@ -18,16 +18,16 @@ import {
   IonCard,
   IonButton,
   useIonRouter,
-} from "@ionic/react";
+} from '@ionic/react';
 import {
   personCircleOutline,
   notificationsOutline,
   timeOutline,
   flagOutline,
   closeOutline,
-} from "ionicons/icons";
-import { PushNotificationSchema } from "@capacitor/push-notifications";
-import StokeMeter from "../components/StokeMeter";
+} from 'ionicons/icons';
+import { PushNotificationSchema } from '@capacitor/push-notifications';
+import StokeMeter from '../components/StokeMeter';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -51,11 +51,11 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const router = useIonRouter();
 
   const handleCardClick = (route: string) => {
-    router.push(route, "forward"); // "forward" for a page transition effect
+    router.push(route, 'forward'); // "forward" for a page transition effect
   };
 
   const handleAuthClick = () => {
-    router.push("/login", "root");
+    router.push('/login', 'root');
   };
 
   return (
@@ -74,7 +74,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
                 key={index}
                 onClick={() => {
                   handleCardClick(item.route);
-                  document.querySelector("ion-menu")?.close();
+                  document.querySelector('ion-menu')?.close();
                 }}
               >
                 <IonLabel>{item.title}</IonLabel>
@@ -85,8 +85,8 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
       </IonMenu>
       <IonPage id="main-content">
         <IonHeader translucent={true}>
-          <IonToolbar color={"primary"}>
-            <IonTitle style={{ "text-align": "center" }}>
+          <IonToolbar color={'primary'}>
+            <IonTitle style={{ 'text-align': 'center' }}>
               Oak City Shred Fest 5
             </IonTitle>
             <IonButtons slot="end">

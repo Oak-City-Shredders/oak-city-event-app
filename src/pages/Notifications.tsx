@@ -1,11 +1,22 @@
-import React from "react";
-import { RefresherEventDetail, IonRefresher, IonRefresherContent, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonLabel } from "@ionic/react";
-import { PushNotificationSchema } from "@capacitor/push-notifications";
-import useGoogleSheets from "../hooks/useGoogleSheets";
-import { useMemo } from "react";
-import dayjs from 'dayjs'
-import relativeTime from "dayjs/plugin/relativeTime";
-
+import React from 'react';
+import {
+  RefresherEventDetail,
+  IonRefresher,
+  IonRefresherContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+} from '@ionic/react';
+import { PushNotificationSchema } from '@capacitor/push-notifications';
+import useGoogleSheets from '../hooks/useGoogleSheets';
+import { useMemo } from 'react';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
 interface NotificationsPageProps {
   notifications: PushNotificationSchema[];
@@ -22,17 +33,25 @@ interface SheetNotification {
 
 dayjs.extend(relativeTime);
 
-const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) => {
+const NotificationsPage: React.FC<NotificationsPageProps> = ({
+  notifications,
+}) => {
   dayjs.extend(relativeTime);
-  const SHEET_ID = "1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI";
-  const RANGE = "Notifications!A:F"; // Adjust range based on racer data (e.g., A:C for 3 columns)
+  const SHEET_ID = '1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI';
+  const RANGE = 'Notifications!A:F'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-  const { data: sheetsData, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const {
+    data: sheetsData,
+    loading,
+    error,
+    refetch,
+  } = useGoogleSheets(SHEET_ID, RANGE);
 
   const sheetNotifications: SheetNotification[] = useMemo(() => {
     if (!sheetsData) return [];
 
-    return sheetsData.slice(1) // Skip header row
+    return sheetsData
+      .slice(1) // Skip header row
       .map(([title, message, topic, published, date, result]: string[]) => ({
         title,
         message,
@@ -41,13 +60,17 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
         date,
         result,
       }))
-      .filter((notification) => notification.published === "Publish" && notification.result === "Success")
-      .reverse();; // Only keep published rows
+      .filter(
+        (notification) =>
+          notification.published === 'Publish' &&
+          notification.result === 'Success'
+      )
+      .reverse(); // Only keep published rows
   }, [sheetsData]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-      await refetch(); // Call the refetch function from useGoogleSheets
-      event.detail.complete(); // Notify Ionic that the refresh is complete
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
@@ -57,9 +80,9 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
           <IonTitle>Notifications</IonTitle>
         </IonToolbar>
       </IonHeader>
-      
+
       <IonContent className="ion-padding">
-      <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
         {loading ? (
@@ -67,7 +90,6 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
         ) : error ? (
           <p>Error loading notifications</p>
         ) : sheetNotifications.length > 0 ? (
-          
           <IonList>
             {sheetNotifications.map((notification, index) => (
               <IonItem key={index}>

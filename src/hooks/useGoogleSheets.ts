@@ -1,5 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
-import { fetchWithErrorHandling } from "../utils/fetchUtils";
+import { useEffect, useState, useCallback } from 'react';
+import { fetchWithErrorHandling } from '../utils/fetchUtils';
 
 const API_KEY = import.meta.env.VITE_REACT_APP_GOOGLE_SHEETS_API_KEY as string;
 
@@ -10,14 +10,17 @@ interface GoogleSheetsHook {
   refetch: () => Promise<void>;
 }
 
-function useGoogleSheets(sheetId: string | undefined, range: string): GoogleSheetsHook {
+function useGoogleSheets(
+  sheetId: string | undefined,
+  range: string
+): GoogleSheetsHook {
   const [data, setData] = useState<string[][] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!sheetId) {
-      setError(new Error("Missing data configuration."));
+      setError(new Error('Missing data configuration.'));
       return;
     }
 
