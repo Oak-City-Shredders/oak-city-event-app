@@ -13,6 +13,7 @@ import {
   IonText,
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
+import PageHeader from '../components/PageHeader';
 
 const Login: React.FC = () => {
   const { user, loading } = useAuth();
@@ -70,11 +71,7 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader translucent={true}>
-        <IonToolbar color={'primary'}>
-          <IonTitle>{user ? 'Your Profile' : 'Sign In'}</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title={user ? 'Your Profile' : 'Sign In'} />
       <IonContent className="ion-padding">
         {user ? (
           <>

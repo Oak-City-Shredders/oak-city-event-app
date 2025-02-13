@@ -2,24 +2,19 @@ import React from 'react';
 import {
   IonContent,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonCardSubtitle,
   IonList,
   IonItem,
   IonLabel,
+  IonPage
 } from '@ionic/react';
-import { IonPage, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 const ScavengerHunt: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Scavenger Hunt</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Scavenger Hunt" />
       <IonContent>
         <IonCard>
           <img

@@ -12,10 +12,7 @@ import {
   IonItem,
   IonText,
   IonLoading,
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
+  IonPage
 } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar
@@ -26,6 +23,7 @@ import {
 } from '../utils/calenderUtils';
 import { getErrorMessage } from '../utils/errorUtils';
 import { useIonRouter } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 const CALENDAR_ID: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || '';
 const SchedulePage: React.FC = () => {
@@ -50,11 +48,7 @@ const SchedulePage: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Schedule</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Schedule" />
       <IonContent>
         <IonItem>
           <IonLabel class="ion-text-wrap">

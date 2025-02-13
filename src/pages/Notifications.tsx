@@ -4,9 +4,6 @@ import {
   IonRefresher,
   IonRefresherContent,
   IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
   IonContent,
   IonList,
   IonItem,
@@ -17,6 +14,7 @@ import useGoogleSheets from '../hooks/useGoogleSheets';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import PageHeader from '../components/PageHeader';
 
 interface NotificationsPageProps {
   notifications: PushNotificationSchema[];
@@ -75,12 +73,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Notifications</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
+      <PageHeader title="Notifications" />
       <IonContent className="ion-padding">
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />

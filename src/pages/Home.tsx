@@ -7,6 +7,7 @@ import {
   IonImg,
   IonMenu,
   IonMenuButton,
+  IonMenuToggle,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -55,7 +56,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   };
 
   const handleAuthClick = () => {
-    router.push('/login', 'root');
+    router.push('/login', 'forward');
   };
 
   return (
@@ -69,36 +70,37 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
         <IonContent>
           <IonList>
             {homePageLayout.map((item, index) => (
-              <IonItem
-                button
-                key={index}
-                onClick={() => {
-                  handleCardClick(item.route);
-                  document.querySelector('ion-menu')?.close();
-                }}
-              >
-                <IonLabel>{item.title}</IonLabel>
-              </IonItem>
+              <IonMenuToggle key={index}>
+                <IonItem
+                  button
+                  key={item.route}
+                  onClick={() => {
+                    handleCardClick(item.route);
+                  }}
+                >
+                  <IonLabel>{item.title}</IonLabel>
+                </IonItem>
+              </IonMenuToggle>
             ))}
           </IonList>
           <IonList>
-            <IonItem
-              button
-              key={homePageLayout.length + 1}
-              onClick={() => {
-                handleCardClick("/about");
-                document.querySelector('ion-menu')?.close();
-              }}
-            >
-              <IonLabel>About</IonLabel>
-            </IonItem>
+            <IonMenuToggle key={homePageLayout.length + 1}>
+              <IonItem
+                button
+                onClick={() => {
+                  handleCardClick("/about");
+                }}
+              >
+                <IonLabel>About</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
           </IonList>
         </IonContent>
       </IonMenu>
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
-            <IonTitle style={{ textAlign: 'center' }}>
+            <IonTitle>
               Oak City Shred Fest 5
             </IonTitle>
             <IonButtons slot="end">

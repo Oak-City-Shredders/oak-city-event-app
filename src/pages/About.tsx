@@ -1,21 +1,20 @@
 import React from 'react';
-import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonCardSubtitle, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg } from '@ionic/react';
+import { IonContent, IonPage, IonCardSubtitle, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 const About: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="tertiary">
-          <IonTitle>About</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader color="tertiary" title="About" />
       <IonContent className="ion-padding">
         <IonCard>
           <IonCardHeader>
             <IonCardSubtitle>Another original creation built in the labs of the Mad Scientist</IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent>
-            <IonImg src="/images/Jareds+Headshot.webp" alt="Mad Scientist" />
+            <IonImg
+              style={{ maxWidth: '300px', height: 'auto', display: 'block', margin: '0' }}
+              src="/images/Jareds+Headshot.webp" alt="Mad Scientist" />
           </IonCardContent>
         </IonCard>
 

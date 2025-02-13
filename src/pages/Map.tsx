@@ -1,10 +1,7 @@
 import {
   IonImg,
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonBadge,
   IonIcon,
 } from '@ionic/react';
@@ -17,6 +14,7 @@ import {
   useTransformEffect,
   ReactZoomPanPinchState,
 } from 'react-zoom-pan-pinch';
+import PageHeader from '../components/PageHeader';
 
 interface LocationItem {
   id: number;
@@ -97,11 +95,7 @@ const Map: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Map</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Map" />
       <IonContent fullscreen ref={ionContentRef}>
         <div style={{ position: 'relative' }}>
           {selectedLocation && (
