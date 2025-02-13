@@ -62,7 +62,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     <>
       <IonMenu contentId="main-content">
         <IonHeader>
-          <IonToolbar>
+          <IonToolbar color="tertiary">
             <IonTitle>Navigation</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -80,6 +80,18 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
                 <IonLabel>{item.title}</IonLabel>
               </IonItem>
             ))}
+          </IonList>
+          <IonList>
+            <IonItem
+              button
+              key={homePageLayout.length + 1}
+              onClick={() => {
+                handleCardClick("/about");
+                document.querySelector('ion-menu')?.close();
+              }}
+            >
+              <IonLabel>About</IonLabel>
+            </IonItem>
           </IonList>
         </IonContent>
       </IonMenu>
