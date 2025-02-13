@@ -3,10 +3,9 @@
     border-radius: 10px;
     padding: 4px;
     background: #ffffff;
-  }
-  
-  .custom-progress-bar {
+}
+
+.custom-progress-bar {
     height: 20px; /* Adjust thickness */
     border-radius: 8px;
-  }
-  
+}
