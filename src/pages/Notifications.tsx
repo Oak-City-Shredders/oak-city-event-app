@@ -24,6 +24,7 @@ interface SheetNotification {
   title: string;
   message: string;
   topic: string;
+  details: string;
   published: string;
   date: string;
   result: string;
@@ -36,7 +37,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 }) => {
   dayjs.extend(relativeTime);
   const SHEET_ID = '1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI';
-  const RANGE = 'Notifications!A:F'; // Adjust range based on racer data (e.g., A:C for 3 columns)
+  const RANGE = 'Notifications!A:G'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const {
     data: sheetsData,
@@ -50,10 +51,11 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
     return sheetsData
       .slice(1) // Skip header row
-      .map(([title, message, topic, published, date, result]: string[]) => ({
+      .map(([title, message, topic, published, date, result, details]: string[]) => ({
         title,
         message,
         topic,
+        details,
         published,
         date,
         result,
@@ -90,6 +92,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                   <p>{dayjs().to(notification.date)}</p>
                   <strong>{notification.title}</strong>
                   <p>{notification.message}</p>
+                  {notification.details && <i>{notification.details}</i>}
                 </IonLabel>
               </IonItem>
             ))}
