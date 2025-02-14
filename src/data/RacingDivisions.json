@@ -1,0 +1,42 @@
+[
+  {
+    "division": "ORL-Pro Mens",
+    "description": "Elite men's division featuring top Onewheel riders competing at the highest level.  Riders are at least 14 years old.  Winning in this division earns points toward Future Motion's Race for the Rail competition. Rider’s must use a stock Future Motion powertrain in ORL sanctioned races. The powertrain consists of batteries, motor and controller. Modifications to the tire, rails, bumpers and footpads are permitted."
+  },
+  {
+    "division": "ORL-Pro Womens",
+    "description": "Elite women's division for the most skilled female Onewheel racers. Riders are at least 14 years old.  Winning in this division earns points toward Future Motion's Race for the Rail competition. Rider’s must use a stock Future Motion powertrain in ORL sanctioned races. The powertrain consists of batteries, motor and controller. Modifications to the tire, rails, bumpers and footpads are permitted."
+  },
+  {
+    "division": "ORL-Clydesdale",
+    "description": "Men over 215 lbs at the time of the race. Those who compete in this division are not eligible for Race for the Rail but are eligible for Clydesdale Season Champ. Rider’s must use a stock Future Motion powertrain in ORL sanctioned races. The powertrain consists of batteries, motor and controller. Modifications to the tire, rails, bumpers and footpads are permitted."
+  },
+  {
+    "division": "ORL-Legends",
+    "description": "Men and Women over 50 years of age at the time of the race. Those who compete in this division are not eligible for Race for the Rail, but are eligible for Legends’ Season Champ. Rider’s must use a stock Future Motion powertrain in ORL sanctioned races. The powertrain consists of batteries, motor and controller. Modifications to the tire, rails, bumpers and footpads are permitted."
+  },
+  {
+    "division": "Open Onewheel-Mens",
+    "description": "Open men's division for riders of all skill levels to compete."
+  },
+  {
+    "division": "Open Onewheel-Womens",
+    "description": "Open women's division for riders of all skill levels to compete."
+  },
+  {
+    "division": "Open Onewheel-Grom",
+    "description": "Youth division for young Onewheel riders younger than 14 years old looking to race."
+  },
+  {
+    "division": "EUC Amateur",
+    "description": "Amateur division for electric unicycle (EUC) riders new to racing."
+  },
+  {
+    "division": "Open Onewheel-Clydesdale",
+    "description": "Open division for Onewheel riders weighing 215 lbs or more."
+  },
+  {
+    "division": "Unknown",
+    "description": "Division not yet classified or to be determined."
+  }
+]

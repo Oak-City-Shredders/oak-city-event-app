@@ -17,7 +17,7 @@ import {
   IonLabel,
   IonText,
   IonSpinner,
-  IonTitle,
+  IonIcon,
 } from '@ionic/react';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
@@ -26,6 +26,8 @@ import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
 import { Capacitor } from '@capacitor/core';
 import PageHeader from '../components/PageHeader';
+import { chevronDown, chevronForward } from "ionicons/icons";
+import divisions from '../data/RacingDivisions.json';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -36,9 +38,10 @@ interface Racer {
   team?: string;
 }
 
-interface Category {
+interface Division {
   id: number;
   name: string;
+  description?: string;
   racers: Racer[];
 }
 
@@ -92,36 +95,47 @@ const Raceing: React.FC = () => {
     }
   };
 
-  const groupedCategories: Category[] | undefined = useMemo(() => {
+  const groupedDivisions: Division[] | undefined = useMemo(() => {
     if (!sheetsData) return undefined;
 
-    const data: { category: string; racer: Racer }[] = sheetsData
+    const data: { division: string; racer: Racer }[] = sheetsData
       .slice(1)
-      .map(([category, racer, team]: string[]) => ({
-        category,
+      .map(([division, racer, team]: string[]) => ({
+        division: division,
         racer: { name: racer, team },
       }));
 
     const grouped = data.reduce<Record<string, Racer[]>>(
-      (acc, { category, racer }) => {
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(racer);
+      (acc, { division: division, racer }) => {
+        if (!acc[division]) acc[division] = [];
+        acc[division].push(racer);
         return acc;
       },
       {}
     );
 
-    return Object.entries(grouped).map(([name, racers], id) => ({
-      id,
-      name,
-      racers,
-    }));
+    return Object.entries(grouped).map(([name, racers], id) => {
+      const description = divisions.find(d => d.division === name)?.description || "";
+      return {
+        id,
+        description,
+        name,
+        racers,
+      }
+    });
   }, [sheetsData]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
     await refetch(); // Call the refetch function from useGoogleSheets
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
+
+  const [expandedDivision, setExpandedDivision] = useState<number | null>(null);
+
+  const toggleDivision = (divisionId: number) => {
+    setExpandedDivision(expandedDivision === divisionId ? null : divisionId);
+  };
+
 
   return (
     <IonPage>
@@ -161,34 +175,61 @@ const Raceing: React.FC = () => {
             <p>Error loading racing data, please check back later.</p>
             <p>{getErrorMessage(error)}</p>
           </IonText>
-        ) : !groupedCategories || groupedCategories.length === 0 ? (
+        ) : !groupedDivisions || groupedDivisions.length === 0 ? (
           <IonText>No racers are currently available to be shown.</IonText>
         ) : (
           <>
+
+
+
             <IonList>
-              {groupedCategories.map((category) => (
-                <IonItemGroup defaultChecked={true} key={category.id}>
-                  <IonItemDivider slot="header" color="secondary">
-                    <IonText
-                      class={'ion-text-nowrap'}
-                      slot="start"
-                    >{`${category.name}`}</IonText>
-                    <IonText slot="end">{`(${category.racers.length})`}</IonText>
-                  </IonItemDivider>
-                  <div slot="content">
-                    <IonList>
-                      {category.racers.map((racer, index) => (
-                        <IonItem key={index}>
-                          <IonLabel>
-                            {racer.name} {racer.team ? `[${racer.team}]` : ''}
-                          </IonLabel>
-                        </IonItem>
-                      ))}
-                    </IonList>
-                  </div>
-                </IonItemGroup>
-              ))}
+              {groupedDivisions.map((division) => {
+                const isExpanded = expandedDivision === division.id;
+
+                return (
+                  <IonItemGroup key={division.id}>
+                    <IonItemDivider
+                      slot="header"
+                      color="secondary"
+                      //button
+                      onClick={() => toggleDivision(division.id)}
+                    >
+                      <IonText class="ion-text-nowrap" slot="start">
+                        {`${division.name}`}
+                      </IonText>
+                      <IonIcon
+                        icon={isExpanded ? chevronDown : chevronForward}
+                        slot="end"
+                      />
+                    </IonItemDivider>
+
+
+                    <div slot="content">
+
+                      {isExpanded && (
+                        <IonCard>
+                          <IonCardContent>
+                            <IonText>{division.description}</IonText>
+                          </IonCardContent>
+                        </IonCard>
+                      )}
+
+                      <IonList>
+                        {division.racers.map((racer, index) => (
+                          <IonItem key={index}>
+                            <IonLabel>
+                              {racer.name} {racer.team ? `[${racer.team}]` : ""}
+                            </IonLabel>
+                          </IonItem>
+                        ))}
+                      </IonList>
+                    </div>
+
+                  </IonItemGroup>
+                );
+              })}
             </IonList>
+
           </>
         )}
       </IonContent>
