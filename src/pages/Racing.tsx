@@ -26,7 +26,7 @@ import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
 import { Capacitor } from '@capacitor/core';
 import PageHeader from '../components/PageHeader';
-import { chevronDown, chevronForward } from "ionicons/icons";
+import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
 
 interface NotificationSettings {
@@ -164,6 +164,23 @@ const Raceing: React.FC = () => {
           </IonCard>
         )}
 
+        <IonCard>
+          <IonCardContent>
+            <IonText>The following people have purchased race tickets for Oak City Shred Fest 5.  Want to race against them?&nbsp;</IonText>
+            <IonText>
+
+              <a
+                href={"https://www.oakcityshredfest.com/2025-tickets/p/ultimate-racer-bundle"}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Get your ticket here
+              </a>
+            </IonText>
+          </IonCardContent>
+        </IonCard>
+
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
@@ -197,8 +214,8 @@ const Raceing: React.FC = () => {
                       <IonText class="ion-text-nowrap" slot="start">
                         {`${division.name}`}
                       </IonText>
-                      <IonIcon
-                        icon={isExpanded ? chevronDown : chevronForward}
+                      <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
+                        icon={isExpanded ? informationCircle : informationCircleOutline}
                         slot="end"
                       />
                     </IonItemDivider>
