@@ -52,7 +52,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({ enabled, imageLink, tit
           <>
             {detailedImageLink && <IonImg src={detailedImageLink} />}
             {detailedDescription && <IonText>
-              {detailedDescription}
+              <br />{detailedDescription}
             </IonText>}
           </>
         )}
