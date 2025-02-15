@@ -1,0 +1,37 @@
+.help-subtitles {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.emergency-image {
+  width: 100%;
+  height: auto;
+  max-height: 400px; /* Adjust based on your desired max height */
+  object-fit: cover;
+}
+
+.info-row {
+  display: flex;
+}
+
+.emergency-text {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 32px;
+}
+
+.help-section {
+  margin-top: 8px;
+}
+
+.content-section {
+  margin-top: 32px;
+}
+
+.about-us-subtitle {
+  margin-top: 12px;
+}
+
+.closing-text {
+  margin-top: 12px;
+}
