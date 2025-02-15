@@ -66,8 +66,8 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   const dynamicContent: DynamicContentProps[] = !data ? [] : data
     .slice(1) // Skip header row
-    .map(([title, subtitle, shortDescription, imageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
-      title, subtitle, shortDescription, imageLink, detailedDescription, buttonName, buttonLink
+    .map(([imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
+      imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink
     }))
 
   const handleCardClick = (route: string) => {
@@ -166,7 +166,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             </IonCard>
           )}
           <StokeMeter />
-          {dynamicContent.map(d => <DynamicContent {...d} />)}
+          {dynamicContent.map((d, index) => <DynamicContent key={index} {...d} />)}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}

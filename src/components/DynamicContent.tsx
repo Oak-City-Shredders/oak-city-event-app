@@ -12,18 +12,21 @@ import {
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { chevronDown, chevronUp, chevronForward } from "ionicons/icons";
+import dayjs from 'dayjs';
 
 export interface DynamicContentProps {
+  imageLink: string;
   title: string;
   subtitle: string;
+  datePosted: string;
   shortDescription: string;
-  imageLink: string;
+  detailedImageLink: string;
   detailedDescription: string;
   buttonName: string;
   buttonLink: string;
 }
 
-const DynamicContent: React.FC<DynamicContentProps> = ({ title, subtitle, shortDescription, imageLink, detailedDescription, buttonName, buttonLink }) => {
+const DynamicContent: React.FC<DynamicContentProps> = ({ imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink }) => {
   const [isExtraContentVisible, setIsListVisible] = useState(false);
 
 
@@ -33,28 +36,29 @@ const DynamicContent: React.FC<DynamicContentProps> = ({ title, subtitle, shortD
 
   return (
     <IonCard>
+      {imageLink && <IonImg src={imageLink} />}
       <IonCardHeader onClick={onToggleView} >
-        <IonCardTitle>{title}</IonCardTitle>
-        <IonCardSubtitle>{subtitle}</IonCardSubtitle>
+        {title && <IonCardTitle>{title}</IonCardTitle>}
+        {subtitle && <IonCardSubtitle>{subtitle}</IonCardSubtitle>}
 
       </IonCardHeader>
       <IonCardContent>
-        <IonText onClick={onToggleView}>
-          {shortDescription}
-        </IonText>
+        {shortDescription && <IonText onClick={onToggleView}>
+          {datePosted && `${dayjs().to(datePosted)} - `}{shortDescription}
+        </IonText>}
         <IonIcon onClick={onToggleView} slot="end" icon={isExtraContentVisible ? chevronDown : chevronForward} />
         {isExtraContentVisible && (
           <>
-            <IonImg src={imageLink} />
-            <IonText>
+            {detailedImageLink && <IonImg src={detailedImageLink} />}
+            {detailedDescription && <IonText>
               {detailedDescription}
-            </IonText>
+            </IonText>}
           </>
         )}
       </IonCardContent>
-      <IonButton fill="clear" href={buttonLink}>
+      {buttonName && buttonLink && <IonButton fill="clear" href={buttonLink}>
         {buttonName}
-      </IonButton>
+      </IonButton>}
     </IonCard>
   );
 }
