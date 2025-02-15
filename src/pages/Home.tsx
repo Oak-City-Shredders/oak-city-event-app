@@ -177,7 +177,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             </IonCard>
           )}
           <StokeMeter />
-          {dynamicContent.map((d, index) => <DynamicContent key={index} {...d} />)}
+          {dynamicContent.map((d, index) => d.enabled && <DynamicContent key={index} {...d} />)}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
