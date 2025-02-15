@@ -1,4 +1,5 @@
 import './Home.css';
+import { useEffect } from 'react';
 import CardLayout from '../components/CardLayout';
 import { homePageLayout } from '../data/homePageLayout';
 import {

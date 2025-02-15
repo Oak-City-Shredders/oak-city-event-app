@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { fetchWithErrorHandling } from '../utils/fetchUtils';
+import { App } from '@capacitor/app';
 
 const API_KEY = import.meta.env.VITE_REACT_APP_GOOGLE_SHEETS_API_KEY as string;
 
@@ -41,7 +42,19 @@ function useGoogleSheets(
 
   // Fetch data on initial render
   useEffect(() => {
+    // Fetch delivered notifications when app is resumed
+    const appResumed = async () => {
+      console.log('App resumed - fetching sheets data.');
+      fetchData();
+    };
+    App.addListener('resume', appResumed);
+
     fetchData();
+
+    return () => {
+      App.removeAllListeners();
+      console.log('home cleanup - all listeners removed');
+    };
   }, [fetchData]);
 
   return { data, loading, error, refetch: fetchData };
