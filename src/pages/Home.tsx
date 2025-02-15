@@ -29,6 +29,8 @@ import {
 } from 'ionicons/icons';
 import { PushNotificationSchema } from '@capacitor/push-notifications';
 import StokeMeter from '../components/StokeMeter';
+import DynamicContent, { DynamicContentProps } from '../components/DynamicContent';
+import useGoogleSheets from '../hooks/useGoogleSheets';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -50,6 +52,23 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const router = useIonRouter();
+
+  const SHEET_ID = import.meta.env
+    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
+  const RANGE = 'DynamicContent!A:G';
+
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+  } = useGoogleSheets(SHEET_ID, RANGE);
+
+  const dynamicContent: DynamicContentProps[] = !data ? [] : data
+    .slice(1) // Skip header row
+    .map(([title, subtitle, shortDescription, imageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
+      title, subtitle, shortDescription, imageLink, detailedDescription, buttonName, buttonLink
+    }))
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -147,6 +166,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             </IonCard>
           )}
           <StokeMeter />
+          {dynamicContent.map(d => <DynamicContent {...d} />)}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
