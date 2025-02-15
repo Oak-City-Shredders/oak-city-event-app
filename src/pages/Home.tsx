@@ -1,4 +1,5 @@
 import './Home.css';
+import { useEffect } from 'react';
 import CardLayout from '../components/CardLayout';
 import { homePageLayout } from '../data/homePageLayout';
 import {
@@ -19,6 +20,9 @@ import {
   IonCard,
   IonButton,
   useIonRouter,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherEventDetail
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -29,6 +33,8 @@ import {
 } from 'ionicons/icons';
 import { PushNotificationSchema } from '@capacitor/push-notifications';
 import StokeMeter from '../components/StokeMeter';
+import DynamicContent, { DynamicContentProps } from '../components/DynamicContent';
+import useGoogleSheets from '../hooks/useGoogleSheets';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -51,12 +57,34 @@ interface HomeProps {
 const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const router = useIonRouter();
 
+  const SHEET_ID = import.meta.env
+    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
+  const RANGE = 'DynamicContent!A:J';
+
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+  } = useGoogleSheets(SHEET_ID, RANGE);
+
+  const dynamicContent: DynamicContentProps[] = !data ? [] : data
+    .slice(1) // Skip header row
+    .map(([enabled, imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
+      enabled: (enabled === "Yes"), imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink
+    }))
+
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
   };
 
   const handleAuthClick = () => {
     router.push('/login', 'forward');
+  };
+
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
@@ -122,6 +150,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               />
             </IonToolbar>
           </IonHeader>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           {notifications.length > 0 && (
             <IonCard className="ion-padding">
               <IonList>
@@ -147,6 +178,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             </IonCard>
           )}
           <StokeMeter />
+          {dynamicContent.map((d, index) => d.enabled && <DynamicContent key={index} {...d} />)}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
