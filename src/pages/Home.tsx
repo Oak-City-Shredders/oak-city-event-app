@@ -19,6 +19,9 @@ import {
   IonCard,
   IonButton,
   useIonRouter,
+  IonRefresher,
+  IonRefresherContent,
+  RefresherEventDetail
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -55,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   const SHEET_ID = import.meta.env
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'DynamicContent!A:G';
+  const RANGE = 'DynamicContent!A:J';
 
   const {
     data,
@@ -66,8 +69,8 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   const dynamicContent: DynamicContentProps[] = !data ? [] : data
     .slice(1) // Skip header row
-    .map(([imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
-      imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink
+    .map(([enabled, imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
+      enabled: (enabled === "Yes"), imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink
     }))
 
   const handleCardClick = (route: string) => {
@@ -76,6 +79,11 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   const handleAuthClick = () => {
     router.push('/login', 'forward');
+  };
+
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
@@ -141,6 +149,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               />
             </IonToolbar>
           </IonHeader>
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           {notifications.length > 0 && (
             <IonCard className="ion-padding">
               <IonList>

@@ -15,6 +15,7 @@ import { chevronDown, chevronUp, chevronForward } from "ionicons/icons";
 import dayjs from 'dayjs';
 
 export interface DynamicContentProps {
+  enabled: boolean;
   imageLink: string;
   title: string;
   subtitle: string;
@@ -26,7 +27,7 @@ export interface DynamicContentProps {
   buttonLink: string;
 }
 
-const DynamicContent: React.FC<DynamicContentProps> = ({ imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink }) => {
+const DynamicContent: React.FC<DynamicContentProps> = ({ enabled, imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink }) => {
   const [isExtraContentVisible, setIsListVisible] = useState(false);
 
 
@@ -36,7 +37,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({ imageLink, title, subti
 
   return (
     <IonCard>
-      {imageLink && <IonImg src={imageLink} />}
+      {imageLink && <IonImg src={imageLink} onClick={onToggleView} />}
       <IonCardHeader onClick={onToggleView} >
         {title && <IonCardTitle>{title}</IonCardTitle>}
         {subtitle && <IonCardSubtitle>{subtitle}</IonCardSubtitle>}
@@ -46,7 +47,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({ imageLink, title, subti
         {shortDescription && <IonText onClick={onToggleView}>
           {datePosted && `${dayjs().to(datePosted)} - `}{shortDescription}
         </IonText>}
-        <IonIcon onClick={onToggleView} slot="end" icon={isExtraContentVisible ? chevronDown : chevronForward} />
+        {(detailedImageLink || detailedDescription || (buttonName && buttonLink)) && <IonIcon onClick={onToggleView} slot="end" icon={isExtraContentVisible ? chevronDown : chevronForward} />}
         {isExtraContentVisible && (
           <>
             {detailedImageLink && <IonImg src={detailedImageLink} />}
