@@ -11,11 +11,11 @@ import {
 } from "@ionic/react";
 import dayjs from "dayjs";
 
-//const festivalStartDate = new Date("2025-04-24T08:00:00").getTime();
-//const festivalEndDate = new Date("2025-04-27T15:00:00").getTime();
-
-const festivalStartDate = new Date("2025-02-17T01:40:40").getTime();
+const festivalStartDate = new Date("2025-04-24T08:00:00").getTime();
 const festivalEndDate = new Date("2025-04-27T15:00:00").getTime();
+
+//const festivalStartDate = new Date("2025-02-17T00:40:40").getTime();
+//const festivalEndDate = new Date("2025-02-17T01:45:00").getTime();
 
 type EventStatus =
     | "timeRemaining" // Time remaining until key event
