@@ -1,5 +1,4 @@
 import './Home.css';
-import { useEffect } from 'react';
 import CardLayout from '../components/CardLayout';
 import { homePageLayout } from '../data/homePageLayout';
 import {
@@ -35,6 +34,7 @@ import { PushNotificationSchema } from '@capacitor/push-notifications';
 import StokeMeter from '../components/StokeMeter';
 import DynamicContent, { DynamicContentProps } from '../components/DynamicContent';
 import useGoogleSheets from '../hooks/useGoogleSheets';
+import CountdownTimer from '../components/CountdownTimer';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -91,7 +91,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     <>
       <IonMenu contentId="main-content">
         <IonHeader>
-          <IonToolbar color="tertiary">
+          <IonToolbar color="secondary">
             <IonTitle>Navigation</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -146,13 +146,14 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             <IonToolbar>
               <IonImg
                 src="/images/OCSF5+Web+Logo.webp"
-                alt="Under Construction"
+                alt="Oak City Shred Fest 5"
               />
             </IonToolbar>
           </IonHeader>
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
+          <CountdownTimer />
           {notifications.length > 0 && (
             <IonCard className="ion-padding">
               <IonList>

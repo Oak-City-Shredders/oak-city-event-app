@@ -8,4 +8,9 @@
 .custom-progress-bar {
   height: 20px; /* Adjust thickness */
   border-radius: 8px;
+  --progress-background: linear-gradient(
+    45deg,
+    var(--ion-color-secondary),
+    var(--ion-color-primary)
+  );
 }
