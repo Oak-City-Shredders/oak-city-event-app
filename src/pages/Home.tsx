@@ -35,6 +35,7 @@ import StokeMeter from '../components/StokeMeter';
 import DynamicContent, { DynamicContentProps } from '../components/DynamicContent';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import CountdownTimer from '../components/CountdownTimer';
+import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -86,6 +87,13 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     await refetch(); // Call the refetch function from useGoogleSheets
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
+
+  // Set text color to dark (for light backgrounds)
+  const setStatusBarBackground = async () => {
+    await EdgeToEdge.setBackgroundColor({ color: "#38e4ae" });
+  };
+
+  setStatusBarBackground();
 
   return (
     <>
