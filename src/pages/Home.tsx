@@ -36,6 +36,7 @@ import DynamicContent, { DynamicContentProps } from '../components/DynamicConten
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
+import { Capacitor } from '@capacitor/core';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -90,6 +91,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
+    if (!Capacitor.isPluginAvailable('EdgeToEdge')) return;
     await EdgeToEdge.setBackgroundColor({ color: "#38e4ae" });
   };
 

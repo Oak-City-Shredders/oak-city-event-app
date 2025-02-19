@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   RefresherEventDetail,
   IonCardHeader,
@@ -42,6 +42,7 @@ interface Division {
   id: number;
   name: string;
   description?: string;
+  desciriptionExpanded?: boolean;
   racers: Racer[];
 }
 
@@ -95,8 +96,8 @@ const Raceing: React.FC = () => {
     }
   };
 
-  const groupedDivisions: Division[] | undefined = useMemo(() => {
-    if (!sheetsData) return undefined;
+  const memorizedGroupedDivisions: Division[] = useMemo(() => {
+    if (!sheetsData) return [];
 
     const data: { division: string; racer: Racer }[] = sheetsData
       .slice(1)
@@ -121,21 +122,28 @@ const Raceing: React.FC = () => {
         description,
         name,
         racers,
+        desciriptionExpanded: true,
       }
     });
   }, [sheetsData]);
+
+  useEffect(() => {
+    if (memorizedGroupedDivisions.length > 0) {
+      setGroupDivisions(memorizedGroupedDivisions);
+    }
+  }, [memorizedGroupedDivisions]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
     await refetch(); // Call the refetch function from useGoogleSheets
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
-  const [expandedDivision, setExpandedDivision] = useState<number | null>(null);
+  const [groupedDivisions, setGroupDivisions] = useState<Division[]>([]);
 
   const toggleDivision = (divisionId: number) => {
-    setExpandedDivision(expandedDivision === divisionId ? null : divisionId);
+    setGroupDivisions(prev => prev.map(d =>
+      d.id === divisionId ? { ...d, desciriptionExpanded: !d.desciriptionExpanded } : d));
   };
-
 
   return (
     <IonPage>
@@ -165,6 +173,7 @@ const Raceing: React.FC = () => {
         )}
 
         <IonCard>
+          <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
           <IonCardContent>
             <IonText>The following people have purchased race tickets for Oak City Shred Fest 5.  Want to race against them?&nbsp;</IonText>
             <IonText>
@@ -201,8 +210,6 @@ const Raceing: React.FC = () => {
 
             <IonList>
               {groupedDivisions.map((division) => {
-                const isExpanded = expandedDivision === division.id;
-
                 return (
                   <IonItemGroup key={division.id}>
                     <IonItemDivider
@@ -215,7 +222,7 @@ const Raceing: React.FC = () => {
                         {`${division.name}`}
                       </IonText>
                       <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
-                        icon={isExpanded ? informationCircle : informationCircleOutline}
+                        icon={division.desciriptionExpanded ? informationCircle : informationCircleOutline}
                         slot="end"
                       />
                     </IonItemDivider>
@@ -223,7 +230,7 @@ const Raceing: React.FC = () => {
 
                     <div slot="content">
 
-                      {isExpanded && (
+                      {division.desciriptionExpanded && (
                         <IonCard>
                           <IonCardContent>
                             <IonText>{division.description}</IonText>
