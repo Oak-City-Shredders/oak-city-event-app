@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   RefresherEventDetail,
   IonCardHeader,
@@ -24,10 +24,11 @@ import { getErrorMessage } from '../utils/errorUtils';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
-import { Capacitor } from '@capacitor/core';
 import PageHeader from '../components/PageHeader';
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
+import useNotificationPermissions from '../hooks/useNotifcationPermissions';
+import { notificationsOffOutline } from 'ionicons/icons';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -42,6 +43,7 @@ interface Division {
   id: number;
   name: string;
   description?: string;
+  desciriptionExpanded?: boolean;
   racers: Racer[];
 }
 
@@ -53,6 +55,7 @@ const Raceing: React.FC = () => {
     useLocalStorage<NotificationSettings>('notificationSettings', {
       racingEnabled: false,
     });
+  const { notificationPermission } = useNotificationPermissions();
 
   const SHEET_ID = import.meta.env
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
@@ -95,8 +98,8 @@ const Raceing: React.FC = () => {
     }
   };
 
-  const groupedDivisions: Division[] | undefined = useMemo(() => {
-    if (!sheetsData) return undefined;
+  const memorizedGroupedDivisions: Division[] = useMemo(() => {
+    if (!sheetsData) return [];
 
     const data: { division: string; racer: Racer }[] = sheetsData
       .slice(1)
@@ -121,50 +124,63 @@ const Raceing: React.FC = () => {
         description,
         name,
         racers,
+        desciriptionExpanded: true,
       }
     });
   }, [sheetsData]);
+
+  useEffect(() => {
+    if (memorizedGroupedDivisions.length > 0) {
+      setGroupDivisions(memorizedGroupedDivisions);
+    }
+  }, [memorizedGroupedDivisions]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
     await refetch(); // Call the refetch function from useGoogleSheets
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
-  const [expandedDivision, setExpandedDivision] = useState<number | null>(null);
+  const [groupedDivisions, setGroupDivisions] = useState<Division[]>([]);
 
   const toggleDivision = (divisionId: number) => {
-    setExpandedDivision(expandedDivision === divisionId ? null : divisionId);
+    setGroupDivisions(prev => prev.map(d =>
+      d.id === divisionId ? { ...d, desciriptionExpanded: !d.desciriptionExpanded } : d));
   };
-
 
   return (
     <IonPage>
       <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
-        {Capacitor.isPluginAvailable('PushNotifications') && (
-          <IonCard>
-            <IonCardHeader>
-              <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonToggle
-                checked={notificationSettings.racingEnabled}
-                onIonChange={() => toggleNotification()}
-              >
-                Enable race notifications
-              </IonToggle>
-              {racingNotificationsError && (
-                <IonItem>
-                  <IonLabel color={'danger'}>
-                    {racingNotificationsError}
-                  </IonLabel>
-                </IonItem>
-              )}
-            </IonCardContent>
-          </IonCard>
-        )}
+        {notificationPermission === 'prompt' ? "" : notificationPermission === 'denied' ? (
+          <IonCard><IonCardContent>
+            <IonIcon icon={notificationsOffOutline} /> Go to your device's system settings and enable notifications for this app so that you can receive updates about racing.
+          </IonCardContent></IonCard>)
+          :
+          (
+            <IonCard>
+              <IonCardHeader>
+                <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonToggle
+                  checked={notificationSettings.racingEnabled}
+                  onIonChange={() => toggleNotification()}
+                >
+                  Enable race notifications
+                </IonToggle>
+                {racingNotificationsError && (
+                  <IonItem>
+                    <IonLabel color={'danger'}>
+                      {racingNotificationsError}
+                    </IonLabel>
+                  </IonItem>
+                )}
+              </IonCardContent>
+            </IonCard>
+          )}
 
         <IonCard>
+          <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
           <IonCardContent>
             <IonText>The following people have purchased race tickets for Oak City Shred Fest 5.  Want to race against them?&nbsp;</IonText>
             <IonText>
@@ -201,8 +217,6 @@ const Raceing: React.FC = () => {
 
             <IonList>
               {groupedDivisions.map((division) => {
-                const isExpanded = expandedDivision === division.id;
-
                 return (
                   <IonItemGroup key={division.id}>
                     <IonItemDivider
@@ -215,7 +229,7 @@ const Raceing: React.FC = () => {
                         {`${division.name}`}
                       </IonText>
                       <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
-                        icon={isExpanded ? informationCircle : informationCircleOutline}
+                        icon={division.desciriptionExpanded ? informationCircle : informationCircleOutline}
                         slot="end"
                       />
                     </IonItemDivider>
@@ -223,7 +237,7 @@ const Raceing: React.FC = () => {
 
                     <div slot="content">
 
-                      {isExpanded && (
+                      {division.desciriptionExpanded && (
                         <IonCard>
                           <IonCardContent>
                             <IonText>{division.description}</IonText>

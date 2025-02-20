@@ -8,6 +8,7 @@ const TrickCompPage: React.FC = () => {
     <IonPage>
       <PageHeader title='Trick Comp' />
       <IonContent>
+        <img src="images/stokepark.webp" alt="Trick Comp" />
         <UnderConstruction />
       </IonContent>
     </IonPage>

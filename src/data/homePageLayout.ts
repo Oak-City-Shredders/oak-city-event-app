@@ -10,7 +10,7 @@ export const homePageLayout: LayoutItem[] = [
     title: 'Race Information',
     description: 'Rules and races',
     route: '/race-information',
-    image: '/images/race-information-small.webp',
+    image: '/images/LukeAustinRace.webp',
   },
   {
     title: 'Side Quests',
