@@ -24,10 +24,11 @@ import { getErrorMessage } from '../utils/errorUtils';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
-import { Capacitor } from '@capacitor/core';
 import PageHeader from '../components/PageHeader';
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
+import useNotificationPermissions from '../hooks/useNotifcationPermissions';
+import { notificationsOffOutline } from 'ionicons/icons';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -54,6 +55,7 @@ const Raceing: React.FC = () => {
     useLocalStorage<NotificationSettings>('notificationSettings', {
       racingEnabled: false,
     });
+  const { notificationPermission } = useNotificationPermissions();
 
   const SHEET_ID = import.meta.env
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
@@ -149,28 +151,33 @@ const Raceing: React.FC = () => {
     <IonPage>
       <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
-        {Capacitor.isPluginAvailable('PushNotifications') && (
-          <IonCard>
-            <IonCardHeader>
-              <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent>
-              <IonToggle
-                checked={notificationSettings.racingEnabled}
-                onIonChange={() => toggleNotification()}
-              >
-                Enable race notifications
-              </IonToggle>
-              {racingNotificationsError && (
-                <IonItem>
-                  <IonLabel color={'danger'}>
-                    {racingNotificationsError}
-                  </IonLabel>
-                </IonItem>
-              )}
-            </IonCardContent>
-          </IonCard>
-        )}
+        {notificationPermission === 'prompt' ? "" : notificationPermission === 'denied' ? (
+          <IonCard><IonCardContent>
+            <IonIcon icon={notificationsOffOutline} /> Go to your device's system settings and enable notifications for this app so that you can receive updates about racing.
+          </IonCardContent></IonCard>)
+          :
+          (
+            <IonCard>
+              <IonCardHeader>
+                <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonToggle
+                  checked={notificationSettings.racingEnabled}
+                  onIonChange={() => toggleNotification()}
+                >
+                  Enable race notifications
+                </IonToggle>
+                {racingNotificationsError && (
+                  <IonItem>
+                    <IonLabel color={'danger'}>
+                      {racingNotificationsError}
+                    </IonLabel>
+                  </IonItem>
+                )}
+              </IonCardContent>
+            </IonCard>
+          )}
 
         <IonCard>
           <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
