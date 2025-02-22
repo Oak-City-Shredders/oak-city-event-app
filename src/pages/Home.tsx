@@ -21,7 +21,7 @@ import {
   useIonRouter,
   IonRefresher,
   IonRefresherContent,
-  RefresherEventDetail
+  RefresherEventDetail,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -32,7 +32,9 @@ import {
 } from 'ionicons/icons';
 import { PushNotificationSchema } from '@capacitor/push-notifications';
 import StokeMeter from '../components/StokeMeter';
-import DynamicContent, { DynamicContentProps } from '../components/DynamicContent';
+import DynamicContent, {
+  DynamicContentProps,
+} from '../components/DynamicContent';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
@@ -63,18 +65,37 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = 'DynamicContent!A:J';
 
-  const {
-    data,
-    loading,
-    error,
-    refetch,
-  } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
 
-  const dynamicContent: DynamicContentProps[] = !data ? [] : data
-    .slice(1) // Skip header row
-    .map(([enabled, imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink]: string[]) => ({
-      enabled: (enabled === "Yes"), imageLink, title, subtitle, datePosted, shortDescription, detailedImageLink, detailedDescription, buttonName, buttonLink
-    }))
+  const dynamicContent: DynamicContentProps[] = !data
+    ? []
+    : data
+        .slice(1) // Skip header row
+        .map(
+          ([
+            enabled,
+            imageLink,
+            title,
+            subtitle,
+            datePosted,
+            shortDescription,
+            detailedImageLink,
+            detailedDescription,
+            buttonName,
+            buttonLink,
+          ]: string[]) => ({
+            enabled: enabled === 'Yes',
+            imageLink,
+            title,
+            subtitle,
+            datePosted,
+            shortDescription,
+            detailedImageLink,
+            detailedDescription,
+            buttonName,
+            buttonLink,
+          })
+        );
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -92,7 +113,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
     if (!Capacitor.isPluginAvailable('EdgeToEdge')) return;
-    await EdgeToEdge.setBackgroundColor({ color: "#38e4ae" });
+    await EdgeToEdge.setBackgroundColor({ color: '#38e4ae' });
   };
 
   setStatusBarBackground();
@@ -126,7 +147,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               <IonItem
                 button
                 onClick={() => {
-                  handleCardClick("/about");
+                  handleCardClick('/about');
                 }}
               >
                 <IonLabel>About</IonLabel>
@@ -138,9 +159,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
-            <IonTitle>
-              Oak City Shred Fest 5
-            </IonTitle>
+            <IonTitle>Oak City Shred Fest 5</IonTitle>
             <IonButtons slot="end">
               <IonButton onClick={handleAuthClick}>
                 <IonIcon icon={personCircleOutline} size="large" />
@@ -155,7 +174,8 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonHeader collapse="condense">
             <IonToolbar>
               <IonImg
-                src="/images/OCSF5+Web+Logo.webp"
+                className="shred-fest-logo"
+                src="/images/shred-fest-logo.webp"
                 alt="Oak City Shred Fest 5"
               />
             </IonToolbar>
@@ -189,7 +209,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
             </IonCard>
           )}
           <StokeMeter />
-          {dynamicContent.map((d, index) => d.enabled && <DynamicContent key={index} {...d} />)}
+          {/* {dynamicContent.map(
+            (d, index) => d.enabled && <DynamicContent key={index} {...d} />
+          )} */}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}

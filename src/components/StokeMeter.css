@@ -14,3 +14,7 @@
     var(--ion-color-primary)
   );
 }
+
+.stoke-meter {
+  margin-bottom: 8px;
+}

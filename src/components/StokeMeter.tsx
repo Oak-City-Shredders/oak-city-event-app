@@ -58,16 +58,18 @@ export default function StokeMeter() {
     stokeItems.filter((item) => item.completed).length / stokeItems.length;
 
   return (
-    <IonCard>
+    <IonCard className="stoke-meter">
       <IonCardHeader onClick={onToggleView}>
         <IonCardTitle>Stoke Meter</IonCardTitle>
         <IonCardSubtitle>Are you ready for the fest?</IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent>
-        <motion.div className="cursor-pointer" whileTap={{ scale: 1.02 }} onClick={onToggleView}>
-          <div
-            className="custom-progress-container mb-4"
-          >
+        <motion.div
+          className="cursor-pointer"
+          whileTap={{ scale: 1.02 }}
+          onClick={onToggleView}
+        >
+          <div className="custom-progress-container mb-4">
             <IonProgressBar value={progress} className="custom-progress-bar" />
           </div>
           <p className="text-lg text-center">
@@ -89,25 +91,29 @@ export default function StokeMeter() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: item.id * 0.1 }}
                 >
-                  <IonItem style={{ alignItems: "center" }}>
+                  <IonItem style={{ alignItems: 'center' }}>
                     <IonCheckbox
                       checked={item.completed}
                       onIonChange={() => handleCheck(item.id)}
                       disabled={item.id === 1}
                       style={{ flexGrow: 1 }} // Makes checkbox take up available space
                     />
-                    <div style={{ textAlign: "right", minWidth: "fit-content" }}>
+                    <div
+                      style={{ textAlign: 'right', minWidth: 'fit-content' }}
+                    >
                       {item.link ? (
                         <a
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          style={{ whiteSpace: "nowrap" }}
+                          style={{ whiteSpace: 'nowrap' }}
                         >
                           {item.text}
                         </a>
                       ) : (
-                        <span style={{ whiteSpace: "nowrap" }}>{item.text}</span>
+                        <span style={{ whiteSpace: 'nowrap' }}>
+                          {item.text}
+                        </span>
                       )}
                     </div>
                   </IonItem>
