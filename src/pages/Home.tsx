@@ -46,7 +46,7 @@ const iconMap = {
   time: timeOutline, // Time related
 };
 
-const shredFestStartDate = '2024-04-24';
+const shredFestStartDate = '2025-04-24';
 
 const getIconForNotification = (notification: PushNotificationSchema) => {
   const text = `${notification.title} ${notification.body}`.toLowerCase();
