@@ -73,19 +73,23 @@ export const getIcon = (eventTitle: string = ''): JSX.Element => {
   // Return the icon if found, otherwise return the default
   return (
     ICONS[
-      Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
+    Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
     ] || <IonIcon aria-hidden="true" slot="start" icon={alarm} />
   );
 };
 
 // Function to get the name of the day for a given date
 export const getFormattedDate = (dateString: string): string => {
-  const dayName = new Intl.DateTimeFormat('en-US', {
+  const date = new Date(dateString + 'T00:00:00'); // Interpret in local time
+  const dayName = date.toLocaleDateString('en-US', {
     weekday: 'long',
-  }).format(new Date(dateString + 'T00:00:00'));
-  return `${dayName} - ${new Date(dateString).toLocaleDateString('en-US', {
+    timeZone: 'UTC', // Ensures the correct day name without shifting time zones
+  });
+
+  return `${dayName} - ${date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+    timeZone: 'UTC', // Ensures consistency
   })}`;
 };
 
