@@ -5,6 +5,7 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonContent,
+  IonImg,
   IonLabel,
   IonPage,
   IonText,
@@ -18,7 +19,7 @@ const EmergencyServices: React.FC = () => {
       <PageHeader title="Emergency Services" />
       <IonContent>
         <IonCard>
-          <img
+          <IonImg
             src="/images/emergency-services.webp"
             alt="Scavenger Hunt"
             className="emergency-image"

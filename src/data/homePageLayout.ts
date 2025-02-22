@@ -7,16 +7,28 @@ export interface LayoutItem {
 
 export const homePageLayout: LayoutItem[] = [
   {
-    title: 'Race Information',
-    description: 'Rules and races',
-    route: '/race-information',
-    image: '/images/LukeAustinRace.webp',
+    title: 'View Schedule',
+    description: '',
+    route: '/schedule',
+    image: '/images/schedule-small.webp',
   },
   {
-    title: 'Side Quests',
+    title: 'Map',
     description: '',
-    route: '/quests',
-    image: '/images/quests-small.webp',
+    route: '/map',
+    image: '/images/map-small.webp',
+  },
+  {
+    title: 'Race Info',
+    description: 'Rules and races',
+    route: '/race-information',
+    image: '/images/race-information-small.webp',
+  },
+  {
+    title: 'Trick Comp',
+    description: '',
+    route: '/trick-comp',
+    image: '/images/trick-comp-small.webp',
   },
   {
     title: 'Scavenger Hunt',
@@ -26,29 +38,29 @@ export const homePageLayout: LayoutItem[] = [
     image: '/images/scavenger-hunt-small.webp',
   },
   {
+    title: 'Side Quests',
+    description: '',
+    route: '/quests',
+    image: '/images/quests-small.webp',
+  },
+  {
     title: 'Food Trucks',
     description: 'Explore food truck options.',
     route: '/food-trucks',
     image: '/images/food-truck-small.webp',
   },
-  {
-    title: 'Trick Comp',
-    description: '',
-    route: '/trick-comp',
-    image: '/images/trick-comp-small.webp',
-  },
-  {
-    title: 'Raffles & Giveaways',
-    description: 'Win amazing prizes',
-    route: '/raffles-giveaways',
-    image: '/images/raffles-giveaways-small.webp',
-  },
-  {
-    title: 'Emergency Services',
-    description: 'Contact information',
-    route: '/emergency-services',
-    image: '/images/emergency-services-small.webp',
-  },
+  // {
+  //   title: 'Raffles',
+  //   description: 'Win amazing prizes',
+  //   route: '/raffles-giveaways',
+  //   image: '/images/raffles-giveaways-small.webp',
+  // },
+  // {
+  //   title: 'Emergency',
+  //   description: 'Contact information',
+  //   route: '/emergency-services',
+  //   image: '/images/emergency-services-small.webp',
+  // },
   {
     title: 'Drip Schedule',
     description: 'Daily outfit schedule',
