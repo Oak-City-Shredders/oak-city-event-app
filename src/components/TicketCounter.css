@@ -1,0 +1,11 @@
+.ticket-count {
+  margin: 0 16px;
+  text-align: center;
+  background-color: #39e4ad;
+  border-radius: 8px;
+
+  h1 {
+    padding: 8px;
+    margin-top: 12px;
+  }
+}

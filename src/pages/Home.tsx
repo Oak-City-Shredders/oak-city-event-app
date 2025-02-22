@@ -39,11 +39,14 @@ import useGoogleSheets from '../hooks/useGoogleSheets';
 import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { Capacitor } from '@capacitor/core';
+import TicketCounter from '../components/TicketCounter';
 
 const iconMap = {
   race: flagOutline, // Racing related
   time: timeOutline, // Time related
 };
+
+const shredFestStartDate = '2024-04-24';
 
 const getIconForNotification = (notification: PushNotificationSchema) => {
   const text = `${notification.title} ${notification.body}`.toLowerCase();
@@ -183,7 +186,13 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
-          <CountdownTimer />
+          {new Date() <= new Date(shredFestStartDate) && (
+            <>
+              <TicketCounter />
+              <CountdownTimer />
+              <StokeMeter />
+            </>
+          )}
           {notifications.length > 0 && (
             <IonCard className="ion-padding">
               <IonList>
@@ -208,14 +217,13 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               </IonList>
             </IonCard>
           )}
-          <StokeMeter />
-          {/* {dynamicContent.map(
-            (d, index) => d.enabled && <DynamicContent key={index} {...d} />
-          )} */}
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
           />
+          {dynamicContent.map(
+            (d, index) => d.enabled && <DynamicContent key={index} {...d} />
+          )}
         </IonContent>
       </IonPage>
     </>
