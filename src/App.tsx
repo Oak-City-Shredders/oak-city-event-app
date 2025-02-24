@@ -20,7 +20,7 @@ import {
 } from '@ionic/react';
 
 // Ionicons
-import { alarm, calendar, home, map } from 'ionicons/icons';
+import { alarm, calendar, home, map, people } from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
@@ -41,6 +41,7 @@ import Raffles from './pages/Raffles';
 import ScavengerHunt from './pages/ScavengerHunt';
 import SchedulePage from './pages/SchedulePage';
 import TrickCompPage from './pages/TrickComp';
+import Team from './pages/Team';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -129,6 +130,9 @@ const App: React.FC = () => {
               <Route path="/trick-comp">
                 <TrickCompPage />
               </Route>
+              <Route path="/team">
+                <Team />
+              </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
@@ -145,6 +149,10 @@ const App: React.FC = () => {
               <IonTabButton tab="schedule" href="/schedule">
                 <IonIcon aria-hidden="true" icon={calendar} />
                 <IonLabel>Schedule</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="team" href="/team">
+                <IonIcon aria-hidden="true" icon={people} />
+                <IonLabel>Team</IonLabel>
               </IonTabButton>
               <IonTabButton tab="notifcations" href="/notifications">
                 <IonIcon icon={alarm} />
