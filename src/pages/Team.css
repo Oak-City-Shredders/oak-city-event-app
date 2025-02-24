@@ -1,0 +1,18 @@
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+
+.team-member {
+  text-align: center;
+
+  img {
+    border-radius: 4px;
+  }
+}
+
+.small-margin {
+  margin: 5px 0;
+}
