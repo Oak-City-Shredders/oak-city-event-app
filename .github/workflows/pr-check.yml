@@ -89,6 +89,11 @@ jobs:
       - name: Use Xcode 16
         run: sudo xcode-select -switch /Applications/Xcode_16.2.app
 
+      - name: Verify Xcode Version and Destinations
+        run: |
+          xcode-select -p
+          xcodebuild -showsdks
+
       # Build the iOS app
       - name: Build iOS app
         run: |
@@ -98,6 +103,7 @@ jobs:
                      -configuration Release \
                      archive \
                      -archivePath ios/App/build/App.xcarchive \
+                     -destination "generic/platform=iOS" \
                      DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
                      CURRENT_PROJECT_VERSION=$GITHUB_RUN_NUMBER \
                      -allowProvisioningUpdates
