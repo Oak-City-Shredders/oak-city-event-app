@@ -99,11 +99,11 @@ jobs:
         run: |
           xcodebuild -workspace ios/App/App.xcworkspace \
                      -scheme App \
-                     -sdk iphoneos \
+                     -sdk iphonesimulator18.2 \
                      -configuration Release \
                      archive \
                      -archivePath ios/App/build/App.xcarchive \
-                     -destination "generic/platform=iOS" \
+                     -destination "platform=iOS Simulator,name=iPhone 14" \
                      DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
                      CURRENT_PROJECT_VERSION=$GITHUB_RUN_NUMBER \
                      -allowProvisioningUpdates
