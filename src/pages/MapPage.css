@@ -1,0 +1,18 @@
+.chip-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px;
+}
+
+.chip {
+  flex-shrink: 0;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.chip-scroll-container::-webkit-scrollbar {
+  display: none; /* Hide scrollbar */
+}
