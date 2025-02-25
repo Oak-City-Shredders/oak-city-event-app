@@ -95,9 +95,6 @@ const LocationTracker: React.FC = () => {
     );
 };
 
-
-
-
 // Define the bounds for the image
 const imageBounds: LatLngBoundsExpression = [
     [35.713897, -78.456665], // bottom-left corner
@@ -113,17 +110,13 @@ interface ImageOverlayWithOpacityProps {
 const ImageOverlayWithOpacity = ({ imageUrl, bottomLeftPosition, topRightPosition }: { imageUrl: string, bottomLeftPosition: LatLng, topRightPosition: LatLng }) => {
     const [opacity, setOpacity] = useState(1); // Adjust initial transparency
     const overlayRef = useRef<LeafletImageOverlay | null>(null);
-    //const [bounds, setBounds] = useState(imageBounds);
-
-
-
 
     const newBounds: LatLngBoundsExpression = [
         [bottomLeftPosition.lat, bottomLeftPosition.lng], // top-right corner
         [topRightPosition.lat, topRightPosition.lng]  // bottom-left corner,
     ];
 
-    //console.log("ImageOverlayWithOpacity Rendered: new bounds", newBounds);
+
 
     return (
         <>
@@ -139,8 +132,6 @@ const ImageOverlayWithOpacity = ({ imageUrl, bottomLeftPosition, topRightPositio
             />
 
  */}
-
-
             <ImageOverlay url={imageUrl}
                 ref={overlayRef}
                 bounds={newBounds} opacity={opacity} interactive={true}
@@ -317,14 +308,6 @@ const DraggableMarker = ({ initialPosition }: { initialPosition: LatLng }) => {
     )
 }
 
-function ExampleIcon() {
-    return (
-        <IonIcon icon={arrowDown} size="large" />
-    );
-}
-
-
-
 const TooltipMarker = ({ index, poi, filter }: { index: number, poi: PointOfInterest, filter: POIFilter | undefined }) => {
     //console.log("PopupMarker Rendered: ", poi);
     //console.log("Filter: ", filter);
@@ -339,10 +322,6 @@ const TooltipMarker = ({ index, poi, filter }: { index: number, poi: PointOfInte
         lat: poi.lat,
         lng: poi.lng,
     }
-
-    //console.log("TooltipMarker Rendered: ", position);
-
-
 
     const poiIcon = poi.icon ? new Icon({
         iconUrl: `/images/map-icons/${poi.icon}`,
@@ -478,7 +457,7 @@ const SetView = ({ center }: { center: LatLng }) => {
         //lat: initialLat,
         //lng: initialLng,
     } as LatLngExpression);
-    const [lastZoom, setLastZoom] = useState(19);
+    const [lastZoom, setLastZoom] = useState(17);
     const map = useMap();
     useEffect(() => {
         map.attributionControl.setPrefix(false)
@@ -559,9 +538,10 @@ const MyMapContainer: React.FC<MyMapProps> = ({ centerOn, pointsOfInterest, poiF
 
 
             <SetView center={{ lat: initialLat, lng: initialLng } as LatLng} />
+            <LocationTracker />
 
             {/*
-<LocationTracker />
+
            <ChangeView coords={startPos as LatLngExpression} />
            
                         <LocationMarker />
