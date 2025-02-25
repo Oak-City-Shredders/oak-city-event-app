@@ -4,16 +4,15 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
 import MyMap from '../components/Map';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import { LatLngBoundsExpression } from 'leaflet';
 import { POIFilter } from '../components/Map';
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { IonBackButton, IonButtons, IonChip, IonHeader, IonItem, IonTitle, IonToolbar } from '@ionic/react';
+import { IonChip, IonHeader, IonToolbar } from '@ionic/react';
 import "./MapPage.css";
 import { useRef } from 'react';
-import { useMap } from 'react-leaflet';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 interface RouteParams {
   locationName: string;
@@ -71,7 +70,6 @@ const ChipToolbar: React.FC<ChipToolbarProps> = ({ poiFilters, error, loading, h
   };
 
   return (
-
     <div
       className="chip-scroll-container"
       ref={scrollContainerRef}
@@ -80,22 +78,16 @@ const ChipToolbar: React.FC<ChipToolbarProps> = ({ poiFilters, error, loading, h
     >
       {loading ? <IonChip>...</IonChip> : error ? <span>{error.message}</span> :
         poiFilters.map((poiFilter, index) => (poiFilter.type !== "ClickMe" && poiFilter.type !== "Label") ? (
-
           <IonChip
             onClick={() => handlePOIFilterClick(poiFilter)}
             outline={!poiFilter.isVisible}
             key={index}
             className="chip"
           >{poiFilter.type}</IonChip>
-
         ) : null)}
-
     </div>
-
   );
 };
-
-
 
 const MapPage: React.FC = () => {
   console.log("MapPage");
@@ -106,8 +98,11 @@ const MapPage: React.FC = () => {
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = 'MapData!A:P'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-
   const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const [localPOIFilters, setLocalPOIFilters] = useLocalStorage<POIFilter[]>(
+    'poi-filters-v1',
+    []
+  );
   const pointsOfInterest = useMemo(() => {
 
     if (!data) return [];
@@ -138,7 +133,7 @@ const MapPage: React.FC = () => {
   }, [data]); // ✅ Only recomputes when `data` changes
 
   useEffect(() => {
-    const poiFilters = [...new Set(pointsOfInterest.map(poi => poi.type))].map(t => ({ type: t, isVisible: t !== "ClickMe" }))
+    const poiFilters = [...new Set(pointsOfInterest.map(poi => poi.type))].map(t => ({ type: t, isVisible: (localPOIFilters.find(f => f.type === t)?.isVisible) ?? false }))
     setPOIFilters(poiFilters);
   }, [pointsOfInterest]); // ✅ Only runs when `pointsOfInterest` changes
 
@@ -147,7 +142,7 @@ const MapPage: React.FC = () => {
     setPOIFilters((prev) => {
       const poiFilters = prev.map(f =>
         f.type === poiFilter.type ? { ...f, isVisible: !f.isVisible } : f);
-      console.log("poiFilters", poiFilters);
+      setLocalPOIFilters(() => poiFilters);
       return poiFilters;
 
     }
@@ -158,8 +153,6 @@ const MapPage: React.FC = () => {
     lat: 35.7211377702728,
     lng: -78.4535666961670,
   }
-
-
 
   return (
     <IonPage>

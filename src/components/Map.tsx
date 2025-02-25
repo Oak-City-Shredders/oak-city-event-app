@@ -370,7 +370,7 @@ const TooltipMarker = ({ index, poi, filter }: { index: number, poi: PointOfInte
                 position={position as LatLng}
             >
                 <Tooltip offset={[0, 10]} permanent direction={"bottom"} className={"my-labels"}>
-                    <span >{poi.name}</span>
+                    <span className={"bold-outline-text"}>{poi.name}</span>
                 </Tooltip>
             </Marker>
 
