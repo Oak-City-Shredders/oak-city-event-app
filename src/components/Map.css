@@ -1,0 +1,22 @@
+.leaflet-tooltip.my-labels {
+  background-color: transparent;
+  border: transparent;
+  box-shadow: none;
+}
+
+.leaflet-tooltip.my-labels::before {
+  border-color: transparent;
+}
+
+.show-icon {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
