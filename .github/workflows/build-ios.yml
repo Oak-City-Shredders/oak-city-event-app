@@ -69,7 +69,6 @@ jobs:
         run: |
           echo "${{ secrets.FIREBASE_PLIST_BASE64 }}" | base64 --decode > ios/App/App/GoogleService-Info.plist
 
-
       # Build the React app
       - name: Build React app
         run: npm run build
@@ -85,6 +84,11 @@ jobs:
         run: |
           cd ios/App
           pod install
+
+      - name: Check Xcode version
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks
 
       # Build the iOS app
       - name: Build iOS app
@@ -122,8 +126,8 @@ jobs:
 
       - name: 'Upload app to TestFlight'
         uses: apple-actions/upload-testflight-build@v1
-        with: 
-          app-path: 'ios/App/build/App.ipa' 
+        with:
+          app-path: 'ios/App/build/App.ipa'
           issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
@@ -139,7 +143,7 @@ jobs:
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'  # You can also use 'zulu', 'adopt', etc.
+          distribution: 'temurin' # You can also use 'zulu', 'adopt', etc.
           java-version: '21'
 
       - name: Verify Java version
@@ -207,14 +211,14 @@ jobs:
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
         env:
           # override default build-tools version (33.0.0) -- optional
-          BUILD_TOOLS_VERSION: "34.0.0"
-    
+          BUILD_TOOLS_VERSION: '34.0.0'
+
       # Upload AAB to Google Play
       - name: Upload to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_CREDS }}
-          packageName: "com.oakcityshredfest.app"
+          packageName: 'com.oakcityshredfest.app'
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
           track: internal
           status: draft
