@@ -86,8 +86,8 @@ jobs:
           cd ios/App
           pod install
       
-      - name: List installed Xcode versions
-        run: ls /Applications | grep Xcode
+      - name: Use Xcode 16
+        run: sudo xcode-select -switch /Applications/Xcode_16.2.app
 
       # Build the iOS app
       - name: Build iOS app
