@@ -31,11 +31,7 @@ import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { notificationsOffOutline } from 'ionicons/icons';
 import { chevronDown, chevronForward } from 'ionicons/icons';
-
-interface NotificationSettings {
-  racingEnabled: boolean;
-}
-
+import NotificationToggle from '../components/NotificationToggle';
 interface Racer {
   name: string;
   team?: string;
@@ -53,11 +49,6 @@ interface Division {
 const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
-  const [racingNotificationsError, setRacingNotificationsError] = useState('');
-  const [notificationSettings, setNotificationsSettings] =
-    useLocalStorage<NotificationSettings>('notificationSettings', {
-      racingEnabled: false,
-    });
   const { notificationPermission } = useNotificationPermissions();
 
   const SHEET_ID = import.meta.env
@@ -70,36 +61,6 @@ const Raceing: React.FC = () => {
     error,
     refetch,
   } = useGoogleSheets(SHEET_ID, RANGE);
-
-  const toggleNotification = async () => {
-    const storedToken = localStorage.getItem(
-      PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY
-    );
-    if (!storedToken) {
-      setRacingNotificationsError(
-        'Notifcation settings error. Did you enable notifications?'
-      );
-      return;
-    }
-
-    try {
-      await updateTopicSubscription(
-        RACING_TOPIC,
-        storedToken,
-        !notificationSettings.racingEnabled
-      );
-      setNotificationsSettings((prev) => ({
-        ...prev,
-        racingEnabled: !prev.racingEnabled,
-      }));
-      setRacingNotificationsError('');
-    } catch (error) {
-      console.log('Error updating registration for racing topic');
-      setRacingNotificationsError(
-        'Error updating registration for racing notifications'
-      );
-    }
-  };
 
   const memorizedGroupedDivisions: Division[] = useMemo(() => {
     if (!sheetsData) return [];
@@ -160,33 +121,7 @@ const Raceing: React.FC = () => {
     <IonPage>
       <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
-        {notificationPermission === 'prompt' ? "" : notificationPermission === 'denied' ? (
-          <IonCard><IonCardContent>
-            <IonIcon icon={notificationsOffOutline} /> Go to your device's system settings and enable notifications for this app so that you can receive updates about racing.
-          </IonCardContent></IonCard>)
-          :
-          (
-            <IonCard>
-              <IonCardHeader>
-                <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <IonToggle
-                  checked={notificationSettings.racingEnabled}
-                  onIonChange={() => toggleNotification()}
-                >
-                  Enable race notifications
-                </IonToggle>
-                {racingNotificationsError && (
-                  <IonItem>
-                    <IonLabel color={'danger'}>
-                      {racingNotificationsError}
-                    </IonLabel>
-                  </IonItem>
-                )}
-              </IonCardContent>
-            </IonCard>
-          )}
+        <NotificationToggle topic={RACING_TOPIC} />
 
         <IonCard>
           <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
