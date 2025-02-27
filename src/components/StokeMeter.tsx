@@ -14,6 +14,7 @@ import {
 } from '@ionic/react';
 import { motion } from 'framer-motion';
 import './StokeMeter.css';
+import Confetti from 'react-confetti';
 
 interface StokeItem {
   id: number;
@@ -54,14 +55,29 @@ export default function StokeMeter() {
     setIsListVisible((prev) => !prev);
   };
 
-  const progress =
-    stokeItems.filter((item) => item.completed).length / stokeItems.length;
+  const completedCount = stokeItems.filter((item) => item.completed).length
+
+  const subTitle = () => {
+    switch (true) {
+      case completedCount === 1: return "Why is your stoke so low? 😔";
+      case completedCount < 4: return "Your stoke is on the rise! 🚀";
+      case completedCount <= 7: return "Full Stoke is in sight!  🔥";
+      case completedCount > 7: return "Full Stoked about Oak City Shred Fest! 🤘";
+
+
+      default: return "Are you ready for the fest?"
+    }
+  }
+
+  const progress = completedCount / stokeItems.length;
 
   return (
+
     <IonCard className="stoke-meter">
+      {isListVisible && progress === 1 && (<Confetti />)}
       <IonCardHeader onClick={onToggleView}>
         <IonCardTitle>Stoke Meter</IonCardTitle>
-        <IonCardSubtitle>Are you ready for the fest?</IonCardSubtitle>
+        <IonCardSubtitle>{subTitle()}</IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent>
         <motion.div
