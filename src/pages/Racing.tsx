@@ -18,6 +18,7 @@ import {
   IonText,
   IonSpinner,
   IonIcon,
+  IonButton
 } from '@ionic/react';
 import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
@@ -29,6 +30,7 @@ import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { notificationsOffOutline } from 'ionicons/icons';
+import { chevronDown, chevronForward } from 'ionicons/icons';
 
 interface NotificationSettings {
   racingEnabled: boolean;
@@ -43,7 +45,8 @@ interface Division {
   id: number;
   name: string;
   description?: string;
-  desciriptionExpanded?: boolean;
+  descriptionExpanded?: boolean;
+  descriptionTextExpanded?: boolean;
   racers: Racer[];
 }
 
@@ -124,7 +127,8 @@ const Raceing: React.FC = () => {
         description,
         name,
         racers,
-        desciriptionExpanded: true,
+        descriptionExpanded: true,
+        descriptionTextExpanded: false,
       }
     });
   }, [sheetsData]);
@@ -144,8 +148,13 @@ const Raceing: React.FC = () => {
 
   const toggleDivision = (divisionId: number) => {
     setGroupDivisions(prev => prev.map(d =>
-      d.id === divisionId ? { ...d, desciriptionExpanded: !d.desciriptionExpanded } : d));
+      d.id === divisionId ? { ...d, descriptionExpanded: !d.descriptionExpanded } : d));
   };
+
+  const onClickDivisionText = (division: Division) => {
+    setGroupDivisions(prev => prev.map(d =>
+      d.id === division.id ? { ...d, descriptionTextExpanded: !d.descriptionTextExpanded } : d));
+  }
 
   return (
     <IonPage>
@@ -217,6 +226,10 @@ const Raceing: React.FC = () => {
 
             <IonList>
               {groupedDivisions.map((division) => {
+
+                const wordLimit = 20; // Adjust as needed
+                const words = division.description?.split(" ") ?? [];
+
                 return (
                   <IonItemGroup key={division.id}>
                     <IonItemDivider
@@ -229,7 +242,7 @@ const Raceing: React.FC = () => {
                         {`${division.name}`}
                       </IonText>
                       <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
-                        icon={division.desciriptionExpanded ? informationCircle : informationCircleOutline}
+                        icon={division.descriptionExpanded ? informationCircle : informationCircleOutline}
                         slot="end"
                       />
                     </IonItemDivider>
@@ -237,10 +250,19 @@ const Raceing: React.FC = () => {
 
                     <div slot="content">
 
-                      {division.desciriptionExpanded && (
+                      {division.descriptionExpanded && (
                         <IonCard>
                           <IonCardContent>
-                            <IonText>{division.description}</IonText>
+                            <IonText>
+                              {division.descriptionTextExpanded ? division.description : words.slice(0, wordLimit).join(" ") + (words.length > wordLimit ? "..." : "")}
+                            </IonText>
+                            {(words.length > wordLimit) && (
+                              <IonIcon
+                                onClick={() => onClickDivisionText(division)}
+                                slot="end"
+                                icon={division.descriptionTextExpanded ? chevronDown : chevronForward}
+                              />
+                            )}
                           </IonCardContent>
                         </IonCard>
                       )}
