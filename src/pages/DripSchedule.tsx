@@ -1,13 +1,45 @@
 import React from 'react';
 import { IonLabel, IonText, IonCard, IonCardContent, IonContent, IonPage, IonItem, IonCardTitle, IonCardHeader, IonAccordion, IonAccordionGroup } from '@ionic/react';
-import UnderConstruction from '../components/UnderConstruction';
 import PageHeader from '../components/PageHeader';
 import { useRef, useEffect } from 'react';
+import useGoogleSheets from '../hooks/useGoogleSheets';
+import { RefresherEventDetail, IonRefresher, IonRefresherContent } from '@ionic/react';
+
+interface DripDay {
+  isoDate: string;
+  title: string;
+  firstOutfit: string;
+  secondOutfit: string;
+  thirdOutfit: string;
+}
 
 const DripSchedule: React.FC = () => {
   const today = new Date();
   console.log(today.toISOString().split('T')[0]); // "YYYY-MM-DD" format
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
+
+  const SHEET_ID = import.meta.env
+    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
+  const RANGE = 'DripSchedule!A:E'; // Adjust range based on racer data (e.g., A:C for 3 columns)
+
+  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+
+  const sheetDripSchedule: DripDay[] = !data
+    ? []
+    : data
+      .slice(1) // Skip header row
+      .map(([isoDate, title, firstOutfit, secondOutfit, thirdOutfit]: string[]) => ({
+        isoDate,
+        title,
+        firstOutfit,
+        secondOutfit,
+        thirdOutfit
+      }));
+
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await refetch(); // Call the refetch function from useGoogleSheets
+    event.detail.complete(); // Notify Ionic that the refresh is complete
+  };
 
   useEffect(() => {
     if (!accordionGroup.current) {
@@ -15,97 +47,45 @@ const DripSchedule: React.FC = () => {
     }
 
     const nativeEl = accordionGroup.current;
-
-
     nativeEl.value = today.toISOString().split('T')[0];
-
   })
-
 
   return (
     <IonPage>
       <PageHeader title='Drip Schedule' />
       <IonContent>
-
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         <IonCard>
           <img src="/images/drip-schedule.webp" alt="Drip Schedule" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
           <IonCardContent>
             <IonText>The squirrels at Oak City Shred Fest love to have fun with clothes and costumes.  Join us and plan ahead using the schedule below.</IonText>
-
           </IonCardContent>
         </IonCard>
 
-        <IonAccordionGroup ref={accordionGroup} value="thursday" >
-          <IonAccordion value="2025-04-24">
-            <IonItem slot="header" color="light">
-              <IonLabel>THURSDAY 4/24 - Event or PEV shirt / Video Game character</IonLabel>
-            </IonItem>
-            <div className="ion-padding" slot="content">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>What to wear:</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <ul><li>Your favorite past event shirt (Oak City, FloatLife Fest, Stokebird, etc.)
-                    First-timer at Oak City? Rock your freshest PEV gear!
-                    OG status? Break out the vintage merch from festivals past!</li>
-
-                    <li>4:30PM - Downtown Boss Battle Ride at —what’s your Choose Your Own Avatar look?! 🎮🐿️</li>
-                  </ul>
-                </IonCardContent>
-              </IonCard>
-            </div>
-
-
-          </IonAccordion>
-          <IonAccordion value="2025-04-25">
-            <IonItem slot="header" color="light">
-              <IonLabel>FRIDAY 4/25 - Dress Bold / Embody Your inner Snir</IonLabel>
-            </IonItem>
-            <div className="ion-padding" slot="content">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>What to wear:</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-
-                  <ul>
-                    <li>🏁 Time to Get Rowdy and Dress Bold!
-                      It’s race day, trick comp day, and an all-out SEND IT day. No holding back—today is about going big, riding hard, and flexing your PEV personality!</li>
-
-                    <li>The final "Snir’s Greatest Ride Ever" – Dress like Snir and roll out with the crew for this legendary ride! Let’s send it in Snir style!</li>
-                  </ul>
-                </IonCardContent>
-              </IonCard>
-            </div>
-
-
-          </IonAccordion>
-          <IonAccordion value="2025-04-26">
-            <IonItem slot="header" color="light">
-              <IonLabel>SATURDAY 4/26 – “Team Spirit Saturday”</IonLabel>
-            </IonItem>
-            <div className="ion-padding" slot="content">
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>What to wear:</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-
-                  <ul>
-                    <li>Your favorite PEV race jersey (Oak City, and partner jerseys are for sale on-site!)
-                      Reppin’ a crew? Show your squad pride!
-                      No team? No problem—Oak City is family. Grab a festival jersey and RIDE!</li>
-                  </ul>
-                </IonCardContent>
-              </IonCard>
-            </div>
-
-
-          </IonAccordion>
-
+        <IonAccordionGroup ref={accordionGroup}  >
+          {sheetDripSchedule.map(d => (
+            <IonAccordion value={d.isoDate}>
+              <IonItem slot="header" color="light">
+                <IonLabel>{d.title}</IonLabel>
+              </IonItem>
+              <div className="ion-padding" slot="content">
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle>What to wear:</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <ul>
+                      <li>{d.firstOutfit}</li>
+                      {d.secondOutfit && <li>{d.secondOutfit}</li>}
+                      {d.thirdOutfit && <li>{d.thirdOutfit}</li>}
+                    </ul>
+                  </IonCardContent>
+                </IonCard>
+              </div>
+            </IonAccordion>))}
         </IonAccordionGroup>
-
       </IonContent>
     </IonPage>
   );
