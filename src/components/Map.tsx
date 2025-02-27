@@ -26,6 +26,14 @@ const LocationTracker: React.FC = () => {
     const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    // Custom CSS for pulsing effect
+    const pulsingIcon = divIcon({
+        className: "pulsing-icon",
+        html: `<img class="location-image" src="/images/icon-48.webp" alt="Your location squirrel"> <div class="pulse-background"></div>`,
+        iconSize: [40, 40], // The size of the visible circle
+        iconAnchor: [10, 10], // Center the icon
+    });
+
     // Function to request permission and get the location
     const getLocation = async () => {
         try {
@@ -86,7 +94,7 @@ const LocationTracker: React.FC = () => {
     return (
         position ?
             <Marker
-                icon={customIcon}
+                icon={pulsingIcon}
                 key={13}
                 position={position}
                 interactive={false}
@@ -588,6 +596,37 @@ const MyMap: React.FC<MyMapProps> = ({ centerOn, pointsOfInterest, poiFilters })
         [35.712057439695535, -78.46047163009645]  // bottom-left corner,
     ];
 
+    const GoogleFormURL = "https://docs.google.com/forms/d/e/1FAIpQLScBCIPfAtLoJyPb3rFQPGkf3Vh3TVm5AbqfK-GIn34ziceJMw/viewform?usp=pp_url";
+
+
+    const [longPressCoords, setLongPressCoords] = useState<{ lat: number; lng: number } | null>(null);
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Custom Map Event Handler for Long Press
+    const LongPressHandler = () => {
+        const map = useMapEvents({
+            mousedown: (e) => {
+                console.log("mouse down")
+                timerRef.current = setTimeout(() => {
+                    setLongPressCoords(e.latlng);
+                    handleLongPress(e.latlng.lat, e.latlng.lng);
+                }, 800); // Long press threshold (800ms)
+            },
+            mouseup: () => clearTimeout(timerRef.current!),
+
+        });
+
+        return null;
+    }
+    // Handle Long Press Action
+    const handleLongPress = (lat: number, lng: number) => {
+        const isConfirmed = window.confirm(`Submit location?\nLatitude: ${lat}\nLongitude: ${lng}`);
+        if (isConfirmed) {
+            const formURL = `${GoogleFormURL}&entry.1980346688=${lat}&entry.610497468=${lng}`;
+            window.open(formURL, "_blank");
+        }
+    };
+
     return (
         <MapContainer
             zoomControl={false}
@@ -595,7 +634,7 @@ const MyMap: React.FC<MyMapProps> = ({ centerOn, pointsOfInterest, poiFilters })
             style={{ height: "100%", width: "100vw" }}
             minZoom={16}>
             <MyMapContainer pointsOfInterest={pointsOfInterest} poiFilters={poiFilters} centerOn={centerOn} />
-
+            <LongPressHandler />
             {/* 
             <Rectangle bounds={maxBounds} pathOptions={{ color: 'black' }}></Rectangle>
             */}
