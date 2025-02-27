@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { loginUser, registerUser, resetPassword, logoutUser } from '../auth';
 import {
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonButton,
   IonInput,
   IonItem,
@@ -11,9 +8,15 @@ import {
   IonPage,
   IonContent,
   IonText,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonToggle
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
+import usePreferenceSettings from '../hooks/usePreferenceSettings';
 
 const Login: React.FC = () => {
   const { user, loading } = useAuth();
@@ -21,6 +24,15 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
+
+  const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
+
+  const togglePreference = (key: string) => {
+    setPreferenceSettings((prev) => {
+      preferenceSettings[key].enabled = !preferenceSettings[key].enabled
+      return preferenceSettings;
+    });
+  }
 
   const handleLogin = async () => {
     setError(''); // Clear previous errors
@@ -116,6 +128,21 @@ const Login: React.FC = () => {
             </IonButton>
           </>
         )}
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Preferences</IonCardTitle>
+          </IonCardHeader>
+          <IonCardContent>
+            {Object.keys(preferenceSettings).map((key) => (<IonItem key={key}><IonToggle
+
+              checked={preferenceSettings[key].enabled}
+              onIonChange={() => togglePreference(key)}
+            >
+              {preferenceSettings[key].name}
+            </IonToggle></IonItem>))}
+
+          </IonCardContent>
+        </IonCard>
       </IonContent>
     </IonPage>
   );

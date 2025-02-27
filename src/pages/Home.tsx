@@ -40,6 +40,7 @@ import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { Capacitor } from '@capacitor/core';
 import TicketCounter from '../components/TicketCounter';
+import usePreferenceSettings from '../hooks/usePreferenceSettings';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -69,36 +70,37 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const RANGE = 'DynamicContent!A:J';
 
   const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
     : data
-        .slice(1) // Skip header row
-        .map(
-          ([
-            enabled,
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          ]: string[]) => ({
-            enabled: enabled === 'Yes',
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          })
-        );
+      .slice(1) // Skip header row
+      .map(
+        ([
+          enabled,
+          imageLink,
+          title,
+          subtitle,
+          datePosted,
+          shortDescription,
+          detailedImageLink,
+          detailedDescription,
+          buttonName,
+          buttonLink,
+        ]: string[]) => ({
+          enabled: enabled === 'Yes',
+          imageLink,
+          title,
+          subtitle,
+          datePosted,
+          shortDescription,
+          detailedImageLink,
+          detailedDescription,
+          buttonName,
+          buttonLink,
+        })
+      );
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -123,7 +125,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   return (
     <>
-      <IonMenu contentId="main-content">
+      <IonMenu contentId="main-content" maxEdgeStart={0}>
         <IonHeader>
           <IonToolbar color="secondary">
             <IonTitle>Navigation</IonTitle>
@@ -188,9 +190,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           </IonRefresher>
           {new Date() <= new Date(shredFestStartDate) && (
             <>
-              <TicketCounter />
-              <CountdownTimer />
-              <StokeMeter />
+              <>{preferenceSettings["ticketCounter"].enabled && (<TicketCounter />)}</>
+              <>{preferenceSettings["countDown"].enabled && (<CountdownTimer />)}</>
+              <>{preferenceSettings["stokeMeter"].enabled && (<StokeMeter />)}</>
             </>
           )}
           {notifications.length > 0 && (
