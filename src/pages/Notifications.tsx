@@ -27,6 +27,7 @@ interface SheetNotification {
   title: string;
   message: string;
   topic: string;
+  scheduled: string
   details: string;
   published: string;
   date: string;
@@ -40,7 +41,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 }) => {
   dayjs.extend(relativeTime);
   const SHEET_ID = '1I1pyZteIDs-M22DrVc5vmqvii-olGAlFlG78UpN--KI';
-  const RANGE = 'Notifications!A:G'; // Adjust range based on racer data (e.g., A:C for 3 columns)
+  const RANGE = 'Notifications-v2!A:H'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const {
     data: sheetsData,
@@ -54,10 +55,11 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
     return sheetsData
       .slice(1) // Skip header row
-      .map(([title, message, topic, published, date, result, details]: string[]) => ({
+      .map(([title, message, topic, scheduled, published, date, result, details]: string[]) => ({
         title,
         message,
         topic,
+        scheduled,
         details,
         published,
         date,
