@@ -73,32 +73,32 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const dynamicContent: DynamicContentProps[] = !data
     ? []
     : data
-        .slice(1) // Skip header row
-        .map(
-          ([
-            enabled,
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          ]: string[]) => ({
-            enabled: enabled === 'Yes',
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          })
-        );
+      .slice(1) // Skip header row
+      .map(
+        ([
+          enabled,
+          imageLink,
+          title,
+          subtitle,
+          datePosted,
+          shortDescription,
+          detailedImageLink,
+          detailedDescription,
+          buttonName,
+          buttonLink,
+        ]: string[]) => ({
+          enabled: enabled === 'Yes',
+          imageLink,
+          title,
+          subtitle,
+          datePosted,
+          shortDescription,
+          detailedImageLink,
+          detailedDescription,
+          buttonName,
+          buttonLink,
+        })
+      );
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -123,7 +123,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   return (
     <>
-      <IonMenu contentId="main-content">
+      <IonMenu contentId="main-content" maxEdgeStart={0}>
         <IonHeader>
           <IonToolbar color="secondary">
             <IonTitle>Navigation</IonTitle>

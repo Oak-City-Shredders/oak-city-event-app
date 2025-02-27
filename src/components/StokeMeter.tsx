@@ -62,8 +62,7 @@ export default function StokeMeter() {
       case completedCount === 1: return "Why is your stoke so low? 😔";
       case completedCount < 4: return "Your stoke is on the rise! 🚀";
       case completedCount <= 7: return "Full Stoke is in sight!  🔥";
-      case completedCount > 7: return "Full Stoked about Oak City Shred Fest! 🤘";
-
+      case completedCount > 7: return "Fully Stoked about Oak City Shred Fest! 🤘";
 
       default: return "Are you ready for the fest?"
     }
