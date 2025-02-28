@@ -20,7 +20,7 @@ const EmergencyServices: React.FC = () => {
       <IonContent>
         <IonCard>
           <IonImg
-            src="/images/emergency-services.webp"
+            src="/images/emergency-services-small.webp"
             alt="Scavenger Hunt"
             className="emergency-image"
           />
