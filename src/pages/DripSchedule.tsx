@@ -15,7 +15,6 @@ interface DripDay {
 
 const DripSchedule: React.FC = () => {
   const today = new Date();
-  console.log(today.toISOString().split('T')[0]); // "YYYY-MM-DD" format
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
 
   const SHEET_ID = import.meta.env
@@ -58,7 +57,7 @@ const DripSchedule: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         <IonCard>
-          <img src="/images/drip-schedule.webp" alt="Drip Schedule" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
+          <img src="/images/drip-schedule-small.webp" alt="Drip Schedule" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
           <IonCardContent>
             <IonText>The squirrels at Oak City Shred Fest love to have fun with clothes and costumes.  Join us and plan ahead using the schedule below.</IonText>
           </IonCardContent>
@@ -66,7 +65,7 @@ const DripSchedule: React.FC = () => {
 
         <IonAccordionGroup ref={accordionGroup}  >
           {sheetDripSchedule.map(d => (
-            <IonAccordion value={d.isoDate}>
+            <IonAccordion key={d.isoDate} value={d.isoDate}>
               <IonItem slot="header" color="light">
                 <IonLabel>{d.title}</IonLabel>
               </IonItem>

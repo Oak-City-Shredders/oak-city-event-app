@@ -20,7 +20,7 @@ const ScavengerHunt: React.FC = () => {
         <NotificationToggle topic={"scavenger-hunt"} />
         <IonCard>
           <img
-            src="/images/scavenger-hunt.webp"
+            src="/images/scavenger-hunt-small.webp"
             alt="Scavenger Hunt"
             style={{
               width: '100%',
