@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import {
     IonCardContent,
@@ -20,6 +20,7 @@ import { updateTopicSubscription } from '../utils/notificationUtils';
 const defaultSettings = {
     racing: true,
     scavenger_hunt: true,
+    trick_comp: true,
 };
 
 
@@ -29,6 +30,14 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
     const { notificationPermission } = useNotificationPermissions();
     const [notificationsError, setNotificationsError] = useState('');
 
+    // Ensure missing keys from defaults are merged in
+    useEffect(() => {
+        const updatedSettings = { ...defaultSettings, ...notificationSettings };
+        // Only update if there were missing keys
+        if (JSON.stringify(updatedSettings) !== JSON.stringify(notificationSettings)) {
+            setNotificationsSettings(updatedSettings);
+        }
+    }, [notificationSettings, setNotificationsSettings]);
 
     const toggleNotification = async () => {
         const storedToken = localStorage.getItem(
