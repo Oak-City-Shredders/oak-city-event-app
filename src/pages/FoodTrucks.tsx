@@ -1,22 +1,101 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   IonPage,
   IonContent
 } from '@ionic/react';
-import CardLayout from '../components/CardLayout';
-import layout from '../data/foodTrucksLayout.json';
 import PageHeader from '../components/PageHeader';
+import useFireStoreDB from '../hooks/useFireStoreDB';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonRefresher,
+  IonRefresherContent,
+  IonCardTitle,
+  IonImg,
+  IonCardSubtitle,
+  RefresherEventDetail
+} from '@ionic/react';
+
+interface FireDBFoodTruck {
+  "Image": string;
+  "IsOpenForOrders": string;
+  "Location": string;
+  "Menu": string;
+  "Name": string;
+  "Notes": string;
+  "PlannedSchedule": any | string;
+  "link": string;
+  "description": string;
+  "Category": string;
+  id: string;
+}
 
 const FoodTrucks: React.FC = () => {
+
+  const {
+    data,
+    loading,
+    error,
+    refetch,
+  } = useFireStoreDB<FireDBFoodTruck>("FoodTrucks");
+
+  const layout = useMemo(() => {
+    if (!data) return [];
+
+    const mappedData = data
+      .map((truck) => ({
+        image: truck.Image,
+        route: truck.link,
+        description: truck.description,
+        title: truck.Name,
+        isOpenForOrders: Boolean(truck.IsOpenForOrders),
+        plannedSchedule: truck.PlannedSchedule ? JSON.parse(truck.PlannedSchedule) : {},
+        menu: truck.Menu,
+        category: truck.Category,
+
+      }))
+
+
+    return mappedData;
+  }, [data]);
+
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank');
+  };
+
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    await refetch(); // Call the refetch function from firebase db
+    event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
   return (
     <IonPage>
       <PageHeader title="Food Trucks" />
       <IonContent fullscreen>
-        <CardLayout items={layout} handleCardClick={handleCardClick} />
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
+        {loading ? (
+          <p>Loading food trucks...</p>
+        ) : error ? (
+          <p>Error loading food trucks</p>
+        ) : (
+          <>
+            {layout.map((item, index: number) => (
+              <IonCard
+                key={index}
+                onClick={() => handleCardClick(item.route)}
+              >
+                <IonImg src={item.image} alt={item.title} />
+                <IonCardHeader>
+                  <IonCardTitle>{item.title}</IonCardTitle>
+                  <IonCardSubtitle>{item.description}</IonCardSubtitle>
+                </IonCardHeader>
+                {item.menu && (<IonCardContent>{item.menu}</IonCardContent>)}
+              </IonCard>
+
+            ))}</>)}
       </IonContent>
     </IonPage>
   );
