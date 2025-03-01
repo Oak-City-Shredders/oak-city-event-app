@@ -29,7 +29,6 @@ function useFireStoreDB<T>(collectionId: string): FireStoreDBHook<T> {
       );
 
       setData(items);
-      console.log(items);
     } catch (error) {
       setError(error as Error);
       console.log(error);
