@@ -35,11 +35,12 @@ import StokeMeter from '../components/StokeMeter';
 import DynamicContent, {
   DynamicContentProps,
 } from '../components/DynamicContent';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { Capacitor } from '@capacitor/core';
 import TicketCounter from '../components/TicketCounter';
+import usePreferenceSettings from '../hooks/usePreferenceSettings';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -61,6 +62,20 @@ interface HomeProps {
   removeNotification: (notifcation: PushNotificationSchema) => void;
 }
 
+interface FireDBDynamicContent {
+  "Button Link": string;
+  "Button Name": string;
+  "Date Posted": string;
+  "Detailed Description": string;
+  "Detailed Image link": string;
+  "Enabled": string;
+  "Image Link": string;
+  "Short Description": string;
+  "Subtitle": string;
+  "Title": string;
+  id: string;
+}
+
 const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const router = useIonRouter();
 
@@ -68,37 +83,26 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = 'DynamicContent!A:J';
 
-  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data, loading, error, refetch } = useFireStoreDB<FireDBDynamicContent>("DynamicContent");
+  const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
     : data
-        .slice(1) // Skip header row
-        .map(
-          ([
-            enabled,
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          ]: string[]) => ({
-            enabled: enabled === 'Yes',
-            imageLink,
-            title,
-            subtitle,
-            datePosted,
-            shortDescription,
-            detailedImageLink,
-            detailedDescription,
-            buttonName,
-            buttonLink,
-          })
-        );
+      .map(
+        (dc) => ({
+          enabled: dc.Enabled === 'Yes',
+          imageLink: dc['Image Link'],
+          title: dc.Title,
+          subtitle: dc.Subtitle,
+          datePosted: dc['Date Posted'],
+          shortDescription: dc['Short Description'],
+          detailedImageLink: dc['Detailed Image link'],
+          detailedDescription: dc['Detailed Description'],
+          buttonName: dc['Button Name'],
+          buttonLink: dc['Button Link'],
+        })
+      );
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -109,7 +113,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   };
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function (Firebase DB)
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
@@ -123,7 +127,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   return (
     <>
-      <IonMenu contentId="main-content">
+      <IonMenu contentId="main-content" maxEdgeStart={0}>
         <IonHeader>
           <IonToolbar color="secondary">
             <IonTitle>Navigation</IonTitle>
@@ -188,9 +192,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           </IonRefresher>
           {new Date() <= new Date(shredFestStartDate) && (
             <>
-              <TicketCounter />
-              <CountdownTimer />
-              <StokeMeter />
+              <>{preferenceSettings["ticketCounter"].enabled && (<TicketCounter />)}</>
+              <>{preferenceSettings["countDown"].enabled && (<CountdownTimer />)}</>
+              <>{preferenceSettings["stokeMeter"].enabled && (<StokeMeter />)}</>
             </>
           )}
           {notifications.length > 0 && (

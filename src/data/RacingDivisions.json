@@ -32,6 +32,10 @@
     "description": "Amateur division for electric unicycle (EUC) riders new to racing."
   },
   {
+    "division": "EUC Pro",
+    "description": "Pro division for electric unicycle (EUC) riders."
+  },
+  {
     "division": "Open Onewheel-Clydesdale",
     "description": "Open division for Onewheel riders weighing 215 lbs or more."
   },

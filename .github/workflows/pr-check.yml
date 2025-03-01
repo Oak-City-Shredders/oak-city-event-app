@@ -86,6 +86,14 @@ jobs:
           cd ios/App
           pod install
 
+      - name: Verify Xcode Version and Destinations
+        run: |
+          xcode-select -p
+          xcodebuild -showsdks
+
+      - name: List installed Xcode versions
+        run: ls /Applications | grep Xcode
+
       # Build the iOS app
       - name: Build iOS app
         run: |

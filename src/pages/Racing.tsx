@@ -1,11 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import {
   RefresherEventDetail,
-  IonCardHeader,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
-  IonToggle,
   IonItemGroup,
   IonItemDivider,
   IonRefresher,
@@ -19,21 +16,14 @@ import {
   IonSpinner,
   IonIcon,
 } from '@ionic/react';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { updateTopicSubscription } from '../utils/notificationUtils';
-import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
 import PageHeader from '../components/PageHeader';
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
-import { notificationsOffOutline } from 'ionicons/icons';
-
-interface NotificationSettings {
-  racingEnabled: boolean;
-}
-
+import { chevronDown, chevronForward } from 'ionicons/icons';
+import NotificationToggle from '../components/NotificationToggle';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 interface Racer {
   name: string;
   team?: string;
@@ -43,69 +33,42 @@ interface Division {
   id: number;
   name: string;
   description?: string;
-  desciriptionExpanded?: boolean;
+  descriptionExpanded?: boolean;
+  descriptionTextExpanded?: boolean;
   racers: Racer[];
+}
+
+interface FireDBRacer {
+  "Category": string;
+  "Comment": string;
+  "Link to Instagram": string;
+  "Link to Photo": string;
+  "Racer Name": string;
+  "Racer Team": string;
+  id: string;
 }
 
 const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
-  const [racingNotificationsError, setRacingNotificationsError] = useState('');
-  const [notificationSettings, setNotificationsSettings] =
-    useLocalStorage<NotificationSettings>('notificationSettings', {
-      racingEnabled: false,
-    });
   const { notificationPermission } = useNotificationPermissions();
 
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'Sheet1!A:C'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const {
     data: sheetsData,
     loading,
     error,
     refetch,
-  } = useGoogleSheets(SHEET_ID, RANGE);
-
-  const toggleNotification = async () => {
-    const storedToken = localStorage.getItem(
-      PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY
-    );
-    if (!storedToken) {
-      setRacingNotificationsError(
-        'Notifcation settings error. Did you enable notifications?'
-      );
-      return;
-    }
-
-    try {
-      await updateTopicSubscription(
-        RACING_TOPIC,
-        storedToken,
-        !notificationSettings.racingEnabled
-      );
-      setNotificationsSettings((prev) => ({
-        ...prev,
-        racingEnabled: !prev.racingEnabled,
-      }));
-      setRacingNotificationsError('');
-    } catch (error) {
-      console.log('Error updating registration for racing topic');
-      setRacingNotificationsError(
-        'Error updating registration for racing notifications'
-      );
-    }
-  };
+  } = useFireStoreDB<FireDBRacer>("Sheet1");
 
   const memorizedGroupedDivisions: Division[] = useMemo(() => {
     if (!sheetsData) return [];
 
     const data: { division: string; racer: Racer }[] = sheetsData
-      .slice(1)
-      .map(([division, racer, team]: string[]) => ({
-        division: division,
-        racer: { name: racer, team },
+      .filter(racer => racer['Racer Name'])
+      .map((racer) => ({
+        division: racer.Category,
+        racer: { name: racer['Racer Name'], team: racer['Racer Team'] },
       }));
 
     const grouped = data.reduce<Record<string, Racer[]>>(
@@ -124,7 +87,8 @@ const Raceing: React.FC = () => {
         description,
         name,
         racers,
-        desciriptionExpanded: true,
+        descriptionExpanded: true,
+        descriptionTextExpanded: false,
       }
     });
   }, [sheetsData]);
@@ -136,7 +100,7 @@ const Raceing: React.FC = () => {
   }, [memorizedGroupedDivisions]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from firebase db
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
@@ -144,40 +108,19 @@ const Raceing: React.FC = () => {
 
   const toggleDivision = (divisionId: number) => {
     setGroupDivisions(prev => prev.map(d =>
-      d.id === divisionId ? { ...d, desciriptionExpanded: !d.desciriptionExpanded } : d));
+      d.id === divisionId ? { ...d, descriptionExpanded: !d.descriptionExpanded } : d));
   };
+
+  const onClickDivisionText = (division: Division) => {
+    setGroupDivisions(prev => prev.map(d =>
+      d.id === division.id ? { ...d, descriptionTextExpanded: !d.descriptionTextExpanded } : d));
+  }
 
   return (
     <IonPage>
       <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
-        {notificationPermission === 'prompt' ? "" : notificationPermission === 'denied' ? (
-          <IonCard><IonCardContent>
-            <IonIcon icon={notificationsOffOutline} /> Go to your device's system settings and enable notifications for this app so that you can receive updates about racing.
-          </IonCardContent></IonCard>)
-          :
-          (
-            <IonCard>
-              <IonCardHeader>
-                <IonCardSubtitle>Racing Notifications</IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <IonToggle
-                  checked={notificationSettings.racingEnabled}
-                  onIonChange={() => toggleNotification()}
-                >
-                  Enable race notifications
-                </IonToggle>
-                {racingNotificationsError && (
-                  <IonItem>
-                    <IonLabel color={'danger'}>
-                      {racingNotificationsError}
-                    </IonLabel>
-                  </IonItem>
-                )}
-              </IonCardContent>
-            </IonCard>
-          )}
+        <NotificationToggle topic={RACING_TOPIC} />
 
         <IonCard>
           <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
@@ -217,6 +160,10 @@ const Raceing: React.FC = () => {
 
             <IonList>
               {groupedDivisions.map((division) => {
+
+                const wordLimit = 20; // Adjust as needed
+                const words = division.description?.split(" ") ?? [];
+
                 return (
                   <IonItemGroup key={division.id}>
                     <IonItemDivider
@@ -229,7 +176,7 @@ const Raceing: React.FC = () => {
                         {`${division.name}`}
                       </IonText>
                       <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
-                        icon={division.desciriptionExpanded ? informationCircle : informationCircleOutline}
+                        icon={division.descriptionExpanded ? informationCircle : informationCircleOutline}
                         slot="end"
                       />
                     </IonItemDivider>
@@ -237,10 +184,19 @@ const Raceing: React.FC = () => {
 
                     <div slot="content">
 
-                      {division.desciriptionExpanded && (
+                      {division.descriptionExpanded && (
                         <IonCard>
                           <IonCardContent>
-                            <IonText>{division.description}</IonText>
+                            <IonText>
+                              {division.descriptionTextExpanded ? division.description : words.slice(0, wordLimit).join(" ") + (words.length > wordLimit ? "..." : "")}
+                            </IonText>
+                            {(words.length > wordLimit) && (
+                              <IonIcon
+                                onClick={() => onClickDivisionText(division)}
+                                slot="end"
+                                icon={division.descriptionTextExpanded ? chevronDown : chevronForward}
+                              />
+                            )}
                           </IonCardContent>
                         </IonCard>
                       )}

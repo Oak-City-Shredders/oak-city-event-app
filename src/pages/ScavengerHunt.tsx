@@ -10,15 +10,17 @@ import {
   IonPage
 } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
+import NotificationToggle from '../components/NotificationToggle';
 
 const ScavengerHunt: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
       <IonContent>
+        <NotificationToggle topic={"scavenger-hunt"} />
         <IonCard>
           <img
-            src="/images/scavenger-hunt.webp"
+            src="/images/scavenger-hunt-small.webp"
             alt="Scavenger Hunt"
             style={{
               width: '100%',

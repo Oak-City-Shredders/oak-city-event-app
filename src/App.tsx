@@ -33,7 +33,7 @@ import EmergencyServices from './pages/EmergencyServices';
 import FoodTrucks from './pages/FoodTrucks';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import Map from './pages/Map';
+import MapPage from './pages/MapPage';
 import Notifications from './pages/Notifications';
 import QuestsPage from './pages/Quests';
 import Raceing from './pages/Racing';
@@ -107,7 +107,7 @@ const App: React.FC = () => {
               </Route>
               <Route exact path="/login" component={Login} />
               <Route exact path="/map/:locationName?">
-                <Map />
+                <MapPage />
               </Route>
               <Route path="/notifications">
                 <Notifications notifications={notifications} />
