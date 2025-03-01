@@ -15,9 +15,9 @@ import {
   RefresherEventDetail,
 } from '@ionic/react';
 import useLocalStorage from '../hooks/useLocalStorage';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 
 interface Quest {
   id: number;
@@ -25,12 +25,15 @@ interface Quest {
   completed: boolean;
 }
 
-const QuestsPage: React.FC = () => {
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'Quests!A:B'; // Adjust range based on racer data (e.g., A:C for 3 columns)
+interface FireDBQuest {
+  "ID": string;
+  "Quest": string;
+  id: string;
+}
 
-  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+const QuestsPage: React.FC = () => {
+
+  const { data, loading, error, refetch } = useFireStoreDB<FireDBQuest>("Quests");
   const [locallyStoredQuests, setQueststoLocalStorage] = useLocalStorage<
     Quest[]
   >('quests', []);
@@ -38,10 +41,9 @@ const QuestsPage: React.FC = () => {
   const sheetQuestsUpdatedWithLocal: Quest[] = !data
     ? []
     : data
-      .slice(1) // Skip header row
-      .map(([id, text]: string[]) => ({
-        id: Number(id),
-        text,
+      .map((q) => ({
+        id: Number(q.id),
+        text: q.Quest,
         completed: false,
       }))
       .map((spreadSheetQuest: Quest) => {
@@ -62,7 +64,7 @@ const QuestsPage: React.FC = () => {
   };
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from Firestore DB
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 

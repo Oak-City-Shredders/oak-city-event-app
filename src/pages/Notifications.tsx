@@ -91,7 +91,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
   const { notificationPermission } = useNotificationPermissions();
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from Firestore DB
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 
