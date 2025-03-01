@@ -13,6 +13,9 @@
 # production
 /build
 
+# firebase account key
+/serviceAccountKey.json
+
 # misc
 .DS_Store
 .env.local
