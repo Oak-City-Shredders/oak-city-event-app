@@ -1,0 +1,165 @@
+{
+  "team": {
+    "1": {
+      "name": "Josh Christensen",
+      "nickname": "\"Supremo\"",
+      "role": "Festival & Marketing",
+      "img_src": "/images/team/supremo.webp",
+      "sort_order": 1
+    },
+    "2": {
+      "name": "Mark Gryzb",
+      "nickname": "\"Gryz\"",
+      "role": "Hospitality",
+      "img_src": "/images/team/gryz.webp",
+      "sort_order": 2
+    },
+    "3": {
+      "name": "Jon Brown",
+      "nickname": "\"Jon Brown\"",
+      "role": "Racing",
+      "img_src": "/images/team/jon-brown.webp",
+      "sort_order": 3
+    },
+    "4": {
+      "name": "Jared Farago",
+      "nickname": "\"Mad Scientist\"",
+      "role": "Scavenger Hunt & App",
+      "img_src": "/images/team/mad-scientist.webp",
+      "sort_order": 4
+    },
+    "5": {
+      "name": "Dave Wolf",
+      "nickname": "\"White Wolf\"",
+      "role": "Treasurer & App",
+      "img_src": "/images/team/dave-wolf.webp",
+      "sort_order": 5
+    },
+    "6": {
+      "name": "Kay Love",
+      "nickname": "",
+      "role": "Volunteers",
+      "img_src": "/images/team/kay.webp",
+      "sort_order": 6
+    },
+    "7": {
+      "name": "Kenzi",
+      "nickname": "",
+      "role": "EUC",
+      "img_src": "/images/team/kenzi.webp",
+      "sort_order": 8
+    },
+    "8": {
+      "name": "Ryan Lerch",
+      "nickname": "",
+      "role": "Float Track",
+      "img_src": "/images/team/lerch.webp",
+      "sort_order": 21
+    },
+    "9": {
+      "name": "Snir",
+      "nickname": "",
+      "role": "Stargate",
+      "img_src": "/images/team/snir.webp",
+      "sort_order": 9
+    },
+    "10": {
+      "name": "Aaron Saunders",
+      "nickname": "\"A A Ron\"",
+      "role": "Float Track & Trail Capt.",
+      "img_src": "/images/team/aaron.webp",
+      "sort_order": 10
+    },
+    "11": {
+      "name": "Chris Pinky",
+      "nickname": "\"Pinky\"",
+      "role": "Race Captain",
+      "img_src": "/images/team/pinky.webp",
+      "sort_order": 11
+    },
+    "12": {
+      "name": "Mike",
+      "nickname": "\"D Dom\"",
+      "role": "Disc Golf",
+      "img_src": "/images/team/placeholder.webp",
+      "sort_order": 12
+    },
+    "13": {
+      "name": "Evan Hoke",
+      "nickname": "\"Oak City Outlaw\"",
+      "role": "Tech",
+      "img_src": "/images/team/evan.webp",
+      "sort_order": 13
+    },
+    "14": {
+      "name": "Eric Nichols",
+      "nickname": "\"Oak City Carpenter\"",
+      "role": "Carpenter",
+      "img_src": "/images/team/eric.webp",
+      "sort_order": 14
+    },
+    "15": {
+      "name": "Joe Rana",
+      "nickname": "\"Papa Joe\"",
+      "role": "Stoke Spreader",
+      "img_src": "/images/team/joe.webp",
+      "sort_order": 15
+    },
+    "16": {
+      "name": "Danielle Diaz-Silveira",
+      "nickname": "\"Danielle2Daddy\"",
+      "role": "Swag",
+      "img_src": "/images/team/danielle.webp",
+      "sort_order": 16
+    },
+    "17": {
+      "name": "Josh Johnson",
+      "nickname": "\"Terminator\"",
+      "role": "Underground Races",
+      "img_src": "/images/team/terminator.webp",
+      "sort_order": 17
+    },
+    "18": {
+      "name": "Alex Mononen",
+      "nickname": "\"Sparky\"",
+      "role": "Networking",
+      "img_src": "/images/team/alex.webp",
+      "sort_order": 18
+    },
+    "19": {
+      "name": "Zach Case",
+      "nickname": "",
+      "role": "Super Volunteer",
+      "img_src": "/images/team/placeholder.webp",
+      "sort_order": 19
+    },
+    "20": {
+      "name": "Kaity",
+      "nickname": "",
+      "role": "Music",
+      "img_src": "/images/team/kaity.webp",
+      "sort_order": 20
+    },
+    "21": {
+      "name": "Noah Via",
+      "nickname": "",
+      "role": "Trick Comp",
+      "img_src": "/images/team/noah.webp",
+      "sort_order": 7
+    },
+    "22": {
+      "name": "Josue Olea",
+      "nickname": "\"Sway\"",
+      "role": "Signage",
+      "img_src": "/images/team/sway.webp",
+      "sort_order": 22
+    },
+    "23": {
+      "name": "Greg Ackerman",
+      "nickname": "",
+      "role": "Stoke Spreader",
+      "img_src": "/images/team/greg.webp",
+      "sort_order": 23
+    }
+  }
+}

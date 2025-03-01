@@ -20,6 +20,7 @@
         "@types/react-router-dom": "^5.3.3",
         "dayjs": "^1.11.13",
         "firebase": "^11.3.0",
+        "firebase-admin": "^13.1.0",
         "ionicons": "^7.0.0",
         "leaflet": "^1.9.4",
         "motion": "^12.4.2",
