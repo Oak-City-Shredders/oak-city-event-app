@@ -2,8 +2,8 @@ import React from 'react';
 import { IonLabel, IonText, IonCard, IonCardContent, IonContent, IonPage, IonItem, IonCardTitle, IonCardHeader, IonAccordion, IonAccordionGroup } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { useRef, useEffect } from 'react';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import { RefresherEventDetail, IonRefresher, IonRefresherContent } from '@ionic/react';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 
 interface DripDay {
   isoDate: string;
@@ -13,30 +13,35 @@ interface DripDay {
   thirdOutfit: string;
 }
 
+interface FireDBDripDay {
+  Date: string;
+  "First Outfit": string;
+  "Second Outfit": string;
+  "Third Outfit": string;
+  "Title": string;
+  id: string;
+}
+
 const DripSchedule: React.FC = () => {
   const today = new Date();
   const accordionGroup = useRef<null | HTMLIonAccordionGroupElement>(null);
 
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'DripSchedule!A:E'; // Adjust range based on racer data (e.g., A:C for 3 columns)
-
-  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data, loading, error, refetch } = useFireStoreDB<FireDBDripDay>("DripSchedule");
 
   const sheetDripSchedule: DripDay[] = !data
     ? []
     : data
-      .slice(1) // Skip header row
-      .map(([isoDate, title, firstOutfit, secondOutfit, thirdOutfit]: string[]) => ({
-        isoDate,
-        title,
-        firstOutfit,
-        secondOutfit,
-        thirdOutfit
+      .filter(drip => drip.Date)
+      .map((drip) => ({
+        isoDate: drip.Date,
+        title: drip.Title,
+        firstOutfit: drip['First Outfit'],
+        secondOutfit: drip['Second Outfit'],
+        thirdOutfit: drip['Third Outfit']
       }));
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from firedb
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 

@@ -1,11 +1,8 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import {
   RefresherEventDetail,
-  IonCardHeader,
   IonCard,
   IonCardContent,
-  IonCardSubtitle,
-  IonToggle,
   IonItemGroup,
   IonItemDivider,
   IonRefresher,
@@ -18,20 +15,15 @@ import {
   IonText,
   IonSpinner,
   IonIcon,
-  IonButton
 } from '@ionic/react';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import { getErrorMessage } from '../utils/errorUtils';
-import useLocalStorage from '../hooks/useLocalStorage';
-import { updateTopicSubscription } from '../utils/notificationUtils';
-import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
 import PageHeader from '../components/PageHeader';
 import { informationCircle, informationCircleOutline } from "ionicons/icons";
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
-import { notificationsOffOutline } from 'ionicons/icons';
 import { chevronDown, chevronForward } from 'ionicons/icons';
 import NotificationToggle from '../components/NotificationToggle';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 interface Racer {
   name: string;
   team?: string;
@@ -46,30 +38,37 @@ interface Division {
   racers: Racer[];
 }
 
+interface FireDBRacer {
+  "Category": string;
+  "Comment": string;
+  "Link to Instagram": string;
+  "Link to Photo": string;
+  "Racer Name": string;
+  "Racer Team": string;
+  id: string;
+}
+
 const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
   const { notificationPermission } = useNotificationPermissions();
 
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'Sheet1!A:C'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const {
     data: sheetsData,
     loading,
     error,
     refetch,
-  } = useGoogleSheets(SHEET_ID, RANGE);
+  } = useFireStoreDB<FireDBRacer>("Sheet1");
 
   const memorizedGroupedDivisions: Division[] = useMemo(() => {
     if (!sheetsData) return [];
 
     const data: { division: string; racer: Racer }[] = sheetsData
-      .slice(1)
-      .map(([division, racer, team]: string[]) => ({
-        division: division,
-        racer: { name: racer, team },
+      .filter(racer => racer['Racer Name'])
+      .map((racer) => ({
+        division: racer.Category,
+        racer: { name: racer['Racer Name'], team: racer['Racer Team'] },
       }));
 
     const grouped = data.reduce<Record<string, Racer[]>>(
@@ -101,7 +100,7 @@ const Raceing: React.FC = () => {
   }, [memorizedGroupedDivisions]);
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from firebase db
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 

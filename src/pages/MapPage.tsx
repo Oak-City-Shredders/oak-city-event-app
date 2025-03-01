@@ -5,7 +5,6 @@ import {
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import MyMap from '../components/Map';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import { LatLngBoundsExpression } from 'leaflet';
 import { POIFilter } from '../components/Map';
 import { useEffect, useMemo, useState, useCallback } from 'react';
@@ -13,6 +12,7 @@ import { IonChip, IonHeader, IonToolbar } from '@ionic/react';
 import "./MapPage.css";
 import { useRef } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useFireStoreDB from '../hooks/useFireStoreDB';
 
 interface RouteParams {
   locationName: string;
@@ -89,6 +89,25 @@ const ChipToolbar: React.FC<ChipToolbarProps> = ({ poiFilters, error, loading, h
   );
 };
 
+interface FireDBMapItems {
+  "Description": string;
+  "Icon": string;
+  "Icon Anchor": string;
+  "Icon Popup Anchor": string;
+  "Icon size": string;
+  "Image": string;
+  "Image Left Bottom": string;
+  "Image Top Right": string;
+  "Lat": string;
+  "Lng": string;
+  "Marker or Image": string;
+  "Name": string;
+  "Tooltip Offset": string;
+  "Type": string;
+  "route": string;
+  id: string;
+}
+
 const MapPage: React.FC = () => {
   console.log("MapPage");
   const { locationName } = useParams<RouteParams>();
@@ -98,7 +117,7 @@ const MapPage: React.FC = () => {
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = 'MapData!A:P'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
-  const { data, loading, error, refetch } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data, loading, error, refetch } = useFireStoreDB<FireDBMapItems>("MapData");
   const [localPOIFilters, setLocalPOIFilters] = useLocalStorage<POIFilter[]>(
     'poi-filters-v1',
     []
@@ -107,27 +126,25 @@ const MapPage: React.FC = () => {
 
     if (!data) return [];
     console.log("pointsOfInterest");
-    return data.slice(1).map(([id, lat, lng, type, name,
-      icon, isImage, description, image, route, iconSize, iconAnchor, iconPopupAnchor, boundsLeftBottom, boundsTopRight, toolTipOffset
-    ]: string[]) => ({
-      id: Number(id),
-      lat: Number(lat),
-      lng: Number(lng),
-      type,
-      name,
-      icon,
-      description,
-      image,
-      route,
-      iconSize: iconSize ? iconSize.split(",").map(Number) : [24, 24],
-      iconAnchor: iconAnchor ? iconAnchor.split(",").map(Number) : [12, 12],
-      popupAnchor: iconPopupAnchor ? iconPopupAnchor.split(",").map(Number) : [1, -34],
-      isImage: isImage === "Image",
-      bounds: boundsLeftBottom && boundsTopRight ? [
-        [Number(boundsLeftBottom.split(",")[0]), Number(boundsLeftBottom.split(",")[1])],
-        [Number(boundsTopRight.split(",")[0]), Number(boundsTopRight.split(",")[1])]
+    return data.slice(1).map((item) => ({
+      id: Number(item.id),
+      lat: Number(item.Lat),
+      lng: Number(item.Lng),
+      type: item.Type,
+      name: item.Name,
+      icon: item.Icon,
+      description: item.Description,
+      image: item.Image,
+      route: item.route,
+      iconSize: item['Icon size'] ? item['Icon size'].split(",").map(Number) : [24, 24],
+      iconAnchor: item['Icon Anchor'] ? item['Icon Anchor'].split(",").map(Number) : [12, 12],
+      popupAnchor: item['Icon Popup Anchor'] ? item['Icon Popup Anchor'].split(",").map(Number) : [1, -34],
+      isImage: item['Marker or Image'] === "Image",
+      bounds: item['Image Left Bottom'] && item['Image Top Right'] ? [
+        [Number(item['Image Left Bottom'].split(",")[0]), Number(item['Image Left Bottom'].split(",")[1])],
+        [Number(item['Image Top Right'].split(",")[0]), Number(item['Image Top Right'].split(",")[1])]
       ] as LatLngBoundsExpression : undefined,
-      toolTipOffset: toolTipOffset ? toolTipOffset.split(",").map(Number) : [0, -20],
+      toolTipOffset: item['Tooltip Offset'] ? item['Tooltip Offset'].split(",").map(Number) : [0, -20],
       isVisible: true,
     }));
   }, [data]); // ✅ Only recomputes when `data` changes

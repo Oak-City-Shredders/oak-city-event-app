@@ -1,38 +1,47 @@
 import { useEffect, useState } from 'react';
 import { IonText } from '@ionic/react';
-import useGoogleSheets from '../hooks/useGoogleSheets';
 import './TicketCounter.css';
+import useFireStoreDB from '../hooks/useFireStoreDB';
+
+interface FireDBTicketsSold {
+  Sold: string;
+  id: string;
+}
 
 export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
 
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'TicketsSold!A:J';
-
-  const { data } = useGoogleSheets(SHEET_ID, RANGE);
+  const { data } = useFireStoreDB<FireDBTicketsSold>("TicketsSold");
 
   useEffect(() => {
     const sold: number = !data
       ? 0
       : data
-          .slice(1) // Skip header row
-          .reduce((acc, [sold]: string[]) => acc + parseInt(sold, 10), 0);
+        .reduce((acc, rec) => acc + parseInt(rec.Sold, 10), 0);
     setTicketsSold(sold);
   }, [data]);
 
   useEffect(() => {
     let count = 0;
-    const interval = setInterval(() => {
+    let speed = 150; // Initial speed (in ms)
+
+    const updateCounter = () => {
+      if (count >= ticketsSold) {
+        setTicketCount(ticketsSold);
+        return;
+      }
+
       count += 1;
       setTicketCount(count);
-      if (count === ticketsSold) {
-        clearInterval(interval);
-      }
-    }, 20);
+      // Reduce the interval time to create an accelerating effect
+      speed = Math.max(5, speed * 0.97); // Decrease speed (min 5ms)
 
-    return () => clearInterval(interval);
+      setTimeout(updateCounter, speed);
+    };
+
+    updateCounter();
+
   }, [ticketsSold]);
 
   return (

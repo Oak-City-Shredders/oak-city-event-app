@@ -3,7 +3,6 @@ import { App } from '@capacitor/app';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-
 interface FireStoreDBHook<T> {
     data: T[] | null;
     loading: boolean;
@@ -32,6 +31,7 @@ function useFireStoreDB<T>(
             setData(items);
         } catch (error) {
             setError(error as Error);
+            console.log(error)
         } finally {
             setLoading(false);
         }

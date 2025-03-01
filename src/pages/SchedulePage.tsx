@@ -42,7 +42,7 @@ const SchedulePage: React.FC = () => {
   };
 
   const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from useGoogleSheets
+    await refetch(); // Call the refetch function from google calendar
     event.detail.complete(); // Notify Ionic that the refresh is complete
   };
 

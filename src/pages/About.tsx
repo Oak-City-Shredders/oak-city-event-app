@@ -34,7 +34,7 @@ const About: React.FC = () => {
           </IonCardHeader>
           <IonCardContent>
             <p><b>Developers:</b> Jared Farago, David Wolf, Collin Chandler</p>
-            <p><b>Testers:</b> Maya Wolf, Josh Christensen, Noah Via, Hannah Kenward Pope</p>
+            <p><b>Testers:</b> Maya Wolf, Josh Christensen, Noah Via, Hannah Kenward Pope, Mark Grzyb</p>
           </IonCardContent>
         </IonCard>
       </IonContent>
