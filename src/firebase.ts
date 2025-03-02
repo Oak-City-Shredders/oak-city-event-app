@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import { getFirestore } from "firebase/firestore";
+import { initializeAuth, indexedDBLocalPersistence } from 'firebase/auth';
+import { Capacitor } from '@capacitor/core';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,7 +20,17 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
+// Normally, Firebase Auth automatically initializes when calling initializeApp().
+// but on iOS (Capacitor native), Firebase needs to be explicitly initialized with a different persistence layer.
+// if not, DB calls don't work
+if (Capacitor.isNativePlatform()) {
+  initializeAuth(app, {
+    persistence: indexedDBLocalPersistence,
+  });
+}
+
+//const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 
 export default app;
