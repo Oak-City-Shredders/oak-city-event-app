@@ -32,7 +32,6 @@ if (Capacitor.isNativePlatform()) {
 }
 
 const analytics = getAnalytics(app);
-//const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 
 export default app;
