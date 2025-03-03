@@ -150,10 +150,6 @@ const App: React.FC = () => {
                 <IonIcon aria-hidden="true" icon={calendar} />
                 <IonLabel>Schedule</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="team" href="/team">
-                <IonIcon aria-hidden="true" icon={people} />
-                <IonLabel>Team</IonLabel>
-              </IonTabButton>
               <IonTabButton tab="notifcations" href="/notifications">
                 <IonIcon icon={alarm} />
                 {notifications.length > 0 && (
