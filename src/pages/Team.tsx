@@ -9,17 +9,14 @@ import {
 import './Team.css'; // Import the CSS file for styling
 
 import useTeamMembers from '../hooks/useTeamMembers';
+import PageHeader from '../components/PageHeader';
 
 const Team: React.FC = () => {
   const { teamMembers, loading, error } = useTeamMembers();
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Meet the Directors</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Meet the Team" />
       <IonContent>
         <div className="team-grid">
           {teamMembers.map((member, index) => (
