@@ -18,15 +18,22 @@ import {
 } from '@ionic/react';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
-import { informationCircle, informationCircleOutline } from "ionicons/icons";
+import { informationCircle, informationCircleOutline } from 'ionicons/icons';
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { chevronDown, chevronForward } from 'ionicons/icons';
 import NotificationToggle from '../components/NotificationToggle';
 import useFireStoreDB from '../hooks/useFireStoreDB';
-interface Racer {
+import { useIonRouter } from '@ionic/react';
+
+export interface Racer {
   name: string;
   team?: string;
+  id: number;
+  photoLink: string;
+  comment: string;
+  socialLink: string;
+  nickName: string;
 }
 
 interface Division {
@@ -38,13 +45,15 @@ interface Division {
   racers: Racer[];
 }
 
-interface FireDBRacer {
-  "Category": string;
-  "Comment": string;
-  "Link to Instagram": string;
-  "Link to Photo": string;
-  "Racer Name": string;
-  "Racer Team": string;
+export interface FireDBRacer {
+  Category: string;
+  Comment: string;
+  'Link to Instagram': string;
+  'Link to Photo': string;
+  'Racer Name': string;
+  'Racer Team': string;
+  Nickname: string;
+  OCSF4_qualifier: string;
   id: string;
 }
 
@@ -52,23 +61,31 @@ const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
   const { notificationPermission } = useNotificationPermissions();
-
+  const router = useIonRouter();
 
   const {
     data: sheetsData,
     loading,
     error,
     refetch,
-  } = useFireStoreDB<FireDBRacer>("Sheet1");
+  } = useFireStoreDB<FireDBRacer>('Sheet1');
 
   const memorizedGroupedDivisions: Division[] = useMemo(() => {
     if (!sheetsData) return [];
 
     const data: { division: string; racer: Racer }[] = sheetsData
-      .filter(racer => racer['Racer Name'])
+      .filter((racer) => racer['Racer Name']) //filter out records without a Racer Name
       .map((racer) => ({
         division: racer.Category,
-        racer: { name: racer['Racer Name'], team: racer['Racer Team'] },
+        racer: {
+          name: racer['Racer Name'],
+          team: racer['Racer Team'],
+          id: Number(racer.id),
+          photoLink: racer['Link to Photo'],
+          comment: racer.Comment,
+          socialLink: racer['Link to Instagram'],
+          nickName: racer['Nickname'],
+        },
       }));
 
     const grouped = data.reduce<Record<string, Racer[]>>(
@@ -81,7 +98,8 @@ const Raceing: React.FC = () => {
     );
 
     return Object.entries(grouped).map(([name, racers], id) => {
-      const description = divisions.find(d => d.division === name)?.description || "";
+      const description =
+        divisions.find((d) => d.division === name)?.description || '';
       return {
         id,
         description,
@@ -89,7 +107,7 @@ const Raceing: React.FC = () => {
         racers,
         descriptionExpanded: true,
         descriptionTextExpanded: false,
-      }
+      };
     });
   }, [sheetsData]);
 
@@ -107,14 +125,28 @@ const Raceing: React.FC = () => {
   const [groupedDivisions, setGroupDivisions] = useState<Division[]>([]);
 
   const toggleDivision = (divisionId: number) => {
-    setGroupDivisions(prev => prev.map(d =>
-      d.id === divisionId ? { ...d, descriptionExpanded: !d.descriptionExpanded } : d));
+    setGroupDivisions((prev) =>
+      prev.map((d) =>
+        d.id === divisionId
+          ? { ...d, descriptionExpanded: !d.descriptionExpanded }
+          : d
+      )
+    );
   };
 
   const onClickDivisionText = (division: Division) => {
-    setGroupDivisions(prev => prev.map(d =>
-      d.id === division.id ? { ...d, descriptionTextExpanded: !d.descriptionTextExpanded } : d));
-  }
+    setGroupDivisions((prev) =>
+      prev.map((d) =>
+        d.id === division.id
+          ? { ...d, descriptionTextExpanded: !d.descriptionTextExpanded }
+          : d
+      )
+    );
+  };
+
+  const navigateToRacerProfile = (racerId: number) => {
+    router.push(`/racer-profile/${racerId}`);
+  };
 
   return (
     <IonPage>
@@ -123,16 +155,29 @@ const Raceing: React.FC = () => {
         <NotificationToggle topic={RACING_TOPIC} />
 
         <IonCard>
-          <img src="/images/race2.webp" alt="Luke Austin" style={{ width: "100%", height: "auto", maxHeight: "300px", objectFit: "cover" }} />
+          <img
+            src="/images/race2.webp"
+            alt="Luke Austin"
+            style={{
+              width: '100%',
+              height: 'auto',
+              maxHeight: '300px',
+              objectFit: 'cover',
+            }}
+          />
           <IonCardContent>
-            <IonText>The following people have purchased race tickets for Oak City Shred Fest 5.  Want to race against them?&nbsp;</IonText>
             <IonText>
-
+              The following people have purchased race tickets for Oak City
+              Shred Fest 5. Want to race against them?&nbsp;
+            </IonText>
+            <IonText>
               <a
-                href={"https://www.oakcityshredfest.com/2025-tickets/p/ultimate-racer-bundle"}
+                href={
+                  'https://www.oakcityshredfest.com/2025-tickets/p/ultimate-racer-bundle'
+                }
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ whiteSpace: "nowrap" }}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 Get your ticket here
               </a>
@@ -155,14 +200,10 @@ const Raceing: React.FC = () => {
           <IonText>No racers are currently available to be shown.</IonText>
         ) : (
           <>
-
-
-
             <IonList>
               {groupedDivisions.map((division) => {
-
                 const wordLimit = 20; // Adjust as needed
-                const words = division.description?.split(" ") ?? [];
+                const words = division.description?.split(' ') ?? [];
 
                 return (
                   <IonItemGroup key={division.id}>
@@ -175,26 +216,36 @@ const Raceing: React.FC = () => {
                       <IonText class="ion-text-nowrap" slot="start">
                         {`${division.name}`}
                       </IonText>
-                      <IonText >{`(${division.racers.length})`}</IonText> <IonIcon
-                        icon={division.descriptionExpanded ? informationCircle : informationCircleOutline}
+                      <IonText>{`(${division.racers.length})`}</IonText>{' '}
+                      <IonIcon
+                        icon={
+                          division.descriptionExpanded
+                            ? informationCircle
+                            : informationCircleOutline
+                        }
                         slot="end"
                       />
                     </IonItemDivider>
 
-
                     <div slot="content">
-
                       {division.descriptionExpanded && (
                         <IonCard>
                           <IonCardContent>
                             <IonText>
-                              {division.descriptionTextExpanded ? division.description : words.slice(0, wordLimit).join(" ") + (words.length > wordLimit ? "..." : "")}
+                              {division.descriptionTextExpanded
+                                ? division.description
+                                : words.slice(0, wordLimit).join(' ') +
+                                  (words.length > wordLimit ? '...' : '')}
                             </IonText>
-                            {(words.length > wordLimit) && (
+                            {words.length > wordLimit && (
                               <IonIcon
                                 onClick={() => onClickDivisionText(division)}
                                 slot="end"
-                                icon={division.descriptionTextExpanded ? chevronDown : chevronForward}
+                                icon={
+                                  division.descriptionTextExpanded
+                                    ? chevronDown
+                                    : chevronForward
+                                }
                               />
                             )}
                           </IonCardContent>
@@ -203,20 +254,21 @@ const Raceing: React.FC = () => {
 
                       <IonList>
                         {division.racers.map((racer, index) => (
-                          <IonItem key={index}>
+                          <IonItem
+                            key={index}
+                            onClick={() => navigateToRacerProfile(racer.id)}
+                          >
                             <IonLabel>
-                              {racer.name} {racer.team ? `[${racer.team}]` : ""}
+                              {racer.name} {racer.team ? `[${racer.team}]` : ''}
                             </IonLabel>
                           </IonItem>
                         ))}
                       </IonList>
                     </div>
-
                   </IonItemGroup>
                 );
               })}
             </IonList>
-
           </>
         )}
       </IonContent>

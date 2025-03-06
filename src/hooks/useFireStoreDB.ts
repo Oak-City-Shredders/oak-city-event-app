@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { App } from '@capacitor/app';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 interface FireStoreDBHook<T> {
@@ -10,7 +10,10 @@ interface FireStoreDBHook<T> {
   refetch: () => Promise<void>;
 }
 
-function useFireStoreDB<T>(collectionId: string): FireStoreDBHook<T> {
+function useFireStoreDB<T>(
+  collectionId: string,
+  docId?: string
+): FireStoreDBHook<T> {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -19,16 +22,30 @@ function useFireStoreDB<T>(collectionId: string): FireStoreDBHook<T> {
     setLoading(true);
     setError(null);
     try {
-      const querySnapshot = await getDocs(collection(db, collectionId));
-      const items = querySnapshot.docs.map(
-        (doc) =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as T)
-      );
+      if (docId) {
+        const docRef = doc(db, collectionId, docId);
+        const docSnap = await getDoc(docRef);
 
-      setData(items);
+        if (docSnap.exists()) {
+          setData([
+            {
+              id: docSnap.id,
+              ...docSnap.data(),
+            } as T,
+          ]);
+        }
+      } else {
+        const querySnapshot = await getDocs(collection(db, collectionId));
+        const items = querySnapshot.docs.map(
+          (doc) =>
+            ({
+              id: doc.id,
+              ...doc.data(),
+            } as T)
+        );
+
+        setData(items);
+      }
     } catch (error) {
       setError(error as Error);
       console.log(error);
