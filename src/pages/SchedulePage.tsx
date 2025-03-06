@@ -12,7 +12,7 @@ import {
   IonItem,
   IonText,
   IonLoading,
-  IonPage
+  IonPage,
 } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar

@@ -26,14 +26,14 @@ interface Quest {
 }
 
 interface FireDBQuest {
-  "ID": string;
-  "Quest": string;
+  ID: string;
+  Quest: string;
   id: string;
 }
 
 const QuestsPage: React.FC = () => {
-
-  const { data, loading, error, refetch } = useFireStoreDB<FireDBQuest>("Quests");
+  const { data, loading, error, refetch } =
+    useFireStoreDB<FireDBQuest>('Quests');
   const [locallyStoredQuests, setQueststoLocalStorage] = useLocalStorage<
     Quest[]
   >('quests', []);
@@ -41,19 +41,19 @@ const QuestsPage: React.FC = () => {
   const sheetQuestsUpdatedWithLocal: Quest[] = !data
     ? []
     : data
-      .map((q) => ({
-        id: Number(q.id),
-        text: q.Quest,
-        completed: false,
-      }))
-      .map((spreadSheetQuest: Quest) => {
-        const localQuest = locallyStoredQuests.find(
-          (q) => q.id === spreadSheetQuest.id
-        );
-        return localQuest
-          ? { ...spreadSheetQuest, completed: localQuest.completed }
-          : spreadSheetQuest;
-      });
+        .map((q) => ({
+          id: Number(q.id),
+          text: q.Quest,
+          completed: false,
+        }))
+        .map((spreadSheetQuest: Quest) => {
+          const localQuest = locallyStoredQuests.find(
+            (q) => q.id === spreadSheetQuest.id
+          );
+          return localQuest
+            ? { ...spreadSheetQuest, completed: localQuest.completed }
+            : spreadSheetQuest;
+        });
 
   const toggleQuestCompletion = (id: number) => {
     setQueststoLocalStorage(

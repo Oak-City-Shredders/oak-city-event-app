@@ -55,25 +55,29 @@ export default function StokeMeter() {
     setIsListVisible((prev) => !prev);
   };
 
-  const completedCount = stokeItems.filter((item) => item.completed).length
+  const completedCount = stokeItems.filter((item) => item.completed).length;
 
   const subTitle = () => {
     switch (true) {
-      case completedCount === 1: return "Why is your stoke so low? 😔";
-      case completedCount < 4: return "Your stoke is on the rise! 🚀";
-      case completedCount <= 7: return "Full Stoke is in sight!  🔥";
-      case completedCount > 7: return "Fully Stoked about Oak City Shred Fest! 🤘";
+      case completedCount === 1:
+        return 'Why is your stoke so low? 😔';
+      case completedCount < 4:
+        return 'Your stoke is on the rise! 🚀';
+      case completedCount <= 7:
+        return 'Full Stoke is in sight!  🔥';
+      case completedCount > 7:
+        return 'Fully Stoked about Oak City Shred Fest! 🤘';
 
-      default: return "Are you ready for the fest?"
+      default:
+        return 'Are you ready for the fest?';
     }
-  }
+  };
 
   const progress = completedCount / stokeItems.length;
 
   return (
-
     <IonCard className="stoke-meter">
-      {isListVisible && progress === 1 && (<Confetti />)}
+      {isListVisible && progress === 1 && <Confetti />}
       <IonCardHeader onClick={onToggleView}>
         <IonCardTitle>Stoke Meter</IonCardTitle>
         <IonCardSubtitle>{subTitle()}</IonCardSubtitle>

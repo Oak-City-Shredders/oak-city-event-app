@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from 'react';
 
 const localStorageEventTarget = new EventTarget(); // Global event bus
 
@@ -19,12 +19,17 @@ function useLocalStorage<T>(
   const setValue = useCallback(
     (value: T | ((prevValue: T) => T)) => {
       try {
-        const valueToStore = value instanceof Function ? value(storedValue) : value;
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
 
         // Dispatch event to notify other components
-        localStorageEventTarget.dispatchEvent(new CustomEvent("localStorageUpdated", { detail: { key, value: valueToStore } }));
+        localStorageEventTarget.dispatchEvent(
+          new CustomEvent('localStorageUpdated', {
+            detail: { key, value: valueToStore },
+          })
+        );
       } catch (error) {
         console.error(error);
       }
@@ -40,9 +45,15 @@ function useLocalStorage<T>(
       }
     };
 
-    localStorageEventTarget.addEventListener("localStorageUpdated", handleUpdate);
+    localStorageEventTarget.addEventListener(
+      'localStorageUpdated',
+      handleUpdate
+    );
     return () => {
-      localStorageEventTarget.removeEventListener("localStorageUpdated", handleUpdate);
+      localStorageEventTarget.removeEventListener(
+        'localStorageUpdated',
+        handleUpdate
+      );
     };
   }, [key]);
 
