@@ -12,7 +12,7 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonToggle
+  IonToggle,
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
@@ -29,10 +29,10 @@ const Login: React.FC = () => {
 
   const togglePreference = (key: string) => {
     setPreferenceSettings((prev) => {
-      preferenceSettings[key].enabled = !preferenceSettings[key].enabled
+      preferenceSettings[key].enabled = !preferenceSettings[key].enabled;
       return preferenceSettings;
     });
-  }
+  };
 
   const handleLogin = async () => {
     setError(''); // Clear previous errors
@@ -133,14 +133,16 @@ const Login: React.FC = () => {
             <IonCardTitle>Preferences</IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            {Object.keys(preferenceSettings).map((key) => (<IonItem key={key}><IonToggle
-
-              checked={preferenceSettings[key].enabled}
-              onIonChange={() => togglePreference(key)}
-            >
-              {preferenceSettings[key].name}
-            </IonToggle></IonItem>))}
-
+            {Object.keys(preferenceSettings).map((key) => (
+              <IonItem key={key}>
+                <IonToggle
+                  checked={preferenceSettings[key].enabled}
+                  onIonChange={() => togglePreference(key)}
+                >
+                  {preferenceSettings[key].name}
+                </IonToggle>
+              </IonItem>
+            ))}
           </IonCardContent>
         </IonCard>
       </IonContent>

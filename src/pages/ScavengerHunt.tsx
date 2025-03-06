@@ -7,7 +7,7 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonPage
+  IonPage,
 } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import NotificationToggle from '../components/NotificationToggle';
@@ -17,7 +17,7 @@ const ScavengerHunt: React.FC = () => {
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
       <IonContent>
-        <NotificationToggle topic={"scavenger-hunt"} />
+        <NotificationToggle topic={'scavenger-hunt'} />
         <IonCard>
           <img
             src="/images/scavenger-hunt-small.webp"

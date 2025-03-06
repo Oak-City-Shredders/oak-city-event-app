@@ -12,13 +12,12 @@ export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
 
-  const { data } = useFireStoreDB<FireDBTicketsSold>("TicketsSold");
+  const { data } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
 
   useEffect(() => {
     const sold: number = !data
       ? 0
-      : data
-        .reduce((acc, rec) => acc + parseInt(rec.Sold, 10), 0);
+      : data.reduce((acc, rec) => acc + parseInt(rec.Sold, 10), 0);
     setTicketsSold(sold);
   }, [data]);
 
@@ -41,7 +40,6 @@ export default function TicketCounter() {
     };
 
     updateCounter();
-
   }, [ticketsSold]);
 
   return (

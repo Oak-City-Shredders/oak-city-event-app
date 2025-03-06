@@ -63,16 +63,16 @@ interface HomeProps {
 }
 
 interface FireDBDynamicContent {
-  "Button Link": string;
-  "Button Name": string;
-  "Date Posted": string;
-  "Detailed Description": string;
-  "Detailed Image link": string;
-  "Enabled": string;
-  "Image Link": string;
-  "Short Description": string;
-  "Subtitle": string;
-  "Title": string;
+  'Button Link': string;
+  'Button Name': string;
+  'Date Posted': string;
+  'Detailed Description': string;
+  'Detailed Image link': string;
+  Enabled: string;
+  'Image Link': string;
+  'Short Description': string;
+  Subtitle: string;
+  Title: string;
   id: string;
 }
 
@@ -83,26 +83,24 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
   const RANGE = 'DynamicContent!A:J';
 
-  const { data, loading, error, refetch } = useFireStoreDB<FireDBDynamicContent>("DynamicContent");
+  const { data, loading, error, refetch } =
+    useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
-    : data
-      .map(
-        (dc) => ({
-          enabled: dc.Enabled === 'Yes',
-          imageLink: dc['Image Link'],
-          title: dc.Title,
-          subtitle: dc.Subtitle,
-          datePosted: dc['Date Posted'],
-          shortDescription: dc['Short Description'],
-          detailedImageLink: dc['Detailed Image link'],
-          detailedDescription: dc['Detailed Description'],
-          buttonName: dc['Button Name'],
-          buttonLink: dc['Button Link'],
-        })
-      );
+    : data.map((dc) => ({
+        enabled: dc.Enabled === 'Yes',
+        imageLink: dc['Image Link'],
+        title: dc.Title,
+        subtitle: dc.Subtitle,
+        datePosted: dc['Date Posted'],
+        shortDescription: dc['Short Description'],
+        detailedImageLink: dc['Detailed Image link'],
+        detailedDescription: dc['Detailed Description'],
+        buttonName: dc['Button Name'],
+        buttonLink: dc['Button Link'],
+      }));
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
@@ -192,9 +190,15 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           </IonRefresher>
           {new Date() <= new Date(shredFestStartDate) && (
             <>
-              <>{preferenceSettings["ticketCounter"].enabled && (<TicketCounter />)}</>
-              <>{preferenceSettings["countDown"].enabled && (<CountdownTimer />)}</>
-              <>{preferenceSettings["stokeMeter"].enabled && (<StokeMeter />)}</>
+              <>
+                {preferenceSettings['ticketCounter'].enabled && (
+                  <TicketCounter />
+                )}
+              </>
+              <>
+                {preferenceSettings['countDown'].enabled && <CountdownTimer />}
+              </>
+              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
             </>
           )}
           {notifications.length > 0 && (

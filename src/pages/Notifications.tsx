@@ -24,23 +24,22 @@ interface NotificationsPageProps {
 }
 
 interface FireDBNotification {
-  "Date Sent": string;
-  "Details": string;
-  "Message": string;
-  "Publish State": string;
-  "Result": string;
-  "Schedule": string;
-  "Title": string;
-  "Topic": string;
+  'Date Sent': string;
+  Details: string;
+  Message: string;
+  'Publish State': string;
+  Result: string;
+  Schedule: string;
+  Title: string;
+  Topic: string;
   id: string;
 }
-
 
 interface SheetNotification {
   title: string;
   message: string;
   topic: string;
-  scheduled: string
+  scheduled: string;
   details: string;
   published: string;
   date: string;
@@ -59,23 +58,21 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
     loading,
     error,
     refetch,
-  } = useFireStoreDB<FireDBNotification>("notifications");
-
+  } = useFireStoreDB<FireDBNotification>('notifications');
 
   const sheetNotifications: SheetNotification[] = useMemo(() => {
     if (!sheetsData) return [];
 
-    const mappedData = sheetsData
-      .map((d: FireDBNotification) => ({
-        title: d.Title,
-        message: d.Message,
-        topic: d.Topic,
-        scheduled: d.Schedule,
-        details: d.Details,
-        published: d['Publish State'],
-        date: d['Date Sent'],
-        result: d.Result,
-      }))
+    const mappedData = sheetsData.map((d: FireDBNotification) => ({
+      title: d.Title,
+      message: d.Message,
+      topic: d.Topic,
+      scheduled: d.Schedule,
+      details: d.Details,
+      published: d['Publish State'],
+      date: d['Date Sent'],
+      result: d.Result,
+    }));
 
     const filteredData = mappedData
       .filter(
@@ -109,9 +106,13 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
         ) : sheetNotifications.length > 0 ? (
           <>
             {notificationPermission === 'denied' && (
-              <IonCard><IonCardContent>
-                You have not granted permission to receive push notifications. Please enable them in your device settings.
-              </IonCardContent></IonCard>)}
+              <IonCard>
+                <IonCardContent>
+                  You have not granted permission to receive push notifications.
+                  Please enable them in your device settings.
+                </IonCardContent>
+              </IonCard>
+            )}
             <IonList>
               {sheetNotifications.map((notification, index) => (
                 <IonItem key={index}>
@@ -123,7 +124,8 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
                   </IonLabel>
                 </IonItem>
               ))}
-            </IonList></>
+            </IonList>
+          </>
         ) : (
           <p>No notifications</p>
         )}

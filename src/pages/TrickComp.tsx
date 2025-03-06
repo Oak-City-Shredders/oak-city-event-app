@@ -7,12 +7,11 @@ import NotificationToggle from '../components/NotificationToggle';
 const TrickCompPage: React.FC = () => {
   return (
     <IonPage>
-      <PageHeader title='Trick Comp' />
+      <PageHeader title="Trick Comp" />
       <IonContent>
-
         <img src="images/stokepark.webp" alt="Trick Comp" />
 
-        <NotificationToggle topic='trick-comp' />
+        <NotificationToggle topic="trick-comp" />
         <UnderConstruction />
       </IonContent>
     </IonPage>

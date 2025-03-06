@@ -73,7 +73,7 @@ export const getIcon = (eventTitle: string = ''): JSX.Element => {
   // Return the icon if found, otherwise return the default
   return (
     ICONS[
-    Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
+      Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
     ] || <IonIcon aria-hidden="true" slot="start" icon={alarm} />
   );
 };
