@@ -37,6 +37,7 @@ import MapPage from './pages/MapPage';
 import Notifications from './pages/Notifications';
 import QuestsPage from './pages/Quests';
 import Raceing from './pages/Racing';
+import RacerProfile from './pages/RacerProfile';
 import Raffles from './pages/Raffles';
 import ScavengerHunt from './pages/ScavengerHunt';
 import SchedulePage from './pages/SchedulePage';
@@ -87,6 +88,9 @@ const App: React.FC = () => {
         <IonReactRouter>
           <IonTabs>
             <IonRouterOutlet>
+              <Route path="/racer-profile/:racerId">
+                <RacerProfile />
+              </Route>
               <Route path="/about">
                 <About />
               </Route>
