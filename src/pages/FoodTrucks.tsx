@@ -7,6 +7,7 @@ import {
   IonCardContent,
   IonCardHeader,
   IonRefresher,
+  IonChip,
   IonRefresherContent,
   IonCardTitle,
   IonImg,
@@ -40,7 +41,7 @@ const FoodTrucks: React.FC = () => {
       route: truck.link,
       description: truck.description,
       title: truck.Name,
-      isOpenForOrders: Boolean(truck.IsOpenForOrders),
+      isOpenForOrders: Boolean(truck.IsOpenForOrders === 'Yes'),
       plannedSchedule: truck.PlannedSchedule
         ? JSON.parse(truck.PlannedSchedule)
         : {},
@@ -78,9 +79,17 @@ const FoodTrucks: React.FC = () => {
                 <IonImg src={item.image} alt={item.title} />
                 <IonCardHeader>
                   <IonCardTitle>{item.title}</IonCardTitle>
-                  <IonCardSubtitle>{item.description}</IonCardSubtitle>
+                  {item.isOpenForOrders && (
+                    <IonCardSubtitle>
+                      <IonChip color="success">Taking Orders Now</IonChip>{' '}
+                    </IonCardSubtitle>
+                  )}
                 </IonCardHeader>
-                {item.menu && <IonCardContent>{item.menu}</IonCardContent>}
+                <IonCardContent>
+                  <p>{item.description}</p>
+                  <br></br>
+                  <p>{item.menu}</p>
+                </IonCardContent>
               </IonCard>
             ))}
           </>
