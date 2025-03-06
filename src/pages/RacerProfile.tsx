@@ -7,7 +7,6 @@ import {
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
-  IonImg,
   IonLabel,
   IonItem,
 } from '@ionic/react';
@@ -47,6 +46,7 @@ const RacerProfile: React.FC = () => {
       comment: data[0].Comment,
       socialLink: data[0]['Link to Instagram'],
       ocsf4_qualifier: data[0]['OCSF4_qualifier'],
+      nickName: data[0].Nickname,
     };
 
     return racer;
@@ -79,6 +79,9 @@ const RacerProfile: React.FC = () => {
         ) : (
           <>
             <IonCard>
+              {racer.photoLink && (
+                <img alt={racer.name} src={racer.photoLink} />
+              )}
               <IonCardHeader>
                 <IonCardSubtitle>Racer info</IonCardSubtitle>
               </IonCardHeader>
@@ -89,6 +92,14 @@ const RacerProfile: React.FC = () => {
                   </IonLabel>
                   <IonText>{racer.name}</IonText>
                 </IonItem>
+                {racer.nickName && (
+                  <IonItem>
+                    <IonLabel>
+                      <b>AKA: </b>
+                    </IonLabel>
+                    <IonText>{racer.nickName}</IonText>
+                  </IonItem>
+                )}
                 {racer.team && (
                   <IonItem>
                     <IonLabel>

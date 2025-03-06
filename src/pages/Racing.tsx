@@ -15,6 +15,7 @@ import {
   IonText,
   IonSpinner,
   IonIcon,
+  IonChip,
 } from '@ionic/react';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
@@ -259,7 +260,12 @@ const Raceing: React.FC = () => {
                             onClick={() => navigateToRacerProfile(racer.id)}
                           >
                             <IonLabel>
-                              {racer.name} {racer.team ? `[${racer.team}]` : ''}
+                              {racer.name}{' '}
+                              {racer.team ? (
+                                <IonChip>{racer.team}</IonChip>
+                              ) : (
+                                ''
+                              )}
                             </IonLabel>
                           </IonItem>
                         ))}
