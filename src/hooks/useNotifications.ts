@@ -14,7 +14,19 @@ import { updateTopicSubscription } from '../utils/notificationUtils';
 export const PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY =
   'push_notification_token';
 
+export const NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY =
+  'notificationSettings-v5';
+
 const MAX_PREVIEW_MESSAGES = 3;
+
+export type NotificationSetting = { enabled: boolean; name: string };
+
+const defaultNotificationSettings: Record<string, NotificationSetting> = {
+  racing: { enabled: true, name: 'Racing' },
+  scavengerHunt: { enabled: true, name: 'Scavenger Hunt' },
+  trickComp: { enabled: true, name: 'Trick Comp' },
+  schedule: { enabled: true, name: 'Schedule' },
+};
 
 interface UseNotificationsReturn {
   pushToken: string | null;
@@ -80,6 +92,7 @@ const useNotifications = (): UseNotificationsReturn => {
       const storedToken = localStorage.getItem(
         PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY
       );
+
       if (storedToken !== token.value) {
         console.log('New token detected, sending to server...');
         try {
@@ -93,6 +106,58 @@ const useNotifications = (): UseNotificationsReturn => {
         }
       } else {
         console.log('Token unchanged, no need to update server.');
+      }
+
+      // Initialize topic subscriptions
+      const storedSettings = window.localStorage.getItem(
+        NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY
+      );
+      let localNotificationSettings: Record<string, NotificationSetting> = {};
+
+      try {
+        localNotificationSettings = storedSettings
+          ? JSON.parse(storedSettings)
+          : {};
+      } catch (error) {
+        console.error('Failed to parse local notification settings:', error);
+      }
+
+      console.log('localNotificationSettings: ', localNotificationSettings);
+
+      let updatedLocalSettings = false;
+
+      for (const topic of Object.keys(defaultNotificationSettings)) {
+        console.log('Evaluating topic ', topic);
+        if (!(topic in localNotificationSettings)) {
+          console.log(`Topic subscription (${topic}) not set locally`);
+
+          if (defaultNotificationSettings[topic].enabled) {
+            console.log(
+              `Topic (${topic}) is enabled by default - attempting to subscribe`
+            );
+            await updateTopicSubscription(topic, token.value, true);
+            console.log(`Subscribed to topic: (${topic})`);
+          }
+
+          localNotificationSettings[topic] = {
+            enabled: defaultNotificationSettings[topic].enabled,
+            name: defaultNotificationSettings[topic].name,
+          };
+
+          updatedLocalSettings = true;
+        } else {
+          console.log(
+            `Topic ${topic} found in localNotificationSettings. Skipping.`
+          );
+        }
+      }
+
+      if (updatedLocalSettings) {
+        console.log(`Updating local storage: (${localNotificationSettings})`);
+        window.localStorage.setItem(
+          NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY,
+          JSON.stringify(localNotificationSettings)
+        );
       }
     });
 

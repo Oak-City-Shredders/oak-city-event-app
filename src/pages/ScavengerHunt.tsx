@@ -17,7 +17,7 @@ const ScavengerHunt: React.FC = () => {
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
       <IonContent>
-        <NotificationToggle topic={'scavenger-hunt'} />
+        <NotificationToggle topic={'scavengerHunt'} />
         <IonCard>
           <img
             src="/images/scavenger-hunt-small.webp"
