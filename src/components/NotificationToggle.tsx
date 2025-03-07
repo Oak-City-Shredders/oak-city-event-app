@@ -12,32 +12,30 @@ import {
 } from '@ionic/react';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { notificationsOffOutline } from 'ionicons/icons';
-import { PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY } from '../hooks/useNotifications';
+import {
+  NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY,
+  NotificationSetting,
+  PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY,
+} from '../hooks/useNotifications';
 import { updateTopicSubscription } from '../utils/notificationUtils';
 
-const defaultSettings = {
-  racing: true,
-  scavenger_hunt: true,
-  trick_comp: true,
-};
-
 const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
-  const [notificationSettings, setNotificationsSettings] = useLocalStorage<{
-    [key: string]: boolean;
-  }>('notificationSettings-v2', defaultSettings);
+  const [notificationSettings, setNotificationsSettings] = useLocalStorage<
+    | {
+        [key: string]: NotificationSetting;
+      }
+    | undefined
+  >(NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY, undefined);
+
+  if (!notificationSettings) {
+    console.error(
+      'notificationSettings were not properly initialized in useNotification.ts'
+    );
+    return;
+  }
+
   const { notificationPermission } = useNotificationPermissions();
   const [notificationsError, setNotificationsError] = useState('');
-
-  // Ensure missing keys from defaults are merged in
-  useEffect(() => {
-    const updatedSettings = { ...defaultSettings, ...notificationSettings };
-    // Only update if there were missing keys
-    if (
-      JSON.stringify(updatedSettings) !== JSON.stringify(notificationSettings)
-    ) {
-      setNotificationsSettings(updatedSettings);
-    }
-  }, [notificationSettings, setNotificationsSettings]);
 
   const toggleNotification = async () => {
     const storedToken = localStorage.getItem(
@@ -47,17 +45,18 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
       setNotificationsError(
         'Notifcation settings error. Did you enable notifications?'
       );
-      return;
+      return <></>;
     }
-
+    if (!notificationSettings) return;
     try {
       await updateTopicSubscription(
         topic,
         storedToken,
-        !notificationSettings[topic]
+        !notificationSettings[topic].enabled
       );
       setNotificationsSettings((prev) => {
-        notificationSettings[topic] = !notificationSettings[topic];
+        notificationSettings[topic].enabled =
+          !notificationSettings[topic].enabled;
         return notificationSettings;
       });
       setNotificationsError('');
@@ -84,14 +83,14 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
       ) : (
         <IonCard>
           <IonCardHeader>
-            <IonCardSubtitle>Enable {topic} Notifications?</IonCardSubtitle>
+            <IonCardSubtitle>Enable Notifications?</IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent>
             <IonToggle
-              checked={notificationSettings[topic]}
+              checked={notificationSettings[topic].enabled}
               onIonChange={() => toggleNotification()}
             >
-              {topic} notifications
+              {notificationSettings[topic].name} notifications
             </IonToggle>
             {notificationsError && (
               <IonItem>

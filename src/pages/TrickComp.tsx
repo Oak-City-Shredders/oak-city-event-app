@@ -39,7 +39,7 @@ const TrickCompPage: React.FC = () => {
                 Get your trick competition ticket here
               </a>
             </IonText>
-            <NotificationToggle topic="trick-comp" />
+            <NotificationToggle topic="trickComp" />
           </IonCardContent>
         </IonCard>
         <UnderConstruction />
