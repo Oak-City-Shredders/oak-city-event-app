@@ -43,6 +43,9 @@ import ScavengerHunt from './pages/ScavengerHunt';
 import SchedulePage from './pages/SchedulePage';
 import TrickCompPage from './pages/TrickComp';
 import Team from './pages/Team';
+import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
+
+import { firebaseApp } from './firebase'; // Import Firebase setup
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -74,6 +77,8 @@ import './theme/variables.css';
 /* import '@ionic/react/css/palettes/dark.class.css'; */
 //import '@ionic/react/css/palettes/dark.system.css';
 
+console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
+
 setupIonicReact();
 
 const App: React.FC = () => {
@@ -96,6 +101,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/drip-schedule">
                 <DripSchedule />
+              </Route>
+              <Route path="/app-check">
+                <FireBaseAppCheckPage />
               </Route>
               <Route path="/emergency-services">
                 <EmergencyServices />

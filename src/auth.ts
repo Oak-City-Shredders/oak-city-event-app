@@ -1,9 +1,5 @@
 // src/auth.ts
-import { getAuth } from 'firebase/auth';
-import app from './firebase';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-
-getAuth(app);
 
 export const registerUser = async (email: string, password: string) => {
   try {

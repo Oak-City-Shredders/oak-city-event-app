@@ -11,7 +11,11 @@ install! 'cocoapods', :disable_input_output_paths => true
 def capacitor_pods
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+  pod 'CapacitorFirebaseAnalytics', :path => '../../node_modules/@capacitor-firebase/analytics'
+  pod 'CapacitorFirebaseApp', :path => '../../node_modules/@capacitor-firebase/app'
+  pod 'CapacitorFirebaseAppCheck', :path => '../../node_modules/@capacitor-firebase/app-check'
   pod 'CapacitorFirebaseAuthentication', :path => '../../node_modules/@capacitor-firebase/authentication'
+  pod 'CapacitorFirebaseFirestore', :path => '../../node_modules/@capacitor-firebase/firestore'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorGeolocation', :path => '../../node_modules/@capacitor/geolocation'
   pod 'CapacitorHaptics', :path => '../../node_modules/@capacitor/haptics'
@@ -24,7 +28,8 @@ end
 target 'App' do
   capacitor_pods
   # Add your Pods here
-  pod 'FirebaseMessaging' # Add this line
+  pod 'FirebaseMessaging'
+  pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../node_modules/@capacitor-firebase/analytics'
 end
 
 post_install do |installer|
