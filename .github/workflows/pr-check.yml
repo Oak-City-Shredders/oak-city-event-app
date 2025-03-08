@@ -23,6 +23,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+        # Cache CocoaPods
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            ios/App/Pods
+            ios/App/Podfile.lock
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/App/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
       - name: Install the Apple certificate and provisioning profile
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.P12_FILE_BASE64 }}
