@@ -2,7 +2,11 @@
     "name": "ocsf-app",
     "private": true,
     "dependencies": {
+        "@capacitor-firebase/analytics": "^7.1.0",
+        "@capacitor-firebase/app": "^7.1.0",
+        "@capacitor-firebase/app-check": "^7.1.0",
         "@capacitor-firebase/authentication": "^7.0.0",
+        "@capacitor-firebase/firestore": "^7.1.0",
         "@capacitor/android": "^7.0.1",
         "@capacitor/app": "7.0.0",
         "@capacitor/core": "7.0.1",

@@ -18,8 +18,13 @@ import {
   PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY,
 } from '../hooks/useNotifications';
 import { updateTopicSubscription } from '../utils/notificationUtils';
+import { Capacitor } from '@capacitor/core';
 
 const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
+  if (!Capacitor.isNativePlatform()) {
+    return <></>;
+  }
+
   const [notificationSettings, setNotificationsSettings] = useLocalStorage<
     | {
         [key: string]: NotificationSetting;

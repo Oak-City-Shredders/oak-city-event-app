@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { App } from '@capacitor/app';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { FirebaseFirestore } from '@capacitor-firebase/firestore';
 
 interface FireStoreDBHook<T> {
   data: T[] | null;
@@ -23,24 +22,27 @@ function useFireStoreDB<T>(
     setError(null);
     try {
       if (docId) {
-        const docRef = doc(db, collectionId, docId);
-        const docSnap = await getDoc(docRef);
+        const { snapshot } = await FirebaseFirestore.getDocument({
+          reference: `${collectionId}/${docId}`,
+        });
 
-        if (docSnap.exists()) {
+        if (snapshot.data) {
           setData([
             {
-              id: docSnap.id,
-              ...docSnap.data(),
+              id: docId,
+              ...snapshot.data,
             } as T,
           ]);
         }
       } else {
-        const querySnapshot = await getDocs(collection(db, collectionId));
-        const items = querySnapshot.docs.map(
+        const { snapshots } = await FirebaseFirestore.getCollection({
+          reference: collectionId,
+        });
+        const items = snapshots.map(
           (doc) =>
             ({
               id: doc.id,
-              ...doc.data(),
+              ...doc.data,
             } as T)
         );
 
