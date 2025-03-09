@@ -183,6 +183,15 @@ const Raceing: React.FC = () => {
                 Get your ticket here
               </a>
             </IonText>
+            <IonText>
+              <p>Have questions for the racing organizers?</p>
+              <a
+                href="mailto:racing@oakcityshredders.org?subject=Race Inquiry - Oak City Shred Fest&body=Hi Team,%0D%0A%0D%0AI have a question about racing at Oak City Shred Fest..."
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                Email the racing team
+              </a>
+            </IonText>
           </IonCardContent>
         </IonCard>
 
