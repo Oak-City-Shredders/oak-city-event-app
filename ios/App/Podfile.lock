@@ -1159,6 +1159,9 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (7.0.0):
     - Capacitor
+  - CapacitorBarcodeScanner (2.0.1):
+    - Capacitor
+    - OSBarcodeLib (~> 1.1.0)
   - CapacitorCordova (7.0.1)
   - CapacitorFirebaseAnalytics (7.1.0):
     - Capacitor
@@ -1400,12 +1403,14 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
+  - OSBarcodeLib (1.1.3)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorBarcodeScanner (from `../../node_modules/@capacitor/barcode-scanner`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorFirebaseAnalytics (from `../../node_modules/@capacitor-firebase/analytics`)"
   - "CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport (from `../../node_modules/@capacitor-firebase/analytics`)"
@@ -1448,6 +1453,7 @@ SPEC REPOS:
     - IONGeolocationLib
     - leveldb-library
     - nanopb
+    - OSBarcodeLib
     - PromisesObjC
     - RecaptchaInterop
 
@@ -1456,6 +1462,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorBarcodeScanner:
+    :path: "../../node_modules/@capacitor/barcode-scanner"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorFirebaseAnalytics:
@@ -1487,6 +1495,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
   Capacitor: de199cba6c8b20995428ad0b7cb0bc6ca625ffd4
   CapacitorApp: 9cb31064a6c6bb2b1438583733a7bf45557fc1da
+  CapacitorBarcodeScanner: 59327526d588be51a8413ef6bd9f9d88f636d1a8
   CapacitorCordova: 63d476958d5022d76f197031e8b7ea3519988c64
   CapacitorFirebaseAnalytics: 7ecc6a54ae647af6219faf9c86ce39996305d093
   CapacitorFirebaseApp: 08489aaad81ae0e1d1dbef633632a19ae829ec49
@@ -1521,9 +1530,10 @@ SPEC CHECKSUMS:
   IONGeolocationLib: 81f33f88d025846946de2cf63b0c7628e7c6bc9d
   leveldb-library: cc8b8f8e013647a295ad3f8cd2ddf49a6f19be19
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  OSBarcodeLib: f2e981270a64faf476cb790864262b29ab8cd68a
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: 8f891ff845fc664c0bfd89907ae4ae6455a30ae1
+PODFILE CHECKSUM: e4a0ab3a3dc0305daa092f547acf96a5bfd16d5c
 
 COCOAPODS: 1.16.2
