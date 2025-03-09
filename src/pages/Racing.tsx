@@ -265,6 +265,7 @@ const Raceing: React.FC = () => {
                       <IonList>
                         {division.racers.map((racer, index) => (
                           <IonItem
+                            detail={true}
                             key={index}
                             onClick={() => navigateToRacerProfile(racer.id)}
                           >

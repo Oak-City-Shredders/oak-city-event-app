@@ -2,6 +2,7 @@
 import { useEffect } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
+import { useIonRouter } from '@ionic/react';
 
 // Capacitor
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -46,6 +47,7 @@ import Team from './pages/Team';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
+import { App as CapacitorApp } from '@capacitor/app';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -87,6 +89,30 @@ const App: React.FC = () => {
     SplashScreen.hide();
   }, []);
 
+  //const history = useHistory();
+  const router = useIonRouter();
+  useEffect(() => {
+    CapacitorApp.addListener('appUrlOpen', (event) => {
+      const url = new URL(event.url);
+      console.log('deep link2: ', url);
+      console.log('deep link host name: ', url.host);
+      if (url.host === 'quests') {
+        const questId = url.pathname.split('/')[1]; // Get questId (2)
+        const key = url.searchParams.get('key'); // Get key (abc)
+        console.log('found a quest');
+        console.log('history.push ', `/quests/${questId}?key=${key}`);
+        //history.push(`/quests/${questId}?key=${key}`);
+        router.push(`/quests/${questId}`);
+        console.log('pushed');
+      }
+    });
+
+    return () => {
+      // Clean up the listener when the component is unmounted
+      CapacitorApp.removeAllListeners();
+    };
+  }, [router]);
+
   return (
     <AuthProvider>
       <IonApp>
@@ -123,6 +149,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/notifications">
                 <Notifications notifications={notifications} />
+              </Route>
+              <Route path="/quests/:questId">
+                <QuestsPage />
               </Route>
               <Route path="/quests">
                 <QuestsPage />
