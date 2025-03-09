@@ -10,12 +10,14 @@ import {
   IonImg,
 } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
+import AppInfo from '../components/AppInfo';
 
 const About: React.FC = () => {
   return (
     <IonPage>
       <PageHeader color="tertiary" title="About" />
       <IonContent className="ion-padding">
+        <AppInfo />
         <IonCard>
           <IonCardHeader>
             <IonCardSubtitle>
