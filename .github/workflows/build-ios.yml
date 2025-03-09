@@ -220,5 +220,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_CREDS }}
           packageName: 'com.oakcityshredfest.app'
           releaseFiles: android/app/build/outputs/bundle/release/app-release.aab
-          track: internal
-          status: draft
+          track: production
+          status: completed
