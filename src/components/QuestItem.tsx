@@ -45,7 +45,7 @@ const QuestItem: React.FC<QuestItemProps> = ({
       onClick={
         quest.requiresScan && !quest.completed
           ? () => scanBarcode(quest)
-          : undefined
+          : () => toggleQuestCompletion(quest)
       }
       style={{
         transition: 'background-color 0.3s, transform 0.3s',
