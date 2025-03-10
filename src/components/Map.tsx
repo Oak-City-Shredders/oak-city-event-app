@@ -16,6 +16,8 @@ import {
   Tooltip,
   CircleMarker,
   SVGOverlay,
+  LayersControl,
+  LayerGroup,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
@@ -38,8 +40,9 @@ import { arrowDown, arrowUp } from 'ionicons/icons';
 import { renderToString } from 'react-dom/server';
 import { Rectangle } from 'react-leaflet';
 
-const mapImageUrl = '/images/2024map2k-20240223.webp'; // replace with new map when available
-
+const mapRoadAndTrailImageUrl = '/images/map/2024map-roads.webp'; // replace with new map when available
+const mapGraphicsUrl = '/images/map/2024map-graphics.webp'; // replace with new map when available
+const mapBackgroundUrl = '/images/map/background.webp'; // replace with new map when available
 // Explicitly define the marker icon
 const customIcon = new Icon({
   iconUrl: '/images/icon-48.webp', // Path to marker icon
@@ -252,6 +255,22 @@ const bounds: LatLngBoundsExpression = [
   [initialTopRightPosition.lat, initialTopRightPosition.lng], // bottom-left corner,
 ];
 
+const bgLeftBottomPosition = {
+  lat: 35.613547074031176,
+  lng: -78.46827221870424,
+};
+
+const bgTopRightPosition = {
+  lat: 35.752144594714386,
+  lng: -78.43730734825136,
+};
+
+// Define the bounds for the image and max bounds
+const bgBounds: LatLngBoundsExpression = [
+  [bgLeftBottomPosition.lat, bgLeftBottomPosition.lng], // top-right corner
+  [bgTopRightPosition.lat, bgTopRightPosition.lng], // bottom-left corner,
+];
+
 const ResizableImageLayer = ({
   initialBottomLeftPosition,
   initialTopRightPosition,
@@ -426,6 +445,7 @@ const TooltipMarker = ({
 
     return (
       <ImageOverlay
+        pane="shadowPane"
         interactive={true}
         url={`/images/map-icons/${poi.icon}`}
         bounds={poi.bounds as LatLngBoundsExpression}
@@ -645,29 +665,52 @@ const MyMapContainer: React.FC<MyMapProps> = ({
                 imageUrl={"/images/map-icons/yurt.png"} />
 
                      */}
-      <>
-        {pointsOfInterest.map((poi, index) => {
-          //const filter = poiFilters.find(poiFilter => poiFilter.type === poi.type && poiFilter.isVisible);
-          //return filter ? ( // Explicit return statement
-          return (
-            <TooltipMarker
-              key={index}
-              index={index}
-              poi={poi}
-              filter={poiFilters.find(
-                (poiFilter) => poiFilter.type === poi.type
-              )}
-            />
-          );
-          // )
-          //: null; // Return `null` for items that shouldn't render
-        })}
-      </>
-      <ImageOverlayWithOpacity
-        bottomLeftPosition={initialLeftBottomPosition as LatLng}
-        topRightPosition={initialTopRightPosition as LatLng}
-        imageUrl={mapImageUrl}
-      />
+
+      <LayersControl position="topright">
+        <LayersControl.Overlay key={1} checked name="Points of Interest">
+          <LayerGroup>
+            {pointsOfInterest.map((poi, index) => {
+              //const filter = poiFilters.find(poiFilter => poiFilter.type === poi.type && poiFilter.isVisible);
+              //return filter ? ( // Explicit return statement
+              return (
+                <TooltipMarker
+                  key={index}
+                  index={index}
+                  poi={poi}
+                  filter={poiFilters.find(
+                    (poiFilter) => poiFilter.type === poi.type
+                  )}
+                />
+              );
+              // )
+              //: null; // Return `null` for items that shouldn't render
+            })}
+          </LayerGroup>
+        </LayersControl.Overlay>
+
+        <LayersControl.Overlay key={3} checked name="Roads and Trails">
+          <ImageOverlay
+            url={mapRoadAndTrailImageUrl}
+            bounds={bounds}
+          ></ImageOverlay>
+        </LayersControl.Overlay>
+
+        <LayersControl.Overlay key={4} checked name="Graphics">
+          <ImageOverlay url={mapGraphicsUrl} bounds={bounds}></ImageOverlay>
+        </LayersControl.Overlay>
+
+        <LayersControl.Overlay key={5} checked name="Satellite">
+          <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+        </LayersControl.Overlay>
+
+        <LayersControl.Overlay key={6} checked name="Background">
+          <ImageOverlay
+            pane="tilePane"
+            url={mapBackgroundUrl}
+            bounds={bgBounds}
+          ></ImageOverlay>
+        </LayersControl.Overlay>
+      </LayersControl>
     </>
   );
 };

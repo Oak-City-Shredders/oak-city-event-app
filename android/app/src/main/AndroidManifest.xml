@@ -9,10 +9,14 @@
     android:theme="@style/AppTheme"
   >
     <meta-data
+      android:name="google_analytics_adid_collection_enabled"
+      android:value="false"
+    />
+    <meta-data
       android:name="google_analytics_default_allow_ad_personalization_signals"
       android:value="false"
     />
-        <activity
+    <activity
       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
       android:name=".MainActivity"
       android:label="@string/title_activity_main"
@@ -20,36 +24,36 @@
       android:launchMode="singleTask"
       android:exported="true"
     >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
 
-            <!-- Deep linking intent filter -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="ocsf" />
-            </intent-filter>
-        </activity>
+        <!-- Deep linking intent filter -->
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" android:host="ocsf" />
+        </intent-filter>
+    </activity>
 
-        <provider
+    <provider
       android:name="androidx.core.content.FileProvider"
       android:authorities="${applicationId}.fileprovider"
       android:exported="false"
       android:grantUriPermissions="true"
     >
-            <meta-data
+      <meta-data
         android:name="android.support.FILE_PROVIDER_PATHS"
         android:resource="@xml/file_paths"
       />
         </provider>
-    </application>
+  </application>
 
-    <!-- Permissions -->
+  <!-- Permissions -->
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 </manifest>
