@@ -21,7 +21,7 @@ const CardLayout: React.FC<CardLayoutProps> = ({ items, handleCardClick }) => {
     <IonGrid>
       <IonRow>
         {items.map((item: LayoutItem, index: number) => (
-          <IonCol size="6" sizeLg="3" key={index}>
+          <IonCol size="4" sizeLg="3" key={index}>
             <IonCard
               className="card"
               onClick={() => handleCardClick(item.route)}
