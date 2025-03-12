@@ -24,6 +24,8 @@ import useFireStoreDB from '../hooks/useFireStoreDB';
 import { CapacitorBarcodeScanner } from '@capacitor/barcode-scanner';
 import { useParams } from 'react-router';
 import QuestItem, { Quest } from '../components/QuestItem';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+
 import './Quests.css';
 
 // Add your sound file in the public folder or use a URL to the sound
@@ -117,6 +119,7 @@ const QuestsPage: React.FC = () => {
           );
           // TODO:  Play sound on animation start
           //sound.play();
+          await Haptics.impact({ style: ImpactStyle.Heavy });
           setAnimate(quest.id);
         } else {
           alert('Incorrect barcode scanned. Try again.');
@@ -127,11 +130,12 @@ const QuestsPage: React.FC = () => {
     }
   };
 
-  const toggleQuestCompletion = (quest: Quest) => {
+  const toggleQuestCompletion = async (quest: Quest) => {
     if (quest.requiresScan && !quest.completed) {
       scanBarcode(quest);
     } else {
       if (!quest.completed) {
+        await Haptics.impact({ style: ImpactStyle.Medium });
         setAnimate(quest.id);
         // TODO:  Play sound on animation start
         //sound.play();
