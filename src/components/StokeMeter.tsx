@@ -15,6 +15,7 @@ import {
 import { motion } from 'framer-motion';
 import './StokeMeter.css';
 import Confetti from 'react-confetti';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 interface StokeItem {
   id: number;
@@ -50,13 +51,15 @@ export default function StokeMeter() {
     checklistItems
   );
 
-  const handleCheck = (id: number) => {
+  const handleCheck = async (id: number) => {
+    await Haptics.impact({ style: ImpactStyle.Light });
     setStokeItemsToStorage((prev) =>
       prev.map((i) => (i.id === id ? { ...i, completed: !i.completed } : i))
     );
   };
 
-  const onToggleView = () => {
+  const onToggleView = async () => {
+    await Haptics.impact({ style: ImpactStyle.Medium });
     setIsListVisible((prev) => !prev);
   };
 
