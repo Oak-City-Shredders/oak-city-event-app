@@ -1,0 +1,53 @@
+.racer-item-content {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+  gap: 8px;
+}
+
+.racer-name {
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: fit-content;
+  color: var(--ion-color-dark);
+}
+
+.team-separator {
+  color: var(--ion-color-medium);
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.team-name {
+  color: var(--ion-color-medium);
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.icons-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.medal-icon-gold {
+  color: #ffd700;
+}
+
+.medal-icon-silver {
+  color: #c0c0c0;
+}
+
+.medal-icon-bronze {
+  color: #cd7f32;
+}
+
+.image-icon {
+  color: var(--ion-color-primary);
+}

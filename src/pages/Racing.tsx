@@ -1,3 +1,4 @@
+import './Racing.css';
 import React, { useMemo, useState, useEffect } from 'react';
 import {
   RefresherEventDetail,
@@ -15,11 +16,15 @@ import {
   IonText,
   IonSpinner,
   IonIcon,
-  IonChip,
 } from '@ionic/react';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
-import { informationCircle, informationCircleOutline } from 'ionicons/icons';
+import {
+  imageOutline,
+  informationCircle,
+  informationCircleOutline,
+  medalOutline,
+} from 'ionicons/icons';
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { chevronDown, chevronForward } from 'ionicons/icons';
@@ -269,14 +274,28 @@ const Raceing: React.FC = () => {
                             key={index}
                             onClick={() => navigateToRacerProfile(racer.id)}
                           >
-                            <IonLabel>
-                              {racer.name}{' '}
-                              {racer.team ? (
-                                <IonChip>{racer.team}</IonChip>
-                              ) : (
-                                ''
+                            <div className="racer-item-content">
+                              <span className="racer-name">{racer.name}</span>
+                              {racer.team && (
+                                <>
+                                  <span className="team-separator">•</span>
+                                  <span className="team-name">
+                                    {racer.team}
+                                  </span>
+                                </>
                               )}
-                            </IonLabel>
+                            </div>
+                            <div className="icons-container">
+                              {racer.comment && (
+                                <IonIcon
+                                  color="medium"
+                                  icon={informationCircleOutline}
+                                />
+                              )}
+                              {racer.photoLink && (
+                                <IonIcon color="medium" icon={imageOutline} />
+                              )}
+                            </div>
                           </IonItem>
                         ))}
                       </IonList>

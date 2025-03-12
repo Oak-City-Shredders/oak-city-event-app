@@ -416,7 +416,7 @@ const TooltipMarker = ({
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const handleClick = async () => {
-    await Haptics.impact({ style: ImpactStyle.Medium });
+    await Haptics.impact({ style: ImpactStyle.Light });
     setTooltipVisible(!tooltipVisible);
   };
 
