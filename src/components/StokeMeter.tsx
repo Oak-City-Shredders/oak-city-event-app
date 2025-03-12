@@ -15,6 +15,7 @@ import {
 import { motion } from 'framer-motion';
 import './StokeMeter.css';
 import Confetti from 'react-confetti';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 interface StokeItem {
   id: number;
@@ -33,25 +34,32 @@ const checklistItems: StokeItem[] = [
     text: 'Planned lodging',
     link: 'https://www.oakcityshredfest.com/close-to-the-farm',
   },
-  { id: 6, text: 'Ordered Shred Fest jersey' },
-  { id: 7, text: 'Charged Device' },
-  { id: 8, text: 'Packed gear' },
+  {
+    id: 6,
+    text: 'Joined the Discord chat',
+    link: 'https://discord.gg/r9xx5V2s',
+  },
+  { id: 7, text: 'Ordered Shred Fest jersey' },
+  { id: 8, text: 'Charged Device' },
+  { id: 9, text: 'Packed gear' },
 ];
 
 export default function StokeMeter() {
   const [isListVisible, setIsListVisible] = useState(false);
   const [stokeItems, setStokeItemsToStorage] = useLocalStorage<StokeItem[]>(
-    'stoke-meter-v3b',
+    'stoke-meter-v3c',
     checklistItems
   );
 
-  const handleCheck = (id: number) => {
+  const handleCheck = async (id: number) => {
+    await Haptics.impact({ style: ImpactStyle.Light });
     setStokeItemsToStorage((prev) =>
       prev.map((i) => (i.id === id ? { ...i, completed: !i.completed } : i))
     );
   };
 
-  const onToggleView = () => {
+  const onToggleView = async () => {
+    await Haptics.impact({ style: ImpactStyle.Medium });
     setIsListVisible((prev) => !prev);
   };
 
