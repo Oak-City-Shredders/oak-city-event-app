@@ -89,18 +89,20 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
-    : data.map((dc) => ({
-        enabled: dc.Enabled === 'Yes',
-        imageLink: dc['Image Link'],
-        title: dc.Title,
-        subtitle: dc.Subtitle,
-        datePosted: dc['Date Posted'],
-        shortDescription: dc['Short Description'],
-        detailedImageLink: dc['Detailed Image link'],
-        detailedDescription: dc['Detailed Description'],
-        buttonName: dc['Button Name'],
-        buttonLink: dc['Button Link'],
-      }));
+    : data
+        .map((dc) => ({
+          enabled: dc.Enabled === 'Yes',
+          imageLink: dc['Image Link'],
+          title: dc.Title,
+          subtitle: dc.Subtitle,
+          datePosted: dc['Date Posted'],
+          shortDescription: dc['Short Description'],
+          detailedImageLink: dc['Detailed Image link'],
+          detailedDescription: dc['Detailed Description'],
+          buttonName: dc['Button Name'],
+          buttonLink: dc['Button Link'],
+        }))
+        .reverse();
 
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect

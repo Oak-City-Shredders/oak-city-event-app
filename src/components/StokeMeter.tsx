@@ -33,15 +33,20 @@ const checklistItems: StokeItem[] = [
     text: 'Planned lodging',
     link: 'https://www.oakcityshredfest.com/close-to-the-farm',
   },
-  { id: 6, text: 'Ordered Shred Fest jersey' },
-  { id: 7, text: 'Charged Device' },
-  { id: 8, text: 'Packed gear' },
+  {
+    id: 6,
+    text: 'Joined the Discord chat',
+    link: 'https://discord.gg/r9xx5V2s',
+  },
+  { id: 7, text: 'Ordered Shred Fest jersey' },
+  { id: 8, text: 'Charged Device' },
+  { id: 9, text: 'Packed gear' },
 ];
 
 export default function StokeMeter() {
   const [isListVisible, setIsListVisible] = useState(false);
   const [stokeItems, setStokeItemsToStorage] = useLocalStorage<StokeItem[]>(
-    'stoke-meter-v3b',
+    'stoke-meter-v3c',
     checklistItems
   );
 
