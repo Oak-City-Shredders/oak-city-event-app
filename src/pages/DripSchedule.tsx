@@ -1,3 +1,4 @@
+import './DripSchedule.css';
 import React from 'react';
 import {
   IonLabel,
@@ -107,7 +108,7 @@ const DripSchedule: React.FC = () => {
                     <IonCardTitle>What to wear:</IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <ul>
+                    <ul className="spaced-list">
                       <li>{d.firstOutfit}</li>
                       {d.secondOutfit && <li>{d.secondOutfit}</li>}
                       {d.thirdOutfit && <li>{d.thirdOutfit}</li>}
