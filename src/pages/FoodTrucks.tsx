@@ -14,6 +14,7 @@ import {
   IonCardSubtitle,
   RefresherEventDetail,
 } from '@ionic/react';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface FireDBFoodTruck {
   Image: string;
@@ -56,10 +57,7 @@ const FoodTrucks: React.FC = () => {
     window.open(route, '_blank');
   };
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from firebase db
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   return (
     <IonPage>

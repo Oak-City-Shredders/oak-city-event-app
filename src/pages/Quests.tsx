@@ -16,7 +16,7 @@ import {
   IonIcon,
   IonLabel,
 } from '@ionic/react';
-import { qrCodeOutline } from 'ionicons/icons';
+import { qrCodeOutline, refresh } from 'ionicons/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
@@ -27,6 +27,7 @@ import QuestItem, { Quest } from '../components/QuestItem';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import './Quests.css';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 // Add your sound file in the public folder or use a URL to the sound
 interface FireDBQuest {
@@ -148,10 +149,7 @@ const QuestsPage: React.FC = () => {
     }
   };
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from Firestore DB
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   return (
     <IonPage>

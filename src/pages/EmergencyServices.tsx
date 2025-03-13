@@ -31,10 +31,11 @@ const EmergencyServices: React.FC = () => {
                 <IonText className="help-subtitles">Location:</IonText>
                 <IonText>Stoke Park</IonText>
               </div>
-              <div className="info-row">
+              {/*              <div className="info-row">
                 <IonText className="help-subtitles">Phone Number:</IonText>
                 <IonText>(919-555-555)</IonText>
               </div>
+              */}
               <IonText className="emergency-text">
                 For emergencies, call 911.
               </IonText>
