@@ -55,12 +55,12 @@ export const homePageLayout: LayoutItem[] = [
   //   route: '/raffles-giveaways',
   //   image: '/images/raffles-giveaways-small.webp',
   // },
-  {
-    title: 'Get Help',
-    description: 'Contact information',
-    route: '/emergency-services',
-    image: '/images/emergency-services-small.webp',
-  },
+  // {
+  //   title: 'Get Help',
+  //   description: 'Contact information',
+  //   route: '/emergency-services',
+  //   image: '/images/emergency-services-small.webp',
+  // },
   {
     title: 'Drip Schedule',
     description: 'Daily outfit schedule',
