@@ -20,6 +20,7 @@ import {
   IonRefresherContent,
 } from '@ionic/react';
 import useFireStoreDB from '../hooks/useFireStoreDB';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface DripDay {
   isoDate: string;
@@ -57,10 +58,7 @@ const DripSchedule: React.FC = () => {
           thirdOutfit: drip['Third Outfit'],
         }));
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from firedb
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   useEffect(() => {
     if (!accordionGroup.current) {

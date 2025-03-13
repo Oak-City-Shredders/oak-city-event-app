@@ -41,6 +41,7 @@ import { Capacitor } from '@capacitor/core';
 import TicketCounter from '../components/TicketCounter';
 import usePreferenceSettings from '../hooks/usePreferenceSettings';
 import useFireStoreDB from '../hooks/useFireStoreDB';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -112,10 +113,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     router.push('/login', 'forward');
   };
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function (Firebase DB)
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
@@ -151,6 +149,16 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           </IonList>
           <IonList>
             <IonMenuToggle key={homePageLayout.length + 1}>
+              <IonItem
+                button
+                onClick={() => {
+                  handleCardClick('/emergency-services');
+                }}
+              >
+                <IonLabel>Get Help</IonLabel>
+              </IonItem>
+            </IonMenuToggle>
+            <IonMenuToggle key={homePageLayout.length + 2}>
               <IonItem
                 button
                 onClick={() => {

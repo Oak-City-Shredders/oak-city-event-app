@@ -23,6 +23,7 @@ import {
 import { getErrorMessage } from '../utils/errorUtils';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface RouteParams {
   racerId: string;
@@ -52,11 +53,7 @@ const RacerProfile: React.FC = () => {
     return racer;
   }, [data]);
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from google calendar
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
-
+  const handleRefresh = useRefreshHandler(refetch);
   return (
     <IonPage>
       <PageHeader

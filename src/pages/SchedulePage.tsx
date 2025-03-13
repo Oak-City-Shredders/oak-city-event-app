@@ -25,6 +25,7 @@ import { getErrorMessage } from '../utils/errorUtils';
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import NotificationToggle from '../components/NotificationToggle';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const CALENDAR_ID: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || '';
 const SchedulePage: React.FC = () => {
@@ -42,10 +43,7 @@ const SchedulePage: React.FC = () => {
     router.push(`/map/${eventLocation}`);
   };
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from google calendar
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   return (
     <IonPage>
