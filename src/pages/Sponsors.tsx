@@ -11,6 +11,8 @@ import {
   IonImg,
   RefresherEventDetail,
   IonCol,
+  IonGrid,
+  IonRow,
 } from '@ionic/react';
 
 import useSponsors from '../hooks/useSponsors';
@@ -40,27 +42,31 @@ const Team: React.FC = () => {
           <p>Error loading food trucks</p>
         ) : (
           <>
-            {sponsors.map((sponsor, index: number) => (
-              <IonCol size="6" sizeLg="3" key={index}>
-                <IonCard
-                  key={index}
-                  onClick={() => handleCardClick(sponsor.websiteLink)}
-                  style={{ marginTop: '0', marginBottom: '0' }}
-                >
-                  <IonImg
-                    src={sponsor.imageLink}
-                    alt={sponsor.name}
-                    style={{ backgroundColor: '#e6e6e6' }} // Very light gray, almost white
-                  />
-                  <IonCardHeader>
-                    <IonCardTitle>{sponsor.name}</IonCardTitle>
-                  </IonCardHeader>
-                  <IonCardContent>
-                    <p>{sponsor.description}</p>
-                  </IonCardContent>
-                </IonCard>
-              </IonCol>
-            ))}
+            <IonGrid>
+              <IonRow>
+                {sponsors.map((sponsor, index: number) => (
+                  <IonCol sizeXs="12" sizeSm="4" sizeLg="3" key={index}>
+                    <IonCard
+                      key={index}
+                      onClick={() => handleCardClick(sponsor.websiteLink)}
+                      style={{ marginTop: '6px', marginBottom: '6px' }}
+                    >
+                      <IonImg
+                        src={sponsor.imageLink}
+                        alt={sponsor.name}
+                        style={{ backgroundColor: '#e6e6e6' }} // Very light gray, almost white
+                      />
+                      <IonCardHeader>
+                        <IonCardTitle>{sponsor.name}</IonCardTitle>
+                      </IonCardHeader>
+                      <IonCardContent>
+                        <p>{sponsor.description}</p>
+                      </IonCardContent>
+                    </IonCard>
+                  </IonCol>
+                ))}
+              </IonRow>
+            </IonGrid>
           </>
         )}
       </IonContent>
