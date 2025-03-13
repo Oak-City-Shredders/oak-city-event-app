@@ -78,6 +78,10 @@ const About: React.FC = () => {
               <b>Testers:</b> Maya Wolf, Josh Christensen, Noah Via, Hannah
               Kenward Pope, Mark Grzyb
             </p>
+            <p>
+              <b>Photos:</b> Special thanks to Cori @ArmorDilloz and Alex
+              Mononen for their amazing photos
+            </p>
           </IonCardContent>
         </IonCard>
       </IonContent>
