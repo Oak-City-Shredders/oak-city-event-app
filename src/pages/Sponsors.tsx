@@ -59,9 +59,11 @@ const Team: React.FC = () => {
                       <IonCardHeader>
                         <IonCardTitle>{sponsor.name}</IonCardTitle>
                       </IonCardHeader>
-                      <IonCardContent>
-                        <p>{sponsor.description}</p>
-                      </IonCardContent>
+                      {sponsor.description && (
+                        <IonCardContent>
+                          <p>{sponsor.description}</p>
+                        </IonCardContent>
+                      )}
                     </IonCard>
                   </IonCol>
                 ))}
