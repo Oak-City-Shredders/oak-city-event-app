@@ -1,7 +1,7 @@
 import './Racing.css';
 import React, { useMemo, useState, useEffect } from 'react';
 import {
-  RefresherEventDetail,
+  IonButton,
   IonCard,
   IonCardContent,
   IonItemGroup,
@@ -13,6 +13,8 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonCardHeader,
+  IonCardTitle,
   IonText,
   IonSpinner,
   IonIcon,
@@ -23,7 +25,8 @@ import {
   imageOutline,
   informationCircle,
   informationCircleOutline,
-  medalOutline,
+  ticket,
+  mail,
 } from 'ionicons/icons';
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
@@ -104,18 +107,31 @@ const Raceing: React.FC = () => {
       {}
     );
 
-    return Object.entries(grouped).map(([name, racers], id) => {
-      const description =
-        divisions.find((d) => d.division === name)?.description || '';
-      return {
-        id,
-        description,
-        name,
-        racers,
-        descriptionExpanded: true,
-        descriptionTextExpanded: false,
-      };
-    });
+    return Object.entries(grouped)
+      .map(([name, racers], id) => {
+        const description =
+          divisions.find((d) => d.division === name)?.description || '';
+        return {
+          id,
+          description,
+          name,
+          racers,
+          descriptionExpanded: true,
+          descriptionTextExpanded: false,
+        };
+      })
+      .sort((a, b) => {
+        // Put Unknown at the end
+        if (a.name === 'Unknown') return 1;
+        if (b.name === 'Unknown') return -1;
+
+        // Sort by racer count first (descending)
+        const racerDiff = b.racers.length - a.racers.length;
+        if (racerDiff !== 0) return racerDiff;
+
+        // If racer counts are equal, sort by name alphabetically
+        return a.name.localeCompare(b.name);
+      });
   }, [sheetsData]);
 
   useEffect(() => {
@@ -155,47 +171,56 @@ const Raceing: React.FC = () => {
     <IonPage>
       <PageHeader title="Registered Racers" />
       <IonContent fullscreen className="ion-padding">
-        <NotificationToggle topic={RACING_TOPIC} />
-
-        <IonCard>
+        {/* Hero Section */}
+        <div className="hero-section">
           <img
             src="/images/race2.webp"
-            alt="Luke Austin"
-            style={{
-              width: '100%',
-              height: 'auto',
-              maxHeight: '300px',
-              objectFit: 'cover',
-            }}
+            alt="PEV Racing"
+            className="hero-image"
           />
+          <div className="hero-overlay">
+            <p className="hero-text">Some squirrels like to float.</p>
+            <p className="hero-text">These squirrels prefer to fly!</p>
+          </div>
+        </div>
+
+        <IonCard>
+          <IonCardHeader>
+            <IonCardTitle>Quick Actions</IonCardTitle>
+          </IonCardHeader>
           <IonCardContent>
-            <IonText>
-              The following people have purchased race tickets for Oak City
-              Shred Fest 5. Want to race against them?&nbsp;
-            </IonText>
-            <IonText>
-              <a
-                href={
-                  'https://www.oakcityshredfest.com/2025-tickets/p/ultimate-racer-bundle'
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                Get your ticket here
-              </a>
-            </IonText>
-            <IonText>
-              <p>Have questions for the racing organizers?</p>
-              <a
-                href="mailto:racing@oakcityshredders.org?subject=Race Inquiry - Oak City Shred Fest&body=Hi Team,%0D%0A%0D%0AI have a question about racing at Oak City Shred Fest..."
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                Email the racing team
-              </a>
-            </IonText>
+            <IonButton
+              expand="block"
+              href={
+                'https://www.oakcityshredfest.com/2025-tickets/p/ultimate-racer-bundle'
+              }
+              className="mb-3"
+            >
+              <IonIcon icon={ticket} slot="start" />
+              Purchase Ticket
+            </IonButton>
+
+            <IonButton
+              expand="block"
+              color="secondary"
+              href="mailto:racing@oakcityshredders.org?subject=Race Inquiry - Oak City Shred Fest&body=Hi Team,%0D%0A%0D%0AI have a question about racing at Oak City Shred Fest..."
+            >
+              <IonIcon icon={mail} slot="start" />
+              Contact Racing Organizers
+            </IonButton>
+
+            <IonButton
+              expand="block"
+              color="tertiary"
+              href="mailto:racer-profile@oakcityshredders.org?subject=Please Update my Racing Profile&body=Provide information here that you would like to add or change.  Make sure to provide your registered racing name."
+            >
+              <IonIcon icon={mail} slot="start" />
+              Update Racing Profile
+            </IonButton>
           </IonCardContent>
         </IonCard>
+
+        <NotificationToggle topic={RACING_TOPIC} />
 
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
@@ -228,7 +253,7 @@ const Raceing: React.FC = () => {
                       <IonText class="ion-text-nowrap" slot="start">
                         {`${division.name}`}
                       </IonText>
-                      <IonText>{`(${division.racers.length})`}</IonText>{' '}
+                      <IonText>&nbsp;{`(${division.racers.length})`}</IonText>{' '}
                       <IonIcon
                         icon={
                           division.descriptionExpanded
