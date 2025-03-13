@@ -44,6 +44,7 @@ import ScavengerHunt from './pages/ScavengerHunt';
 import SchedulePage from './pages/SchedulePage';
 import TrickCompPage from './pages/TrickComp';
 import Team from './pages/Team';
+import Sponsors from './pages/Sponsors';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
@@ -173,6 +174,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/team">
                 <Team />
+              </Route>
+              <Route path="/sponsors">
+                <Sponsors />
               </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
