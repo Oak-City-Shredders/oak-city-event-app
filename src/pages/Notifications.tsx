@@ -18,6 +18,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import PageHeader from '../components/PageHeader';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface NotificationsPageProps {
   notifications: PushNotificationSchema[];
@@ -87,10 +88,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   const { notificationPermission } = useNotificationPermissions();
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from Firestore DB
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
 
   return (
     <IonPage>

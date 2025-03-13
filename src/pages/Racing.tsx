@@ -31,6 +31,7 @@ import { chevronDown, chevronForward } from 'ionicons/icons';
 import NotificationToggle from '../components/NotificationToggle';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useIonRouter } from '@ionic/react';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 export interface Racer {
   name: string;
@@ -123,11 +124,7 @@ const Raceing: React.FC = () => {
     }
   }, [memorizedGroupedDivisions]);
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from firebase db
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
-
+  const handleRefresh = useRefreshHandler(refetch);
   const [groupedDivisions, setGroupDivisions] = useState<Division[]>([]);
 
   const toggleDivision = (divisionId: number) => {

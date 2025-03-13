@@ -8,7 +8,6 @@ import {
   IonProgressBar,
   IonCheckbox,
   IonItem,
-  IonLabel,
   IonList,
   IonCard,
 } from '@ionic/react';
@@ -39,7 +38,11 @@ const checklistItems: StokeItem[] = [
     text: 'Joined the Discord chat',
     link: 'https://discord.gg/r9xx5V2s',
   },
-  { id: 7, text: 'Ordered Shred Fest jersey' },
+  {
+    id: 7,
+    text: 'Ordered Shred Fest jersey',
+    link: 'https://www.oakcityshredfest.com/squirrelshop/p/2025-oak-city-race-jersey-custom-name-number',
+  },
   { id: 8, text: 'Charged Device' },
   { id: 9, text: 'Packed gear' },
 ];
