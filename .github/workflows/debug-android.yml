@@ -61,8 +61,8 @@ jobs:
 
       - name: Set Android versionCode
         run: |
-          sed -i "s/versionCode [0-9]\+/versionCode $GITHUB_RUN_NUMBER/" android/app/build.gradle
-          sed -i "s/versionName \".*\"/versionName \"1.0.$GITHUB_RUN_NUMBER\"/" android/app/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode 85/" android/app/build.gradle
+          sed -i "s/versionName \".*\"/versionName \"1.0.85\"/" android/app/build.gradle
           cat android/app/build.gradle
 
       # Build the Android app (AAB)
