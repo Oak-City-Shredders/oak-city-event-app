@@ -11,6 +11,7 @@ import { useRef } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 interface RouteParams {
   locationName: string;
@@ -208,25 +209,27 @@ const MapPage: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar color={'primary'}>
-          <ChipToolbar
+    <ErrorBoundary>
+      <IonPage>
+        <IonHeader>
+          <IonToolbar color={'primary'}>
+            <ChipToolbar
+              poiFilters={poiFilters}
+              loading={loading}
+              error={error}
+              handlePOIFilterClick={handlePOIFilterClick}
+            />
+          </IonToolbar>
+        </IonHeader>
+        <IonContent style={{ height: '200px', width: '100vw' }}>
+          <MyMap
+            centerOn={locationName}
             poiFilters={poiFilters}
-            loading={loading}
-            error={error}
-            handlePOIFilterClick={handlePOIFilterClick}
+            pointsOfInterest={pointsOfInterest}
           />
-        </IonToolbar>
-      </IonHeader>
-      <IonContent style={{ height: '200px', width: '100vw' }}>
-        <MyMap
-          centerOn={locationName}
-          poiFilters={poiFilters}
-          pointsOfInterest={pointsOfInterest}
-        />
-      </IonContent>
-    </IonPage>
+        </IonContent>
+      </IonPage>
+    </ErrorBoundary>
   );
 };
 

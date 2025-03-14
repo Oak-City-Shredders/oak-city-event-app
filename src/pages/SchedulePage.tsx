@@ -92,7 +92,9 @@ const SchedulePage: React.FC = () => {
                           <h2>{item.startTime}</h2>
                           <p>
                             <strong>{item.title}</strong>
-                            {item.description && ` - ${item.description} `}
+                            <div style={{ whiteSpace: 'pre-wrap' }}>
+                              {item.description && ` - ${item.description} `}
+                            </div>
                             {item.location && (
                               <IonLabel
                                 onClick={() => navigateToMap(item.location)}

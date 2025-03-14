@@ -28,6 +28,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import './Quests.css';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import { logEvent } from '../utils/analytics';
 
 // Add your sound file in the public folder or use a URL to the sound
 interface FireDBQuest {
@@ -136,6 +137,7 @@ const QuestsPage: React.FC = () => {
       scanBarcode(quest);
     } else {
       if (!quest.completed) {
+        logEvent('completed quest', { quest: quest.text });
         await Haptics.impact({ style: ImpactStyle.Medium });
         setAnimate(quest.id);
         // TODO:  Play sound on animation start

@@ -1,6 +1,6 @@
 // React & React Router
 import { useEffect } from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { useIonRouter } from '@ionic/react';
 
@@ -68,6 +68,7 @@ import '@ionic/react/css/display.css';
 
 // Theme
 import './theme/variables.css';
+import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 
 /**
  * Ionic Dark Mode
@@ -83,6 +84,22 @@ import './theme/variables.css';
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 
 setupIonicReact();
+
+const AnalyticsTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const screenName = location.pathname || 'Home'; // Customize as needed
+    FirebaseAnalytics.setCurrentScreen({
+      screenName,
+      screenClassOverride: screenName, // Optional: override CAPBridgeViewController
+    })
+      .then(() => console.log(`Screen set to: ${screenName}`))
+      .catch((err) => console.error('Error setting screen:', err));
+  }, [location]);
+
+  return null;
+};
 
 const App: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
@@ -118,6 +135,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <IonApp>
         <IonReactRouter>
+          <AnalyticsTracker />
           <IonTabs>
             <IonRouterOutlet>
               <Route path="/racer-profile/:racerId">

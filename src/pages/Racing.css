@@ -1,3 +1,7 @@
+ion-card-title {
+  font-size: 1.5em;
+}
+
 .racer-item-content {
   display: flex;
   align-items: center;
@@ -50,4 +54,40 @@
 
 .image-icon {
   color: var(--ion-color-primary);
+}
+
+/* Custom classes */
+.hero-section {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 33.333%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.7), transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.hero-text {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
