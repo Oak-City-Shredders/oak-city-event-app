@@ -31,6 +31,7 @@ target 'App' do
   # Add your Pods here
   pod 'FirebaseMessaging'
   pod 'CapacitorFirebaseAnalytics/AnalyticsWithoutAdIdSupport', :path => '../../node_modules/@capacitor-firebase/analytics'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '11.7.0' # Match your Firebase version
 end
 
 post_install do |installer|
