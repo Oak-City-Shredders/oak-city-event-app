@@ -130,7 +130,9 @@ const RacerProfile: React.FC = () => {
                 <IonCardTitle>Racer Details</IonCardTitle>
               </IonCardHeader>
               <IonCardContent>
-                <p>{racer.ocsf4_qualifier}</p>
+                <div style={{ whiteSpace: 'pre-wrap' }}>
+                  {racer.ocsf4_qualifier}
+                </div>
               </IonCardContent>
             </IonCard>
           </>
