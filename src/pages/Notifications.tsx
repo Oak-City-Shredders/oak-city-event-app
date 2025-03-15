@@ -81,7 +81,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
           notification.published === 'Publish' && // Only keep published rows
           notification.result === 'Success'
       )
-      .reverse();
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()); // Sort newest to oldest
 
     return filteredData;
   }, [sheetsData]);
