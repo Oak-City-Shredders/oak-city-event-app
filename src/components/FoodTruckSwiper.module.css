@@ -49,13 +49,13 @@
 }
 
 .statusBadgeServing {
-  background-color: #22c55e;
-  color: white;
+  background-color: var(--ion-color-success);
+  color: var(--ion-color-success-contrast);
 }
 
 .statusBadgeClosed {
-  background-color: #6b7280;
-  color: white;
+  background-color: var(--ion-color-medium);
+  color: var(--ion-color-medium-contrast);
 }
 
 .bottomRowContainer {
@@ -73,7 +73,6 @@
 .infoContainer {
   display: flex;
   flex-direction: row;
-  background-color: rgba(255, 255, 255, 0.9);
   margin: 4px;
   margin-left: 2px;
   margin-right: 2px;
@@ -86,19 +85,19 @@
 
   padding: 0.25rem 0.75rem;
 
-  color: white;
+  color: var(--ion-color-secondary-contrast);
   font-size: 1.25rem;
   font-weight: 700;
 }
 
 .popularItem {
-  color: #1f2937;
+  color: var(--ion-color-medium);
   font-weight: 500;
   font-size: 0.875rem;
 }
 
 .itemPrice {
-  color: #f97316;
+  color: var(--ion-color-warning);
   font-weight: 700;
   margin-left: 5px;
 }
@@ -117,15 +116,6 @@
 
 .navigationButtonNext {
   right: 0.1rem;
-}
-
-.navigationIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  color: #1f2937;
-}
-
-.menuButton {
 }
 
 .topRowContainer {
