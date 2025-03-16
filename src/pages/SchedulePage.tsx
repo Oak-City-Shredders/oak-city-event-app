@@ -27,15 +27,9 @@ import PageHeader from '../components/PageHeader';
 import NotificationToggle from '../components/NotificationToggle';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
-const CALENDAR_ID: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || '';
 const SchedulePage: React.FC = () => {
   const router = useIonRouter();
-  const {
-    data: calendarData,
-    loading,
-    error,
-    refetch,
-  } = useGoogleCalendar(CALENDAR_ID);
+  const { data: calendarData, loading, error, refetch } = useGoogleCalendar();
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
   }, [calendarData]);
@@ -43,6 +37,8 @@ const SchedulePage: React.FC = () => {
     router.push(`/map/${eventLocation}`);
   };
 
+  const firstKey =
+    Object.keys(groupedEvents).length > 0 ? Object.keys(groupedEvents)[0] : '';
   const handleRefresh = useRefreshHandler(refetch);
 
   return (
@@ -69,9 +65,9 @@ const SchedulePage: React.FC = () => {
         ) : !calendarData || calendarData.length === 0 ? (
           <IonText>There are currently no events available.</IonText>
         ) : (
-          <IonAccordionGroup multiple={true}>
+          <IonAccordionGroup multiple={true} value={firstKey}>
             {Object.keys(groupedEvents).map((day) => (
-              <IonAccordion key={day} value={day} defaultChecked={isToday(day)}>
+              <IonAccordion key={day} value={day}>
                 <IonItem slot="header" color="light">
                   <IonLabel>{getFormattedDate(day)}</IonLabel>
                 </IonItem>
@@ -90,7 +86,7 @@ const SchedulePage: React.FC = () => {
                         {item.icon}
                         <IonLabel>
                           <h2>{item.startTime}</h2>
-                          <p>
+                          <div>
                             <strong>{item.title}</strong>
                             <div style={{ whiteSpace: 'pre-wrap' }}>
                               {item.description && ` - ${item.description} `}
@@ -110,7 +106,7 @@ const SchedulePage: React.FC = () => {
                                 </span>
                               </IonLabel>
                             )}
-                          </p>
+                          </div>
                         </IonLabel>
                       </IonItem>
                     ))}

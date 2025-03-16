@@ -9,14 +9,6 @@ export interface LayoutItem {
 
 export const homePageLayout: LayoutItem[] = [
   {
-    title: 'View Schedule',
-    description: '',
-    route: '/schedule',
-    image: '/images/schedule-small.webp',
-    size: '6',
-    sizeLg: '3',
-  },
-  {
     title: 'Map',
     description: '',
     route: '/map',
@@ -86,15 +78,6 @@ export const homePageLayout: LayoutItem[] = [
     description: '',
     route: '/sponsors',
     image: '/images/sponsors-small.webp',
-    size: '6',
-    sizeLg: '3',
-  },
-
-  {
-    title: 'Get Help',
-    description: 'Contact information',
-    route: '/emergency-services',
-    image: '/images/emergency-services-small.webp',
     size: '6',
     sizeLg: '3',
   },

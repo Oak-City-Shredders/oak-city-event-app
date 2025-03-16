@@ -5,9 +5,7 @@ import {
   IonContent,
   IonHeader,
   IonImg,
-  IonMenu,
   IonMenuButton,
-  IonMenuToggle,
   IonPage,
   IonTitle,
   IonToolbar,
@@ -21,7 +19,6 @@ import {
   useIonRouter,
   IonRefresher,
   IonRefresherContent,
-  RefresherEventDetail,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -42,6 +39,8 @@ import TicketCounter from '../components/TicketCounter';
 import usePreferenceSettings from '../hooks/usePreferenceSettings';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import NextEvent from '../components/NextEvent';
+import HomePageMenu from '../components/HomePageMenu';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -125,52 +124,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
 
   return (
     <>
-      <IonMenu contentId="main-content" maxEdgeStart={0}>
-        <IonHeader>
-          <IonToolbar color="secondary">
-            <IonTitle>Navigation</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          <IonList>
-            {homePageLayout.map((item, index) => (
-              <IonMenuToggle key={index}>
-                <IonItem
-                  button
-                  key={item.route}
-                  onClick={() => {
-                    handleCardClick(item.route);
-                  }}
-                >
-                  <IonLabel>{item.title}</IonLabel>
-                </IonItem>
-              </IonMenuToggle>
-            ))}
-          </IonList>
-          <IonList>
-            <IonMenuToggle key={homePageLayout.length + 1}>
-              <IonItem
-                button
-                onClick={() => {
-                  handleCardClick('/emergency-services');
-                }}
-              >
-                <IonLabel>Get Help</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-            <IonMenuToggle key={homePageLayout.length + 2}>
-              <IonItem
-                button
-                onClick={() => {
-                  handleCardClick('/about');
-                }}
-              >
-                <IonLabel>About</IonLabel>
-              </IonItem>
-            </IonMenuToggle>
-          </IonList>
-        </IonContent>
-      </IonMenu>
+      <HomePageMenu homePageLayout={homePageLayout}></HomePageMenu>
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
@@ -235,6 +189,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               </IonList>
             </IonCard>
           )}
+          <NextEvent />
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
