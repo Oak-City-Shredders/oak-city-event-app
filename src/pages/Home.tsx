@@ -41,6 +41,7 @@ import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
+import RacerSpotlight from '../components/RacerSpotlight';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -152,19 +153,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
-          {new Date() <= new Date(shredFestStartDate) && (
-            <>
-              <>
-                {preferenceSettings['ticketCounter'].enabled && (
-                  <TicketCounter />
-                )}
-              </>
-              <>
-                {preferenceSettings['countDown'].enabled && <CountdownTimer />}
-              </>
-              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
-            </>
-          )}
+          {/* active notifications */}
           {notifications.length > 0 && (
             <IonCard className="ion-padding">
               <IonList>
@@ -189,7 +178,23 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               </IonList>
             </IonCard>
           )}
+
+          {new Date() <= new Date(shredFestStartDate) && (
+            <>
+              <>
+                {preferenceSettings['ticketCounter'].enabled && (
+                  <TicketCounter />
+                )}
+              </>
+              <>
+                {preferenceSettings['countDown'].enabled && <CountdownTimer />}
+              </>
+              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
+            </>
+          )}
+
           <NextEvent />
+          <RacerSpotlight />
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}

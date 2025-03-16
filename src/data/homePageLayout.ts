@@ -17,14 +17,6 @@ export const homePageLayout: LayoutItem[] = [
     sizeLg: '3',
   },
   {
-    title: 'Race Info',
-    description: 'Rules and races',
-    route: '/race-information',
-    image: '/images/race-information-small.webp',
-    size: '6',
-    sizeLg: '3',
-  },
-  {
     title: 'Trick Comp',
     description: '',
     route: '/trick-comp',

@@ -42,6 +42,16 @@ const HomePageMenu: React.FC<HomePageMenuProps> = ({ homePageLayout }) => {
               <IonLabel>Schedule</IonLabel>
             </IonItem>
           </IonMenuToggle>
+          <IonMenuToggle key={homePageLayout.length + 1}>
+            <IonItem
+              button
+              onClick={() => {
+                handleMenuItemClick('/race-information');
+              }}
+            >
+              <IonLabel>Racing</IonLabel>
+            </IonItem>
+          </IonMenuToggle>
           {homePageLayout.map((item, index) => (
             <IonMenuToggle key={index}>
               <IonItem
