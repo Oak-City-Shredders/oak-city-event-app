@@ -11,13 +11,17 @@ interface FireStoreDBHook<T> {
 
 function useFireStoreDB<T>(
   collectionId: string,
-  docId?: string
+  docId?: string,
+  dependencies?: boolean[]
 ): FireStoreDBHook<T> {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
+    if (dependencies?.find((d) => !d)) {
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -52,9 +56,10 @@ function useFireStoreDB<T>(
       setError(error as Error);
       console.log(error);
     } finally {
+      console.log('Fetch complete - setting loading to false');
       setLoading(false);
     }
-  }, [collectionId]);
+  }, [collectionId, docId]);
 
   // Fetch data on initial render
   useEffect(() => {

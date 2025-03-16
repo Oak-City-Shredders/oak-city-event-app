@@ -65,6 +65,7 @@ export interface FireDBRacer {
   Nickname: string;
   OCSF4_qualifier: string;
   id: string;
+  Accomplishments: string;
 }
 
 const RACING_TOPIC = 'racing';

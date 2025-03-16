@@ -1,0 +1,87 @@
+.racer-spotlight-card {
+  background-image: linear-gradient(
+    to right,
+
+    rgba(var(--ion-color-secondary-rgb), 0.1),
+    rgba(var(--ion-color-secondary-rgb), 0.25)
+  );
+}
+.racer-spotlight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+  color: var(--ion-color-medium);
+}
+
+.racer-card-subtitle {
+  margin-bottom: 1px;
+}
+
+.racer-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  font-weight: 700;
+}
+
+.racer-image {
+  width: 90px;
+  height: auto; /* Height varies based on aspect ratio */
+  flex-shrink: 0; /* Prevents image from shrinking */
+}
+
+.racer-view-all {
+  white-space: nowrap;
+}
+
+.racer-card-content {
+  flex-direction: row;
+  display: flex;
+  align-items: flex-start;
+}
+
+.racer-card-header {
+  padding-top: 4px;
+  padding-bottom: 0px;
+}
+
+.racer-summary-and-description {
+  color: var(--ion-color-medium);
+  display: flex;
+  flex-direction: column; /* Stack description and time vertically */
+  flex: 1; /* Takes up remaining space in the parent flex container */
+  min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+  padding: 2px;
+  padding-left: 6px;
+  margin-left: 6px;
+  max-height: inherit;
+}
+
+.racer-description {
+  flex: 1; /* Takes available space */
+  overflow: hidden; /* Hides overflow */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Max lines before ellipsis */
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.racer-description.expanded {
+  display: block; /* Removes line clamp limitations */
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
+  text-overflow: unset;
+  overflow: visible; /* Shows all content */
+}
+
+.racer-accomplishments {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--ion-color-dark);
+}

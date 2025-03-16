@@ -50,9 +50,9 @@ const getTimeLeft = (): CountdownProps => {
   const m = Math.floor((diff / (1000 * 60)) % 60);
   const s = Math.floor((diff / 1000) % 60);
 
-  if (now >= festivalStartDate && d == -1 && h >= -1 && m >= -1) {
+  if (now >= festivalStartDate && d == -1 && h >= -1 && m >= -2) {
     return {
-      statusMessage: 'Shred Fest 5 is happening NOW! 🛞🔥 Get out there!',
+      statusMessage: "Shred Fest 5 has started! 🛞🔥 Let's Go!",
       timeLeft: null,
       status: 'eventStarted',
     };
@@ -94,14 +94,16 @@ const CountdownTimer: React.FC = () => {
 
   return (
     <div>
-      {countdown.status == 'eventStarted' && <Confetti />}
+      {countdown.status == 'eventStarted' && isVisible && <Confetti />}
       <IonCard>
         <IonCardHeader onClick={onToggleView}>
-          <IonCardTitle>Countdown</IonCardTitle>
+          {isVisible && countdown.status !== 'eventStarted' && (
+            <IonCardTitle>Countdown</IonCardTitle>
+          )}
           <IonCardSubtitle>{countdown.statusMessage}</IonCardSubtitle>
         </IonCardHeader>
-        <IonCardContent>
-          {isVisible && countdown.status == 'timeRemaining' && (
+        {isVisible && countdown.status == 'timeRemaining' && (
+          <IonCardContent>
             <div className="ion-padding crazy-bg" onClick={onToggleView}>
               <div className="countdown-container">
                 {countdown.timeLeft &&
@@ -128,8 +130,8 @@ const CountdownTimer: React.FC = () => {
                   ))}
               </div>
             </div>
-          )}
-        </IonCardContent>
+          </IonCardContent>
+        )}
       </IonCard>
     </div>
   );
