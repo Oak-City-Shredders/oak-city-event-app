@@ -25,8 +25,8 @@ interface UseGoogleCalendarReturn {
 }
 
 function useGoogleCalendar(
-  calendarId: string,
-  maxResults: number = 500
+  maxResults: number = 500,
+  calendarId: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || ''
 ): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(false);

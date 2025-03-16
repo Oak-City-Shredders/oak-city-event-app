@@ -1,0 +1,121 @@
+.event-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.event-card-content {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.event-card-header {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.calendar-icon {
+  flex: 0 0 50px;
+
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 2px solid var(--ion-color-dark);
+  border-radius: 8px;
+}
+
+.calendar-icon-header {
+  color: var(--ion-color-dark);
+  background-color: var(--ion-color-secondary);
+  text-align: center;
+  padding: 1px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--ion-color-dark);
+}
+
+.calendar-icon-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+}
+
+.calendar-icon-day {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.calendar-icon-time {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.calendar-event-description {
+  font-size: 0.9em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.calendar-event-summary-and-description {
+  color: var(--ion-color-medium);
+  display: flex;
+  flex-direction: column; /* Stack description and time vertically */
+  flex: 1; /* Takes up remaining space in the parent flex container */
+  min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+  padding: 2px;
+  padding-left: 6px;
+}
+
+.calendar-event-summary {
+  font-size: 0.9em;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+}
+.event-vertical-bar {
+  background-color: var(--ion-color-secondary);
+  width: 4px;
+  margin-top: 5px;
+  margin-left: 6px;
+  margin-bottom: 5px;
+}
+.calendar-event-time {
+  display: flex;
+  flex-direction: row; /* Stack description and time vertically */
+  flex: 1; /* Takes up remaining space in the parent flex container */
+  color: var(--ion-color-medium);
+  font-size: 0.9em;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  max-width: 100%;
+  align-items: center;
+}
+
+.event-bar-and-summary {
+  display: flex;
+  flex-direction: row; /* Stack description and time vertically */
+  flex: 1; /* Takes up remaining space in the parent flex container */
+  background: linear-gradient(
+    45deg,
+    var(--ion-color-primary),
+    var(--ion-color-secondary)
+  );
+  margin-left: 5px;
+  min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+}
