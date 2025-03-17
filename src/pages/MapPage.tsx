@@ -12,6 +12,7 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import ErrorBoundary from '../components/ErrorBoundary';
+import { checkVibrate } from '../utils/vibrate';
 
 interface RouteParams {
   locationName: string;
@@ -191,7 +192,10 @@ const MapPage: React.FC = () => {
   const handlePOIFilterClick = useCallback(
     async (poiFilter: POIFilter) => {
       console.log('handlePOIFilterClick', poiFilter);
-      await Haptics.impact({ style: ImpactStyle.Medium });
+
+      checkVibrate(
+        async () => await Haptics.impact({ style: ImpactStyle.Medium })
+      );
       setPOIFilters((prev) => {
         const poiFilters = prev.map((f) =>
           f.type === poiFilter.type ? { ...f, isVisible: !f.isVisible } : f

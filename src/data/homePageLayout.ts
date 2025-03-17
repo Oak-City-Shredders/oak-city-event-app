@@ -41,14 +41,7 @@ export const homePageLayout: LayoutItem[] = [
     size: '6',
     sizeLg: '3',
   },
-  {
-    title: 'Food Trucks',
-    description: 'Explore food truck options.',
-    route: '/food-trucks',
-    image: '/images/food-truck-small.webp',
-    size: '6',
-    sizeLg: '3',
-  },
+
   // {
   //   title: 'Raffles',
   //   description: 'Win amazing prizes',

@@ -15,13 +15,13 @@ import { trophy, people, star } from 'ionicons/icons';
 import './RacerSpotlight.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { FireDBRacer } from '../pages/Racing';
-interface RacerSpotlight {}
+interface RacerSpotlightProps {}
 
 interface FireDBRacerSpotlight {
   name: string;
   id: string;
 }
-const RacerSpotlight: React.FC<RacerSpotlight> = ({}) => {
+const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
   const router = useIonRouter();
   const {
     data: racers,
@@ -41,10 +41,6 @@ const RacerSpotlight: React.FC<RacerSpotlight> = ({}) => {
     }
   }, [racers]);
 
-  /*if (loadingRacers || errorRacers || !racers || racers.length < 1) {
-    return <></>;
-  }*/
-
   const { data, loading, error } = useFireStoreDB<FireDBRacer>(
     'Sheet1',
     racerId || '',
@@ -62,12 +58,6 @@ const RacerSpotlight: React.FC<RacerSpotlight> = ({}) => {
   }
 
   const racer = data[0];
-
-  /*
-  // This is a button that could be included in the widget but isn't needed now because schedule page is pretty limited
-  
-  
-    */
 
   return (
     <IonCard className="racer-spotlight-card" onClick={undefined}>

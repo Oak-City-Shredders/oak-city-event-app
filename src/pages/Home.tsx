@@ -42,6 +42,7 @@ import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
+import FoodTruckSwiper from '../components/FoodTruckSwiper';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -178,23 +179,20 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
               </IonList>
             </IonCard>
           )}
-
-          {new Date() <= new Date(shredFestStartDate) && (
-            <>
-              <>
-                {preferenceSettings['ticketCounter'].enabled && (
-                  <TicketCounter />
-                )}
-              </>
-              <>
-                {preferenceSettings['countDown'].enabled && <CountdownTimer />}
-              </>
-              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
-            </>
-          )}
-
           <NextEvent />
+
+          <>
+            <>
+              {preferenceSettings['ticketCounter'].enabled && <TicketCounter />}
+            </>
+            <>{preferenceSettings['countDown'].enabled && <CountdownTimer />}</>
+            {new Date() <= new Date(shredFestStartDate) && (
+              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
+            )}
+          </>
+
           <RacerSpotlight />
+          <FoodTruckSwiper />
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}

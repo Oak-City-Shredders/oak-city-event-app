@@ -67,6 +67,16 @@ const HomePageMenu: React.FC<HomePageMenuProps> = ({ homePageLayout }) => {
           ))}
         </IonList>
         <IonList>
+          <IonMenuToggle key={homePageLayout.length + 5}>
+            <IonItem
+              button
+              onClick={() => {
+                handleMenuItemClick('/food-trucks');
+              }}
+            >
+              <IonLabel>Food Trucks</IonLabel>
+            </IonItem>
+          </IonMenuToggle>
           <IonMenuToggle key={homePageLayout.length + 3}>
             <IonItem
               button

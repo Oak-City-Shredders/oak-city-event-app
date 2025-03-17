@@ -40,6 +40,7 @@ import { arrowDown, arrowUp } from 'ionicons/icons';
 import { renderToString } from 'react-dom/server';
 import { Rectangle } from 'react-leaflet';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { checkVibrate } from '../utils/vibrate';
 
 const mapRoadAndTrailImageUrl = '/images/map/2024map-roads.webp'; // replace with new map when available
 const mapGraphicsUrl = '/images/map/2024map-graphics.webp'; // replace with new map when available
@@ -416,7 +417,9 @@ const TooltipMarker = ({
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const handleClick = async () => {
-    await Haptics.impact({ style: ImpactStyle.Light });
+    checkVibrate(
+      async () => await Haptics.impact({ style: ImpactStyle.Light })
+    );
     setTooltipVisible(!tooltipVisible);
   };
 

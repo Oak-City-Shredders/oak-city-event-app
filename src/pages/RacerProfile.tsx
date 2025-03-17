@@ -24,6 +24,7 @@ import { getErrorMessage } from '../utils/errorUtils';
 import { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import './RacerProfile.css';
 
 interface RouteParams {
   racerId: string;
@@ -107,6 +108,18 @@ const RacerProfile: React.FC = () => {
                 )}
               </IonCardContent>
             </IonCard>
+
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Racer Details</IonCardTitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <div className="racer-stats" style={{ whiteSpace: 'pre-wrap' }}>
+                  {racer.ocsf4_qualifier}
+                </div>
+              </IonCardContent>
+            </IonCard>
+
             {racer.socialLink && (
               <IonCard>
                 <IonCardHeader>
@@ -125,16 +138,6 @@ const RacerProfile: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             )}
-            <IonCard>
-              <IonCardHeader>
-                <IonCardTitle>Racer Details</IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <div style={{ whiteSpace: 'pre-wrap' }}>
-                  {racer.ocsf4_qualifier}
-                </div>
-              </IonCardContent>
-            </IonCard>
           </>
         )}
       </IonContent>
