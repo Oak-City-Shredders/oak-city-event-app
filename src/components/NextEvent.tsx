@@ -57,7 +57,7 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
     */
 
   return (
-    <IonCard onClick={undefined}>
+    <IonCard className="next-event-card" onClick={undefined}>
       <IonCardHeader className="event-card-header">
         <IonCardSubtitle>
           <div className="event-header">
