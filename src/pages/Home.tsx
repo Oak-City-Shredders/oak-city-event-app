@@ -19,6 +19,9 @@ import {
   useIonRouter,
   IonRefresher,
   IonRefresherContent,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -122,6 +125,9 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     await EdgeToEdge.setBackgroundColor({ color: '#38e4ae' });
   };
 
+  const colSize = '12';
+  const colSizeLg = '6';
+
   setStatusBarBackground();
 
   return (
@@ -154,52 +160,81 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
             <IonRefresherContent />
           </IonRefresher>
-          {/* active notifications */}
-          {notifications.length > 0 && (
-            <IonCard className="ion-padding">
-              <IonList>
-                {notifications.map((notification) => (
-                  <IonItem key={notification.id}>
-                    <IonIcon
-                      icon={getIconForNotification(notification)}
-                      slot="start"
-                    />
-                    <IonLabel>
-                      <h2>{notification.title}</h2>
-                      <p>{notification.body}</p>
-                    </IonLabel>
-                    <IonButton
-                      fill="clear"
-                      onClick={() => removeNotification(notification)}
-                    >
-                      <IonIcon icon={closeOutline} />
-                    </IonButton>
-                  </IonItem>
-                ))}
-              </IonList>
-            </IonCard>
-          )}
-          <NextEvent />
+          <IonGrid>
+            <IonRow>
+              {/* active notifications */}
+              {notifications.length > 0 && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
+                  <IonCard className="ion-padding">
+                    <IonList>
+                      {notifications.map((notification) => (
+                        <IonItem key={notification.id}>
+                          <IonIcon
+                            icon={getIconForNotification(notification)}
+                            slot="start"
+                          />
+                          <IonLabel>
+                            <h2>{notification.title}</h2>
+                            <p>{notification.body}</p>
+                          </IonLabel>
+                          <IonButton
+                            fill="clear"
+                            onClick={() => removeNotification(notification)}
+                          >
+                            <IonIcon icon={closeOutline} />
+                          </IonButton>
+                        </IonItem>
+                      ))}
+                    </IonList>
+                  </IonCard>
+                </IonCol>
+              )}
+              <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
+                <NextEvent />
+              </IonCol>
 
-          <>
-            <>
-              {preferenceSettings['ticketCounter'].enabled && <TicketCounter />}
-            </>
-            <>{preferenceSettings['countDown'].enabled && <CountdownTimer />}</>
-            {new Date() <= new Date(shredFestStartDate) && (
-              <>{preferenceSettings['stokeMeter'].enabled && <StokeMeter />}</>
-            )}
-          </>
+              {preferenceSettings['ticketCounter'].enabled && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
+                  <TicketCounter />
+                </IonCol>
+              )}
 
-          <RacerSpotlight />
-          <FoodTruckSwiper />
+              {preferenceSettings['countDown'].enabled && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={4}>
+                  <CountdownTimer />
+                </IonCol>
+              )}
+              {new Date() <= new Date(shredFestStartDate) &&
+                preferenceSettings['stokeMeter'].enabled && (
+                  <IonCol size={colSize} sizeLg={colSizeLg} key={5}>
+                    <StokeMeter />
+                  </IonCol>
+                )}
+
+              <IonCol size={colSize} sizeLg={colSizeLg} key={6}>
+                <RacerSpotlight />
+              </IonCol>
+              <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
+                <FoodTruckSwiper />
+              </IonCol>
+            </IonRow>
+          </IonGrid>
           <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
           />
-          {dynamicContent.map(
-            (d, index) => d.enabled && <DynamicContent key={index} {...d} />
-          )}
+          <IonGrid>
+            <IonRow>
+              {dynamicContent.map(
+                (d, index) =>
+                  d.enabled && (
+                    <IonCol size={colSize} sizeLg={'4'} key={index}>
+                      <DynamicContent {...d} />
+                    </IonCol>
+                  )
+              )}
+            </IonRow>
+          </IonGrid>
         </IonContent>
       </IonPage>
     </>

@@ -95,7 +95,7 @@ const CountdownTimer: React.FC = () => {
   return (
     <div>
       {countdown.status == 'eventStarted' && isVisible && <Confetti />}
-      <IonCard>
+      <IonCard className="count-down-card">
         <IonCardHeader onClick={onToggleView}>
           {isVisible && countdown.status !== 'eventStarted' && (
             <IonCardTitle>Countdown</IonCardTitle>
