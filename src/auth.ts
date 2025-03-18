@@ -48,3 +48,28 @@ export const logoutUser = async () => {
     console.error('Error signing out:', error);
   }
 };
+
+export const sendEmailVerification = async () => {
+  try {
+    await FirebaseAuthentication.sendEmailVerification({
+      actionCodeSettings: {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be in the authorized domains list in the Firebase Console.
+        url: 'https://rideoakcity.com/about',
+        // This must be true.
+        handleCodeInApp: true,
+        iOS: {
+          bundleId: 'com.oakcityshredfest.app',
+        },
+        android: {
+          packageName: 'com.oakcityshredfest.app',
+          installApp: true,
+          minimumVersion: '1',
+        },
+      },
+    });
+    console.log('send email verification');
+  } catch (error) {
+    console.error('Error sending email verificaiton:', error);
+  }
+};

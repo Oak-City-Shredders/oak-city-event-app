@@ -53,7 +53,8 @@ function useFireStoreDB<T>(
         setData(items);
       }
     } catch (error) {
-      setError(error as Error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      setError(err);
       console.log(error);
     } finally {
       console.log('Fetch complete - setting loading to false');
@@ -63,16 +64,18 @@ function useFireStoreDB<T>(
 
   // Fetch data on initial render
   useEffect(() => {
+    let isMounted = true;
     // Fetch delivered notifications when app is resumed
     const appResumed = async () => {
       console.log('App resumed - fetching sheets data.');
-      fetchData();
+      if (isMounted && !loading) fetchData();
     };
     App.addListener('resume', appResumed);
 
     fetchData();
 
     return () => {
+      isMounted = false;
       App.removeAllListeners();
       console.log('home cleanup - all listeners removed');
     };
