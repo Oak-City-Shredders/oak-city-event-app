@@ -44,7 +44,8 @@ const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
   const { data, loading, error } = useFireStoreDB<FireDBRacer>(
     'Sheet1',
     racerId || '',
-    [loadingRacers]
+    [],
+    [!loadingRacers]
   );
 
   const [isExpanded, setIsExpanded] = useState(false);

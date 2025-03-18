@@ -4,7 +4,6 @@ import {
   IonCard,
   IonButton,
   IonCardContent,
-  useIonRouter,
   IonText,
   IonLabel,
 } from '@ionic/react';
@@ -31,7 +30,6 @@ import styles from './FoodTruckSwiper.module.css';
 import './FoodTruckSwiper.css';
 
 const FoodTruckSwiper: React.FC = () => {
-  const router = useIonRouter();
   const {
     data: foodTrucks,
     loading,

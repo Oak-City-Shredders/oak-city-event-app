@@ -69,6 +69,7 @@ import '@ionic/react/css/display.css';
 // Theme
 import './theme/variables.css';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
+import TicketsPage from './pages/TicketsPage';
 
 /**
  * Ionic Dark Mode
@@ -174,6 +175,9 @@ const App: React.FC = () => {
               </Route>
               <Route path="/quests">
                 <QuestsPage />
+              </Route>
+              <Route path="/tickets">
+                <TicketsPage />
               </Route>
               <Route path="/race-information">
                 <Raceing />
