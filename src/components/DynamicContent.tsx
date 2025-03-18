@@ -9,9 +9,8 @@ import {
   IonText,
   IonImg,
 } from '@ionic/react';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { chevronDown, chevronUp, chevronForward } from 'ionicons/icons';
+import { chevronDown, chevronForward } from 'ionicons/icons';
 import dayjs from 'dayjs';
 
 export interface DynamicContentProps {

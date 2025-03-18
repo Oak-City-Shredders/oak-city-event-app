@@ -113,10 +113,6 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
   };
 
-  const handleAuthClick = () => {
-    router.push('/login', 'forward');
-  };
-
   const handleRefresh = useRefreshHandler(refetch);
 
   // Set text color to dark (for light backgrounds)
@@ -138,7 +134,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonToolbar color={'primary'}>
             <IonTitle>Oak City Shred Fest 5</IonTitle>
             <IonButtons slot="end">
-              <IonButton onClick={handleAuthClick}>
+              <IonButton routerLink="/login">
                 <IonIcon icon={personCircleOutline} size="large" />
               </IonButton>
             </IonButtons>

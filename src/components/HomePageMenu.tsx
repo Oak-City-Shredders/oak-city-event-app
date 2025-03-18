@@ -10,8 +10,10 @@ import {
   IonItem,
   IonLabel,
   useIonRouter,
+  IonIcon,
 } from '@ionic/react';
 import { LayoutItem } from '../data/homePageLayout';
+import { ticket } from 'ionicons/icons';
 
 interface HomePageMenuProps {
   homePageLayout: LayoutItem[];
@@ -32,6 +34,19 @@ const HomePageMenu: React.FC<HomePageMenuProps> = ({ homePageLayout }) => {
       </IonHeader>
       <IonContent>
         <IonList>
+          <IonMenuToggle key={homePageLayout.length + 7}>
+            <IonItem
+              button
+              onClick={() => {
+                handleMenuItemClick('/tickets');
+              }}
+            >
+              <IonLabel>
+                <IonIcon icon={ticket} />
+                &nbsp;Tickets
+              </IonLabel>
+            </IonItem>
+          </IonMenuToggle>
           <IonMenuToggle key={homePageLayout.length + 2}>
             <IonItem
               button

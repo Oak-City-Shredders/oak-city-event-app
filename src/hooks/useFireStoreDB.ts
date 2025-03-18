@@ -1,6 +1,25 @@
 import { useEffect, useState, useCallback } from 'react';
 import { App } from '@capacitor/app';
-import { FirebaseFirestore } from '@capacitor-firebase/firestore';
+import {
+  FirebaseFirestore,
+  QueryFilterConstraint,
+} from '@capacitor-firebase/firestore';
+
+// Define a type for where conditions
+type WhereCondition = {
+  field: string;
+  operator:
+    | '<'
+    | '<='
+    | '=='
+    | '!='
+    | '>='
+    | '>'
+    | 'in'
+    | 'array-contains'
+    | 'array-contains-any';
+  value: any;
+};
 
 interface FireStoreDBHook<T> {
   data: T[] | null;
@@ -12,6 +31,7 @@ interface FireStoreDBHook<T> {
 function useFireStoreDB<T>(
   collectionId: string,
   docId?: string,
+  where?: WhereCondition[], // Optional where parameter
   dependencies?: boolean[]
 ): FireStoreDBHook<T> {
   const [data, setData] = useState<T[] | null>(null);
@@ -19,13 +39,14 @@ function useFireStoreDB<T>(
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
-    if (dependencies?.find((d) => !d)) {
+    if (dependencies?.some((item) => !item)) {
       return;
     }
     setLoading(true);
     setError(null);
     try {
       if (docId) {
+        // Single document fetch (where clause doesn't apply)
         const { snapshot } = await FirebaseFirestore.getDocument({
           reference: `${collectionId}/${docId}`,
         });
@@ -39,9 +60,29 @@ function useFireStoreDB<T>(
           ]);
         }
       } else {
-        const { snapshots } = await FirebaseFirestore.getCollection({
-          reference: collectionId,
-        });
+        // Collection fetch with optional where conditions
+        const queryConstraints =
+          where?.map(
+            (condition) =>
+              ({
+                type: 'where',
+                fieldPath: condition.field,
+                opStr: condition.operator,
+                value: condition.value,
+              } as QueryFilterConstraint)
+          ) || [];
+        const { snapshots } =
+          queryConstraints.length > 0
+            ? await FirebaseFirestore.getCollection({
+                reference: collectionId,
+                compositeFilter: {
+                  type: 'and',
+                  queryConstraints,
+                },
+              })
+            : await FirebaseFirestore.getCollection({
+                reference: collectionId,
+              });
         const items = snapshots.map(
           (doc) =>
             ({
@@ -52,27 +93,31 @@ function useFireStoreDB<T>(
 
         setData(items);
       }
+      setError(null);
     } catch (error) {
-      setError(error as Error);
+      const err = error instanceof Error ? error : new Error(String(error));
+      setError(err);
       console.log(error);
     } finally {
       console.log('Fetch complete - setting loading to false');
       setLoading(false);
     }
-  }, [collectionId, docId]);
+  }, [collectionId, docId]); // Add where to dependencies
 
   // Fetch data on initial render
   useEffect(() => {
+    let isMounted = true;
     // Fetch delivered notifications when app is resumed
     const appResumed = async () => {
       console.log('App resumed - fetching sheets data.');
-      fetchData();
+      if (isMounted && !loading) fetchData();
     };
     App.addListener('resume', appResumed);
 
     fetchData();
 
     return () => {
+      isMounted = false;
       App.removeAllListeners();
       console.log('home cleanup - all listeners removed');
     };

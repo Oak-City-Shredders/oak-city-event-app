@@ -7,7 +7,9 @@ import {
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  error: string | null;
   signOut: () => Promise<void>;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,31 +19,73 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // Listen for authentication state changes
-    const unsubscribe = FirebaseAuthentication.addListener(
-      'authStateChange',
-      (state) => {
-        setUser(state.user ?? null);
+    const setupAuthListener = async () => {
+      try {
+        FirebaseAuthentication.addListener('authStateChange', (state) => {
+          try {
+            setUser(state.user ?? null);
+            setLoading(false);
+            setError(null);
+          } catch (err) {
+            setError(
+              err instanceof Error
+                ? err.message
+                : 'An error occurred while processing auth state'
+            );
+            setLoading(false);
+          }
+        });
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed to initialize authentication listener'
+        );
         setLoading(false);
       }
-    );
+    };
+
+    setupAuthListener();
 
     // Cleanup listener on unmount
     return () => {
-      FirebaseAuthentication.removeAllListeners();
+      try {
+        FirebaseAuthentication.removeAllListeners();
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Failed to cleanup authentication listeners'
+        );
+      }
     };
   }, []);
 
-  // Sign out function
+  // Sign out function with error handling
   const signOut = async () => {
-    await FirebaseAuthentication.signOut();
-    setUser(null);
+    try {
+      setLoading(true);
+      setError(null);
+      await FirebaseAuthentication.signOut();
+      setUser(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to sign out');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to clear error state
+  const clearError = () => {
+    setError(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ user, loading, error, signOut, clearError }}>
       {children}
     </AuthContext.Provider>
   );

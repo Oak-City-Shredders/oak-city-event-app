@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { loginUser, registerUser, resetPassword, logoutUser } from '../auth';
+import {
+  loginUser,
+  registerUser,
+  resetPassword,
+  logoutUser,
+  sendEmailVerification,
+} from '../auth';
 import {
   IonButton,
   IonInput,
@@ -13,14 +19,25 @@ import {
   IonCardTitle,
   IonCardContent,
   IonToggle,
+  IonIcon,
+  IonSegment,
+  IonSegmentButton,
+  SegmentValue,
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
 import usePreferenceSettings from '../hooks/usePreferenceSettings';
+import styles from './Login.module.css';
+import {
+  logInOutline,
+  logOutOutline,
+  mailOutline,
+  personAddOutline,
+} from 'ionicons/icons';
 
 const Login: React.FC = () => {
-  const { user, loading } = useAuth();
-
+  const { user, loading, error: authError } = useAuth();
+  const [activeTab, setActiveTab] = useState<string>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
@@ -32,6 +49,28 @@ const Login: React.FC = () => {
       preferenceSettings[key].enabled = !preferenceSettings[key].enabled;
       return preferenceSettings;
     });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!email || !password) {
+      setError('Please fill in all fields');
+      return;
+    }
+
+    try {
+      if (activeTab === 'signup') {
+        await handleCreate();
+      } else {
+        await handleLogin();
+      }
+      setEmail('');
+      setPassword('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
   };
 
   const handleLogin = async () => {
@@ -81,70 +120,223 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleSendVerification = async () => {
+    setError(''); // Clear previous errors
+    try {
+      await sendEmailVerification();
+      setError('Verification email sent! Check your inbox.');
+    } catch (error: any) {
+      console.error('Failed to resend verification email', error);
+      setError(error.code || 'Resend verification failed.');
+    }
+  };
+
+  const handleSegmentChange = async (value: SegmentValue) => {
+    setError(''); // Clear previous errors
+    try {
+      setActiveTab(value?.toString() || 'signup');
+    } catch (error: any) {
+      console.error('Failed to resend verification email', error);
+      setError(error.code || 'Resend verification failed.');
+    }
+  };
+
+  if (user) {
+    return (
+      <IonPage>
+        <PageHeader title={user ? 'Your Profile' : 'Sign In'} />
+        <IonContent className="ion-padding">
+          <div className={styles.container}>
+            <div className={styles.wrapper}>
+              <div className={styles.header}>
+                {user.displayName && (
+                  <h2 className={styles.title}>Welcome, {user.displayName}!</h2>
+                )}
+              </div>
+
+              <div className={styles.content}>
+                <IonCard>
+                  <IonCardContent>
+                    <div className={styles.userInfo}>
+                      <p className={styles.userInfoText}>
+                        <strong>Email:</strong> {user.email}
+                      </p>
+                      <p className={styles.userInfoText}>
+                        <strong>Status:</strong>{' '}
+                        {user.emailVerified ? (
+                          <span className={styles.verifiedStatus}>
+                            Verified
+                          </span>
+                        ) : (
+                          <span className={styles.pendingStatus}>
+                            Pending Verification
+                          </span>
+                        )}
+                      </p>
+                    </div>
+
+                    {!user.emailVerified && (
+                      <div>
+                        <p className={styles.verificationText}>
+                          Click the button below to receive a verification link
+                          via email.
+                        </p>
+                        {error && (
+                          <IonText color="danger" className={styles.error}>
+                            {error}
+                          </IonText>
+                        )}
+                        <IonButton
+                          expand="block"
+                          onClick={handleSendVerification}
+                          disabled={loading}
+                        >
+                          <IonIcon icon={mailOutline} />
+                          Send Verification Email
+                        </IonButton>
+                      </div>
+                    )}
+
+                    <IonButton
+                      expand="block"
+                      color="medium"
+                      onClick={handleSignOut}
+                      className={styles.submitButton}
+                    >
+                      <IonIcon icon={logOutOutline} />
+                      Sign Out
+                    </IonButton>
+                  </IonCardContent>
+                </IonCard>
+              </div>
+            </div>
+          </div>
+        </IonContent>
+      </IonPage>
+    );
+  }
+
   return (
     <IonPage>
       <PageHeader title={user ? 'Your Profile' : 'Sign In'} />
       <IonContent className="ion-padding">
-        {user ? (
-          <>
-            <IonLabel position="floating">{user.email}</IonLabel>
-            <IonButton expand="full" onClick={handleSignOut}>
-              Sign Out
-            </IonButton>
-          </>
-        ) : (
-          <>
-            <IonItem>
-              <IonInput
-                placeholder="Email"
-                type="email"
-                value={email}
-                onIonInput={(e: any) => setEmail(e.target.value)}
-              />
-            </IonItem>
-            <IonItem>
-              <IonInput
-                type="password"
-                value={password}
-                placeholder="Password"
-                onIonInput={(e: any) => setPassword(e.target.value)}
-              />
-            </IonItem>
+        <div className={styles.container}>
+          <div className={styles.wrapper}>
+            <div className={styles.header}>
+              <div className={styles.iconWrapper}>
+                {activeTab === 'signup' ? (
+                  <IonIcon icon={personAddOutline} />
+                ) : (
+                  <IonIcon icon={logInOutline} />
+                )}
+              </div>
+              <h2 className={styles.title}>
+                {activeTab === 'signup'
+                  ? 'Create your account'
+                  : 'Welcome back'}
+              </h2>
+              <p className={styles.subtitle}>
+                {activeTab === 'signup'
+                  ? 'Join our racing community today'
+                  : 'Sign in to access your account'}
+              </p>
+            </div>
 
-            {error && (
-              <IonText color="danger">
-                <p>{error}</p>
-              </IonText>
-            )}
+            <div className={styles.content}>
+              <IonSegment
+                value={activeTab}
+                onIonChange={(e) => handleSegmentChange(e.detail.value!)}
+                className={styles.segment}
+              >
+                <IonSegmentButton value="signup">
+                  <IonLabel>Sign Up</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="login">
+                  <IonLabel>Login</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
 
-            <IonButton expand="full" onClick={handleLogin}>
-              Login
-            </IonButton>
-            <IonButton expand="full" onClick={handleCreate}>
-              Create User
-            </IonButton>
-            <IonButton expand="full" onClick={handleForgotPassword}>
-              Forgot Password
-            </IonButton>
-          </>
-        )}
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Preferences</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {Object.keys(preferenceSettings).map((key) => (
-              <IonItem key={key}>
-                <IonToggle
-                  checked={preferenceSettings[key].enabled}
-                  onIonChange={() => togglePreference(key)}
-                >
-                  {preferenceSettings[key].name}
-                </IonToggle>
-              </IonItem>
-            ))}
-          </IonCardContent>
-        </IonCard>
+              <IonCard>
+                <IonCardContent>
+                  {(error || authError) && (
+                    <IonText color="danger" className={styles.error}>
+                      {error || authError}
+                    </IonText>
+                  )}
+
+                  <IonItem>
+                    <IonInput
+                      label="Email address"
+                      labelPlacement="floating"
+                      type="email"
+                      value={email}
+                      onIonInput={(e) =>
+                        setEmail(e.target.value?.toString() || '')
+                      }
+                      disabled={loading}
+                    />
+                  </IonItem>
+
+                  <IonItem>
+                    <IonInput
+                      label="Password"
+                      labelPlacement="floating"
+                      type="password"
+                      value={password}
+                      onIonInput={(e) =>
+                        setPassword(e.target.value?.toString() || '')
+                      }
+                      disabled={loading}
+                    />
+                  </IonItem>
+
+                  <div>
+                    <IonButton
+                      expand="block"
+                      onClick={(e) => handleSubmit(e)}
+                      className={styles.submitButton}
+                      disabled={loading}
+                    >
+                      {loading
+                        ? 'Please wait...'
+                        : activeTab === 'signup'
+                        ? 'Create Account'
+                        : 'Sign in'}
+                    </IonButton>
+                  </div>
+
+                  {activeTab === 'login' && (
+                    <div className={styles.forgotPassword}>
+                      <a
+                        onClick={handleForgotPassword}
+                        className={styles.forgotPasswordLink}
+                      >
+                        Forgot your password?
+                      </a>
+                    </div>
+                  )}
+                </IonCardContent>
+              </IonCard>
+              <IonCard>
+                <IonCardHeader>
+                  <IonCardTitle>Preferences</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  {Object.keys(preferenceSettings).map((key) => (
+                    <IonItem key={key}>
+                      <IonToggle
+                        checked={preferenceSettings[key].enabled}
+                        onIonChange={() => togglePreference(key)}
+                      >
+                        {preferenceSettings[key].name}
+                      </IonToggle>
+                    </IonItem>
+                  ))}
+                </IonCardContent>
+              </IonCard>
+            </div>
+          </div>
+        </div>
       </IonContent>
     </IonPage>
   );
