@@ -15,37 +15,18 @@ import { trophy, people, star } from 'ionicons/icons';
 import './RacerSpotlight.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { FireDBRacer } from '../pages/Racing';
+import { useRandomRacerId } from '../hooks/useRefetchableData';
 interface RacerSpotlightProps {}
 
-interface FireDBRacerSpotlight {
-  name: string;
-  id: string;
-}
 const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
   const router = useIonRouter();
-  const {
-    data: racers,
-    loading: loadingRacers,
-    error: errorRacers,
-  } = useFireStoreDB<FireDBRacerSpotlight>('RacerSpotlight');
-
-  // State to store the selected racer ID after the first query
-  const [racerId, setRacerId] = useState<string | null>(null);
-
-  // Select a random racer once data is available
-  useEffect(() => {
-    if (racers && racers.length > 0) {
-      const randomRacer = racers[Math.floor(Math.random() * racers.length)];
-      setRacerId(randomRacer?.id || null);
-      console.log('racerid:', randomRacer?.id);
-    }
-  }, [racers]);
+  const { racerId, loading: loadingId, error: errorId } = useRandomRacerId();
 
   const { data, loading, error } = useFireStoreDB<FireDBRacer>(
     'Sheet1',
     racerId || '',
     [],
-    [!loadingRacers]
+    [!!racerId]
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
