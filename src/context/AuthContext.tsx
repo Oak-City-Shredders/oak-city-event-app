@@ -61,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             ? err.message
             : 'Failed to cleanup authentication listeners'
         );
+        setLoading(false);
       }
     };
   }, []);
