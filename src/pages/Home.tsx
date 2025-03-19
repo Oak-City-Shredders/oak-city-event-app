@@ -46,7 +46,11 @@ import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
 import FoodTruckSwiper from '../components/FoodTruckSwiper';
-import { useFoodTruckData } from '../hooks/useRefetchableData';
+import {
+  useFoodTruckData,
+  useRandomRacerId,
+} from '../hooks/useRefetchableData';
+import useGoogleCalendar from '../hooks/useGoogleCalendar';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -90,7 +94,14 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const { refetch: refetchFoodTruck } = useFoodTruckData();
-  const handleRefresh = useRefreshHandlers([refetch, refetchFoodTruck]);
+  const { refetch: refetchRacerSpotlight } = useRandomRacerId();
+  const { refetch: refetchCalendar } = useGoogleCalendar(5);
+  const handleRefresh = useRefreshHandlers([
+    refetch,
+    refetchFoodTruck,
+    refetchRacerSpotlight,
+    refetchCalendar,
+  ]);
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []

@@ -12,7 +12,7 @@ export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
 
-  const { data } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
+  const { data, loading } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
 
   useEffect(() => {
     const sold: number = !data
@@ -45,7 +45,7 @@ export default function TicketCounter() {
   return (
     <div className="ticket-count">
       <IonText>
-        <h1>{ticketCount} Tickets Sold!</h1>
+        <h1>{loading ? '' : `${ticketCount} Tickets Sold!`}</h1>
       </IonText>
     </div>
   );

@@ -17,6 +17,7 @@ export const useRandomRacerId = () => {
     data: spotlightRacers,
     loading,
     error,
+    refetch,
   } = useFireStoreDB<FireDBRacerSpotlight>('RacerSpotlight');
 
   // Select a random racer ID if data is available
@@ -24,5 +25,5 @@ export const useRandomRacerId = () => {
     ? spotlightRacers[Math.floor(Math.random() * spotlightRacers.length)].id
     : null;
 
-  return { racerId, loading, error };
+  return { racerId, loading, error, refetch };
 };
