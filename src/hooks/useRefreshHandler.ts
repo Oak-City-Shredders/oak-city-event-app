@@ -14,3 +14,20 @@ export const useRefreshHandler = (refetch: () => Promise<void>) => {
 
   return handleRefresh;
 };
+
+export const useRefreshHandlers = (
+  refetchCallbacks: Array<() => Promise<void>>
+) => {
+  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
+    checkVibrate(
+      async () => await Haptics.impact({ style: ImpactStyle.Medium })
+    );
+
+    // Execute all refetch callbacks in parallel
+    await Promise.all(refetchCallbacks.map((refetch) => refetch()));
+
+    event.detail.complete(); // Notify Ionic that the refresh is complete
+  };
+
+  return handleRefresh;
+};

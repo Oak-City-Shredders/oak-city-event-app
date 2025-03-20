@@ -41,11 +41,16 @@ import { Capacitor } from '@capacitor/core';
 import TicketCounter from '../components/TicketCounter';
 import usePreferenceSettings from '../hooks/usePreferenceSettings';
 import useFireStoreDB from '../hooks/useFireStoreDB';
-import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import { useRefreshHandlers } from '../hooks/useRefreshHandler';
 import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
 import FoodTruckSwiper from '../components/FoodTruckSwiper';
+import {
+  useFoodTruckData,
+  useRandomRacerId,
+} from '../hooks/useRefetchableData';
+import useGoogleCalendar from '../hooks/useGoogleCalendar';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -84,13 +89,19 @@ interface FireDBDynamicContent {
 const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const router = useIonRouter();
 
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'DynamicContent!A:J';
-
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
+
+  const { refetch: refetchFoodTruck } = useFoodTruckData();
+  const { refetch: refetchRacerSpotlight } = useRandomRacerId();
+  const { refetch: refetchCalendar } = useGoogleCalendar(5);
+  const handleRefresh = useRefreshHandlers([
+    refetch,
+    refetchFoodTruck,
+    refetchRacerSpotlight,
+    refetchCalendar,
+  ]);
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
@@ -112,8 +123,6 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
   const handleCardClick = (route: string) => {
     router.push(route, 'forward'); // "forward" for a page transition effect
   };
-
-  const handleRefresh = useRefreshHandler(refetch);
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {

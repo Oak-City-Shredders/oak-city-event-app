@@ -9,43 +9,30 @@ import {
   IonCardSubtitle,
   useIonRouter,
   IonImg,
+  IonThumbnail,
+  IonSkeletonText,
 } from '@ionic/react';
 import { trophy, people, star } from 'ionicons/icons';
 
 import './RacerSpotlight.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { FireDBRacer } from '../pages/Racing';
+import { useRandomRacerId } from '../hooks/useRefetchableData';
 interface RacerSpotlightProps {}
 
-interface FireDBRacerSpotlight {
-  name: string;
-  id: string;
-}
 const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
   const router = useIonRouter();
   const {
-    data: racers,
-    loading: loadingRacers,
-    error: errorRacers,
-  } = useFireStoreDB<FireDBRacerSpotlight>('RacerSpotlight');
+    racerId,
+    error: errorId,
+    loading: loadingRandom,
+  } = useRandomRacerId();
 
-  // State to store the selected racer ID after the first query
-  const [racerId, setRacerId] = useState<string | null>(null);
-
-  // Select a random racer once data is available
-  useEffect(() => {
-    if (racers && racers.length > 0) {
-      const randomRacer = racers[Math.floor(Math.random() * racers.length)];
-      setRacerId(randomRacer?.id || null);
-      console.log('racerid:', randomRacer?.id);
-    }
-  }, [racers]);
-
-  const { data, loading, error } = useFireStoreDB<FireDBRacer>(
+  const { data, error, loading } = useFireStoreDB<FireDBRacer>(
     'Sheet1',
     racerId || '',
     [],
-    [!loadingRacers]
+    [!!racerId]
   );
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -54,11 +41,12 @@ const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
     setIsExpanded(!isExpanded);
   };
 
-  if (loading || error || !data || data.length < 1) {
+  if (error || errorId) {
     return <></>;
   }
 
-  const racer = data[0];
+  const racer =
+    data && data.length > 0 && !loadingRandom && !loading ? data[0] : null;
 
   return (
     <IonCard className="racer-spotlight-card" onClick={undefined}>
@@ -87,27 +75,41 @@ const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
         </IonCardSubtitle>
       </IonCardHeader>
       <IonCardContent className="racer-card-content">
-        <IonImg
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/racer-profile/${racer.id}`);
-          }}
-          src={racer['Link to Photo']}
-          alt="Racer"
-          className="racer-image"
-        />
+        {racer ? (
+          <IonImg
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/racer-profile/${racer.id}`);
+            }}
+            src={racer['Link to Photo']}
+            alt="Racer"
+            className="racer-image"
+          />
+        ) : (
+          <IonThumbnail slot="start">
+            <IonSkeletonText animated={true}></IonSkeletonText>
+          </IonThumbnail>
+        )}
 
         <div className="racer-summary-and-description">
           <div onClick={handleDescriptionClick} className="racer-name">
-            {racer['Racer Name']}
+            {racer ? (
+              racer['Racer Name']
+            ) : (
+              <IonSkeletonText animated={true}></IonSkeletonText>
+            )}
           </div>
           <div
             onClick={handleDescriptionClick}
             className={`racer-description ${isExpanded ? 'expanded' : ''}`}
           >
-            {racer.Comment}
+            {racer ? (
+              racer.Comment
+            ) : (
+              <IonSkeletonText animated={true}></IonSkeletonText>
+            )}
           </div>
-          {racer.Accomplishments && (
+          {racer && racer.Accomplishments && (
             <div className="racer-accomplishments">{racer.Accomplishments}</div>
           )}
         </div>

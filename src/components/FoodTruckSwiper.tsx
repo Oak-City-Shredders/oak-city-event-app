@@ -13,10 +13,8 @@ import {
   fastFood,
   fastFoodOutline,
 } from 'ionicons/icons';
-import useFireStoreDB from '../hooks/useFireStoreDB';
 import {
   mapFoodTruckData,
-  FireDBFoodTruck,
   MappedFoodTruck,
   statusOrder,
 } from '../utils/foodTruckUtils'; // Updated import
@@ -28,13 +26,10 @@ import type { Swiper as SwiperType } from 'swiper';
 import { Pagination, Navigation } from 'swiper/modules';
 import styles from './FoodTruckSwiper.module.css';
 import './FoodTruckSwiper.css';
+import { useFoodTruckData } from '../hooks/useRefetchableData';
 
 const FoodTruckSwiper: React.FC = () => {
-  const {
-    data: foodTrucks,
-    loading,
-    error,
-  } = useFireStoreDB<FireDBFoodTruck>('FoodTrucks');
+  const { foodTrucks, loading, error, refetch } = useFoodTruckData();
 
   const mappedFoodTrucks: MappedFoodTruck[] = useMemo(() => {
     if (loading || error || !foodTrucks || foodTrucks.length < 1) {
