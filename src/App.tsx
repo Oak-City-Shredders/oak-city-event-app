@@ -1,5 +1,5 @@
 // React & React Router
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import { Redirect, Route, useLocation } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { useIonRouter } from '@ionic/react';
@@ -27,25 +27,26 @@ import { alarm, calendar, home, map, people } from 'ionicons/icons';
 import { AuthProvider } from './context/AuthContext';
 import useNotifications from './hooks/useNotifications';
 
-// Pages
-import About from './pages/About';
-import DripSchedule from './pages/DripSchedule';
-import EmergencyServices from './pages/EmergencyServices';
-import FoodTrucks from './pages/FoodTrucks';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import MapPage from './pages/MapPage';
-import Notifications from './pages/Notifications';
-import QuestsPage from './pages/Quests';
-import Raceing from './pages/Racing';
-import RacerProfile from './pages/RacerProfile';
-import Raffles from './pages/Raffles';
-import ScavengerHunt from './pages/ScavengerHunt';
-import SchedulePage from './pages/SchedulePage';
-import TrickCompPage from './pages/TrickComp';
-import Team from './pages/Team';
-import Sponsors from './pages/Sponsors';
-import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
+// Lazy-loaded pages
+const About = lazy(() => import('./pages/About'));
+const DripSchedule = lazy(() => import('./pages/DripSchedule'));
+const EmergencyServices = lazy(() => import('./pages/EmergencyServices'));
+const FoodTrucks = lazy(() => import('./pages/FoodTrucks'));
+const Home = lazy(() => import('./pages/Home'));
+const Login = lazy(() => import('./pages/Login'));
+const MapPage = lazy(() => import('./pages/MapPage'));
+const Notifications = lazy(() => import('./pages/Notifications'));
+const QuestsPage = lazy(() => import('./pages/Quests'));
+const Raceing = lazy(() => import('./pages/Racing'));
+const RacerProfile = lazy(() => import('./pages/RacerProfile'));
+const Raffles = lazy(() => import('./pages/Raffles'));
+const ScavengerHunt = lazy(() => import('./pages/ScavengerHunt'));
+const SchedulePage = lazy(() => import('./pages/SchedulePage'));
+const TrickCompPage = lazy(() => import('./pages/TrickComp'));
+const Team = lazy(() => import('./pages/Team'));
+const Sponsors = lazy(() => import('./pages/Sponsors'));
+const FireBaseAppCheckPage = lazy(() => import('./pages/FireBaseAppCheckPage'));
+const TicketsPage = lazy(() => import('./pages/TicketsPage'));
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp } from '@capacitor/app';
@@ -69,7 +70,6 @@ import '@ionic/react/css/display.css';
 // Theme
 import './theme/variables.css';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
-import TicketsPage from './pages/TicketsPage';
 
 /**
  * Ionic Dark Mode
@@ -139,70 +139,72 @@ const App: React.FC = () => {
           <AnalyticsTracker />
           <IonTabs>
             <IonRouterOutlet>
-              <Route path="/racer-profile/:racerId">
-                <RacerProfile />
-              </Route>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/drip-schedule">
-                <DripSchedule />
-              </Route>
-              <Route path="/app-check">
-                <FireBaseAppCheckPage />
-              </Route>
-              <Route path="/emergency-services">
-                <EmergencyServices />
-              </Route>
-              <Route path="/food-trucks">
-                <FoodTrucks />
-              </Route>
-              <Route exact path="/home">
-                <Home
-                  notifications={notifications}
-                  removeNotification={removeNotification}
-                />
-              </Route>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/map/:locationName?">
-                <MapPage />
-              </Route>
-              <Route path="/notifications">
-                <Notifications notifications={notifications} />
-              </Route>
-              <Route path="/quests/:questId">
-                <QuestsPage />
-              </Route>
-              <Route path="/quests">
-                <QuestsPage />
-              </Route>
-              <Route path="/tickets">
-                <TicketsPage />
-              </Route>
-              <Route path="/race-information">
-                <Raceing />
-              </Route>
-              <Route path="/raffles-giveaways">
-                <Raffles />
-              </Route>
-              <Route path="/schedule">
-                <SchedulePage />
-              </Route>
-              <Route path="/scavenger-hunt">
-                <ScavengerHunt />
-              </Route>
-              <Route path="/trick-comp">
-                <TrickCompPage />
-              </Route>
-              <Route path="/team">
-                <Team />
-              </Route>
-              <Route path="/sponsors">
-                <Sponsors />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/home" />
-              </Route>
+              <Suspense fallback={<div>Loading...</div>}>
+                <Route path="/racer-profile/:racerId">
+                  <RacerProfile />
+                </Route>
+                <Route path="/about">
+                  <About />
+                </Route>
+                <Route path="/drip-schedule">
+                  <DripSchedule />
+                </Route>
+                <Route path="/app-check">
+                  <FireBaseAppCheckPage />
+                </Route>
+                <Route path="/emergency-services">
+                  <EmergencyServices />
+                </Route>
+                <Route path="/food-trucks">
+                  <FoodTrucks />
+                </Route>
+                <Route exact path="/home">
+                  <Home
+                    notifications={notifications}
+                    removeNotification={removeNotification}
+                  />
+                </Route>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/map/:locationName?">
+                  <MapPage />
+                </Route>
+                <Route path="/notifications">
+                  <Notifications notifications={notifications} />
+                </Route>
+                <Route path="/quests/:questId">
+                  <QuestsPage />
+                </Route>
+                <Route path="/quests">
+                  <QuestsPage />
+                </Route>
+                <Route path="/tickets">
+                  <TicketsPage />
+                </Route>
+                <Route path="/race-information">
+                  <Raceing />
+                </Route>
+                <Route path="/raffles-giveaways">
+                  <Raffles />
+                </Route>
+                <Route path="/schedule">
+                  <SchedulePage />
+                </Route>
+                <Route path="/scavenger-hunt">
+                  <ScavengerHunt />
+                </Route>
+                <Route path="/trick-comp">
+                  <TrickCompPage />
+                </Route>
+                <Route path="/team">
+                  <Team />
+                </Route>
+                <Route path="/sponsors">
+                  <Sponsors />
+                </Route>
+                <Route exact path="/">
+                  <Redirect to="/home" />
+                </Route>
+              </Suspense>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
