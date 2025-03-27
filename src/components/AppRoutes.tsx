@@ -2,29 +2,25 @@ import React, { Suspense, lazy } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { IonLoading, IonRouterOutlet } from '@ionic/react';
 import FullPageLoader from './FullPageLoader';
-
-// Lazy-loaded pages
-const About = lazy(() => import('../pages/About'));
-const DripSchedule = lazy(() => import('../pages/DripSchedule'));
-const EmergencyServices = lazy(() => import('../pages/EmergencyServices'));
-const FoodTrucks = lazy(() => import('../pages/FoodTrucks'));
-const Home = lazy(() => import('../pages/Home'));
-const Login = lazy(() => import('../pages/Login'));
-const MapPage = lazy(() => import('../pages/MapPage'));
-const Notifications = lazy(() => import('../pages/Notifications'));
-const QuestsPage = lazy(() => import('../pages/Quests'));
-const Raceing = lazy(() => import('../pages/Racing'));
-const RacerProfile = lazy(() => import('../pages/RacerProfile'));
-const Raffles = lazy(() => import('../pages/Raffles'));
-const ScavengerHunt = lazy(() => import('../pages/ScavengerHunt'));
-const SchedulePage = lazy(() => import('../pages/SchedulePage'));
-const TrickCompPage = lazy(() => import('../pages/TrickComp'));
-const Team = lazy(() => import('../pages/Team'));
-const Sponsors = lazy(() => import('../pages/Sponsors'));
-const FireBaseAppCheckPage = lazy(
-  () => import('../pages/FireBaseAppCheckPage')
-);
-const TicketsPage = lazy(() => import('../pages/TicketsPage'));
+import About from '../pages/About';
+import DripSchedule from '../pages/DripSchedule';
+import EmergencyServices from '../pages/EmergencyServices';
+import FoodTrucks from '../pages/FoodTrucks';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import MapPage from '../pages/MapPage';
+import Notifications from '../pages/Notifications';
+import QuestsPage from '../pages/Quests';
+import Raceing from '../pages/Racing';
+import RacerProfile from '../pages/RacerProfile';
+import Raffles from '../pages/Raffles';
+import ScavengerHunt from '../pages/ScavengerHunt';
+import SchedulePage from '../pages/SchedulePage';
+import TrickCompPage from '../pages/TrickComp';
+import Team from '../pages/Team';
+import Sponsors from '../pages/Sponsors';
+import FireBaseAppCheckPage from '../pages/FireBaseAppCheckPage';
+import TicketsPage from '../pages/TicketsPage';
 
 interface AppRoutesProps {
   notifications?: any[];

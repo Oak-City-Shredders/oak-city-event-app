@@ -91,24 +91,22 @@ const App: React.FC = () => {
   }, [router]);
 
   return (
-    <Suspense fallback={<FullPageLoader />}>
-      <AuthProvider>
-        <IonApp>
-          <IonReactRouter>
-            <AnalyticsTracker />
-            <IonTabs>
-              <IonRouterOutlet>
-                <AppRoutes
-                  notifications={notifications}
-                  removeNotification={removeNotification}
-                />
-              </IonRouterOutlet>
-              <AppTabBar notifications={notifications} />
-            </IonTabs>
-          </IonReactRouter>
-        </IonApp>
-      </AuthProvider>
-    </Suspense>
+    <AuthProvider>
+      <IonApp>
+        <IonReactRouter>
+          <AnalyticsTracker />
+          <IonTabs>
+            <IonRouterOutlet>
+              <AppRoutes
+                notifications={notifications}
+                removeNotification={removeNotification}
+              />
+            </IonRouterOutlet>
+            <AppTabBar notifications={notifications} />
+          </IonTabs>
+        </IonReactRouter>
+      </IonApp>
+    </AuthProvider>
   );
 };
 
