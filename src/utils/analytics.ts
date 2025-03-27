@@ -14,7 +14,6 @@ export const logEvent = async (
       name: eventName,
       params,
     });
-    console.log(`Logged event: ${eventName}`, params); // Optional: for debugging
   } catch (error) {
     console.error(`Failed to log event ${eventName}:`, error);
   }

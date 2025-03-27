@@ -42,9 +42,7 @@ interface FireDBQuest {
 
 const QuestsPage: React.FC = () => {
   const { questId } = useParams<{ questId: string }>();
-  console.log('questId: ', questId);
   const [animate, setAnimate] = useState<number | null>(null);
-  console.log('animation: ', animate);
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBQuest>('Quests');
   const [locallyStoredQuests, setQueststoLocalStorage] = useLocalStorage<
@@ -80,12 +78,7 @@ const QuestsPage: React.FC = () => {
     // If there's a questId in the URL, mark the corresponding quest as completed
     if (questId) {
       const questIdNumber = Number(questId);
-      console.log('Quest-id from deep link? ', questId);
       const key = getQueryParams(location.search);
-      console.log('key: ', key);
-
-      // Function to extract the query parameters
-
       setQueststoLocalStorage(
         sheetQuestsUpdatedWithLocal.map((quest: Quest) =>
           quest.scanValue &&
@@ -102,7 +95,6 @@ const QuestsPage: React.FC = () => {
     if (animate) {
       const timer = setTimeout(() => {
         setAnimate(null); // Stop the animation after 2-3 seconds
-        console.log('animation ended');
       }, 2000); // Duration of the animation
 
       return () => clearTimeout(timer); // Clean up the timer

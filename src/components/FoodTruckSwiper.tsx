@@ -98,7 +98,6 @@ const FoodTruckSwiper: React.FC = () => {
   };
 
   const handleCardClick = (route: string): void => {
-    console.log('route', route);
     window.open(route, '_blank');
   };
 

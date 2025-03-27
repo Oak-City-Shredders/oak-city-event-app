@@ -122,7 +122,6 @@ interface FireDBMapItems {
 }
 
 const MapPage: React.FC = () => {
-  console.log('MapPage');
   const { locationName } = useParams<RouteParams>();
   const [poiFilters, setPOIFilters] = useState([] as POIFilter[]);
 
@@ -138,7 +137,6 @@ const MapPage: React.FC = () => {
   );
   const pointsOfInterest = useMemo(() => {
     if (!data) return [];
-    console.log('pointsOfInterest');
     return data.slice(1).map((item) => ({
       id: Number(item.id),
       lat: Number(item.Lat),
@@ -191,8 +189,6 @@ const MapPage: React.FC = () => {
 
   const handlePOIFilterClick = useCallback(
     async (poiFilter: POIFilter) => {
-      console.log('handlePOIFilterClick', poiFilter);
-
       checkVibrate(
         async () => await Haptics.impact({ style: ImpactStyle.Medium })
       );
