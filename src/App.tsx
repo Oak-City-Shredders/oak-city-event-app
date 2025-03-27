@@ -113,7 +113,6 @@ const App: React.FC = () => {
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
       const url = new URL(event.url);
-      console.log('deep link2: ', url);
       console.log('deep link host name: ', url.host);
       if (url.host === 'quests') {
         const questId = url.pathname.split('/')[1]; // Get questId (2)
