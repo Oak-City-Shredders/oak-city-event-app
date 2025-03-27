@@ -66,7 +66,7 @@ const TicketsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="Schedule" />
+      <PageHeader title="Tickets" />
 
       <IonContent className="ion-padding">
         {loading ? (

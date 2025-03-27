@@ -22,6 +22,7 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonBadge,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -29,6 +30,8 @@ import {
   timeOutline,
   flagOutline,
   closeOutline,
+  notificationsOff,
+  notifications as notificationsIcon,
 } from 'ionicons/icons';
 import { PushNotificationSchema } from '@capacitor/push-notifications';
 import StokeMeter from '../components/StokeMeter';
@@ -70,6 +73,7 @@ const getIconForNotification = (notification: PushNotificationSchema) => {
 interface HomeProps {
   notifications: PushNotificationSchema[];
   removeNotification: (notifcation: PushNotificationSchema) => void;
+  notificationPermission: PermissionState;
 }
 
 interface FireDBDynamicContent {
@@ -86,7 +90,11 @@ interface FireDBDynamicContent {
   id: string;
 }
 
-const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
+const Home: React.FC<HomeProps> = ({
+  notifications,
+  removeNotification,
+  notificationPermission,
+}) => {
   const router = useIonRouter();
 
   const { data, loading, error, refetch } =
@@ -143,6 +151,18 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonToolbar color={'primary'}>
             <IonTitle>Oak City Shred Fest 5</IonTitle>
             <IonButtons slot="end">
+              <IonButton routerLink="/notifications">
+                <IonIcon
+                  icon={
+                    notificationPermission === 'granted'
+                      ? notificationsIcon
+                      : notificationsOff
+                  }
+                />
+                {notifications.length > 0 && (
+                  <IonBadge color="danger">{notifications.length}</IonBadge>
+                )}
+              </IonButton>
               <IonButton routerLink="/login">
                 <IonIcon icon={personCircleOutline} size="large" />
               </IonButton>
@@ -168,6 +188,29 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
           <IonGrid>
             <IonRow>
               {/* active notifications */}
+              {notificationPermission !== 'granted' &&
+                Capacitor.isNativePlatform() && (
+                  <IonCol
+                    size={colSize}
+                    sizeLg={colSizeLg}
+                    key={'notifications_disabled'}
+                  >
+                    <IonCard className="ion-padding">
+                      <IonList>
+                        <IonItem>
+                          <IonIcon icon={notificationsOff} slot="start" />
+                          <IonLabel>
+                            <h2>Notifications Disabled</h2>
+                            <p>
+                              Enable notifcations in your system settings to
+                              receive updates.
+                            </p>
+                          </IonLabel>
+                        </IonItem>
+                      </IonList>
+                    </IonCard>
+                  </IonCol>
+                )}
               {notifications.length > 0 && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
                   <IonCard className="ion-padding">
