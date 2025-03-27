@@ -97,9 +97,8 @@ function useFireStoreDB<T>(
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       setError(err);
-      console.log(error);
+      console.error(error);
     } finally {
-      console.log('Fetch complete - setting loading to false');
       setLoading(false);
     }
   }, [collectionId, docId]); // Add where to dependencies
@@ -109,7 +108,6 @@ function useFireStoreDB<T>(
     let isMounted = true;
     // Fetch delivered notifications when app is resumed
     const appResumed = async () => {
-      console.log('App resumed - fetching sheets data.');
       if (isMounted && !loading) fetchData();
     };
     App.addListener('resume', appResumed);
@@ -119,7 +117,6 @@ function useFireStoreDB<T>(
     return () => {
       isMounted = false;
       App.removeAllListeners();
-      console.log('home cleanup - all listeners removed');
     };
   }, [fetchData]);
 

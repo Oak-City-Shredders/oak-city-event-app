@@ -14,7 +14,6 @@ export const fetchWithErrorHandling = async (
   options: RequestInit = {}
 ): Promise<Response> => {
   try {
-    console.log(url);
     const response = await fetch(url, options);
 
     // Handle non-2xx status codes
