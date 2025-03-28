@@ -1,7 +1,5 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { IonLoading, IonRouterOutlet } from '@ionic/react';
-import FullPageLoader from './FullPageLoader';
 import About from '../pages/About';
 import DripSchedule from '../pages/DripSchedule';
 import EmergencyServices from '../pages/EmergencyServices';
