@@ -75,7 +75,6 @@ const App: React.FC = () => {
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
       const url = new URL(event.url);
-
       if (url.host === 'quests') {
         const questId = url.pathname.split('/')[1];
         router.push(`/quests/${questId}`);
