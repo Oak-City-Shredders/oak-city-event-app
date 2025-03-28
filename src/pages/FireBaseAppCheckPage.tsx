@@ -39,7 +39,6 @@ const FireBaseAppCheckPage: React.FC = () => {
           ),
         };
         await FirebaseAppCheck.initialize(options);
-        console.log('FirebaseAppCheck initialized');
       } catch (error) {
         console.error('Error initializing FirebaseAppCheck:', error);
       }
@@ -53,7 +52,6 @@ const FireBaseAppCheckPage: React.FC = () => {
       const options: GetTokenOptions = { forceRefresh: true };
       const { token } = await FirebaseAppCheck.getToken(options);
       setToken(token);
-      console.log('Token:', token);
     } catch (error) {
       console.error('Error fetching Firebase token:', error);
     }

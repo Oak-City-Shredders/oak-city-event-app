@@ -77,7 +77,6 @@ const Login: React.FC = () => {
     setError(''); // Clear previous errors
     try {
       const user = await loginUser(email, password);
-      console.log('Logged in user:', user);
     } catch (error: any) {
       console.error('Login failed', error);
       setError(error.code || 'Login failed. Please try again.');
@@ -88,7 +87,6 @@ const Login: React.FC = () => {
     setError(''); // Clear previous errors
     try {
       const user = await registerUser(email, password);
-      console.log('Created user:', user);
     } catch (error: any) {
       console.error('Create User failed', error);
       setError(error.code || 'Account creation failed.');
@@ -102,7 +100,6 @@ const Login: React.FC = () => {
       setError(
         'Check your email and Spam folder for message with a link to reset your password.'
       );
-      console.log('Reset Password for user:');
     } catch (error: any) {
       console.error('Reset Password failed', error);
       setError(error.code || 'Password reset failed.');
@@ -113,7 +110,6 @@ const Login: React.FC = () => {
     setError(''); // Clear previous errors
     try {
       await logoutUser();
-      console.log('Logging out');
     } catch (error: any) {
       console.error('Failed to log out', error);
       setError(error.code || 'Logout failed.');
