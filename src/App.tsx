@@ -44,7 +44,6 @@ import '@ionic/react/css/display.css';
 
 // Theme
 import './theme/variables.css';
-import FullPageLoader from './components/FullPageLoader';
 
 firebaseApp;
 
@@ -79,8 +78,6 @@ const App: React.FC = () => {
 
       if (url.host === 'quests') {
         const questId = url.pathname.split('/')[1];
-        const key = url.searchParams.get('key');
-
         router.push(`/quests/${questId}`);
       }
     });
