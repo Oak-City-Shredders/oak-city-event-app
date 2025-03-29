@@ -217,7 +217,7 @@ const Home: React.FC<HomeProps> = ({ notifications, removeNotification }) => {
                 )}
 
               <IonCol size={colSize} sizeLg={colSizeLg} key={6}>
-                {/* <RacerSpotlight /> */}
+                <RacerSpotlight />
               </IonCol>
               <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
                 <FoodTruckSwiper />
