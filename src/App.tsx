@@ -1,5 +1,4 @@
-// React & React Router
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { useIonRouter } from '@ionic/react';
@@ -24,9 +23,10 @@ import AppRoutes from './components/AppRoutes';
 import AppTabBar from './components/AppTabBar';
 
 // Firebase
-import { firebaseApp } from './firebase';
+import { isFirebaseInitialized } from './firebase';
 import { App as CapacitorApp } from '@capacitor/app';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
+import { Capacitor } from '@capacitor/core';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -45,19 +45,22 @@ import '@ionic/react/css/display.css';
 // Theme
 import './theme/variables.css';
 
-firebaseApp;
-
 setupIonicReact();
 
 const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const screenName = location.pathname || 'Home';
-    FirebaseAnalytics.setCurrentScreen({
-      screenName,
-      screenClassOverride: screenName,
-    });
+    // Only try to use Firebase Analytics if on web and Firebase is initialized
+    if (isFirebaseInitialized() && !Capacitor.isNativePlatform()) {
+      const screenName = location.pathname || 'Home';
+      FirebaseAnalytics.setCurrentScreen({
+        screenName,
+        screenClassOverride: screenName,
+      }).catch((error) => {
+        console.error('Error setting current screen:', error);
+      });
+    }
   }, [location]);
 
   return null;
@@ -65,12 +68,11 @@ const AnalyticsTracker = () => {
 
 const App: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
+  const router = useIonRouter();
 
   useEffect(() => {
     SplashScreen.hide();
   }, []);
-
-  const router = useIonRouter();
 
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
