@@ -1,11 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { App } from '@capacitor/app';
 import {
   FirebaseFirestore,
   QueryFilterConstraint,
 } from '@capacitor-firebase/firestore';
 
-// Define a type for where conditions
 type WhereCondition = {
   field: string;
   operator:
@@ -31,99 +30,131 @@ interface FireStoreDBHook<T> {
 function useFireStoreDB<T>(
   collectionId: string,
   docId?: string,
-  where?: WhereCondition[], // Optional where parameter
+  where?: WhereCondition[],
   dependencies?: boolean[]
 ): FireStoreDBHook<T> {
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const cache = useRef<{ data: T[] | null; timestamp: number | null }>({
+    data: null,
+    timestamp: null,
+  }); // Cache with timestamp
 
-  const fetchData = useCallback(async () => {
-    if (dependencies?.some((item) => !item)) {
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      if (docId) {
-        // Single document fetch (where clause doesn't apply)
-        const { snapshot } = await FirebaseFirestore.getDocument({
-          reference: `${collectionId}/${docId}`,
-        });
+  const STALE_TIME = 60 * 1000; // 5 minutes in milliseconds
 
-        if (snapshot.data) {
-          setData([
-            {
-              id: docId,
-              ...snapshot.data,
-            } as T,
-          ]);
-        }
-      } else {
-        // Collection fetch with optional where conditions
-        const queryConstraints =
-          where?.map(
-            (condition) =>
-              ({
-                type: 'where',
-                fieldPath: condition.field,
-                opStr: condition.operator,
-                value: condition.value,
-              } as QueryFilterConstraint)
-          ) || [];
-        const { snapshots } =
-          queryConstraints.length > 0
-            ? await FirebaseFirestore.getCollection({
-                reference: collectionId,
-                compositeFilter: {
-                  type: 'and',
-                  queryConstraints,
-                },
-              })
-            : await FirebaseFirestore.getCollection({
-                reference: collectionId,
-              });
-        const items = snapshots.map(
-          (doc) =>
-            ({
-              id: doc.id,
-              ...doc.data,
-            } as T)
-        );
+  const fetchData = useCallback(
+    async (forceFetch = false) => {
+      console.log('Fetching data');
+      const now = Date.now();
+      const isStale = cache.current.timestamp
+        ? now - cache.current.timestamp > STALE_TIME
+        : true;
 
-        setData(items);
+      // Skip fetch if data is fresh and not forced
+      if (cache.current.data && !forceFetch && !isStale) {
+        setData(cache.current.data);
+        return;
       }
-      setError(null);
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error(String(error));
-      setError(err);
-      console.log(error);
-    } finally {
-      console.log('Fetch complete - setting loading to false');
-      setLoading(false);
-    }
-  }, [collectionId, docId]); // Add where to dependencies
 
-  // Fetch data on initial render
+      if (dependencies?.some((item) => !item)) {
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+      try {
+        if (docId) {
+          const { snapshot } = await FirebaseFirestore.getDocument({
+            reference: `${collectionId}/${docId}`,
+          });
+          if (snapshot.data) {
+            const result = [{ id: docId, ...snapshot.data } as T];
+            setData(result);
+            cache.current = { data: result, timestamp: now }; // Update cache with timestamp
+          }
+        } else {
+          const queryConstraints =
+            where?.map(
+              (condition) =>
+                ({
+                  type: 'where',
+                  fieldPath: condition.field,
+                  opStr: condition.operator,
+                  value: condition.value,
+                } as QueryFilterConstraint)
+            ) || [];
+          const { snapshots } =
+            queryConstraints.length > 0
+              ? await FirebaseFirestore.getCollection({
+                  reference: collectionId,
+                  compositeFilter: { type: 'and', queryConstraints },
+                })
+              : await FirebaseFirestore.getCollection({
+                  reference: collectionId,
+                });
+          const items = snapshots.map(
+            (doc) => ({ id: doc.id, ...doc.data } as T)
+          );
+          setData(items);
+          cache.current = { data: items, timestamp: now }; // Update cache with timestamp
+        }
+        console.log('Fetch complete');
+        setError(null);
+      } catch (error) {
+        const err = error instanceof Error ? error : new Error(String(error));
+        setError(err);
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [collectionId, docId, where]
+  );
+
   useEffect(() => {
     let isMounted = true;
-    // Fetch delivered notifications when app is resumed
+
+    // Check staleness on mount
+    const now = Date.now();
+    const isStale = cache.current.timestamp
+      ? now - cache.current.timestamp > STALE_TIME
+      : true;
+
+    if ((!cache.current.data || isStale) && isMounted && !loading) {
+      fetchData();
+    } else if (cache.current.data) {
+      setData(cache.current.data); // Use fresh cached data
+    }
+
+    // Fetch on app resume if data is stale
     const appResumed = async () => {
-      console.log('App resumed - fetching sheets data.');
-      if (isMounted && !loading) fetchData();
+      console.log('App resumed');
+      const currentTime = Date.now();
+      const isDataStale = cache.current.timestamp
+        ? currentTime - cache.current.timestamp > STALE_TIME
+        : true;
+
+      if (isMounted && !loading && (!cache.current.data || isDataStale)) {
+        console.log('App resumed - fetching fresh data due to staleness');
+        fetchData();
+      } else if (cache.current.data) {
+        console.log('App resumed - using cached data');
+        setData(cache.current.data);
+      }
     };
     App.addListener('resume', appResumed);
-
-    fetchData();
 
     return () => {
       isMounted = false;
       App.removeAllListeners();
-      console.log('home cleanup - all listeners removed');
     };
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData };
+  // Refetch forces a new fetch, ignoring cache
+  const refetch = useCallback(() => fetchData(true), [fetchData]);
+
+  return { data, loading, error, refetch };
 }
 
 export default useFireStoreDB;
