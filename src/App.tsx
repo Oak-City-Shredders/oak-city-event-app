@@ -1,5 +1,6 @@
+// React & React Router
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { useIonRouter } from '@ionic/react';
 
@@ -9,27 +10,50 @@ import { SplashScreen } from '@capacitor/splash-screen';
 // Ionic Core
 import {
   IonApp,
+  IonBadge,
+  IonIcon,
+  IonLabel,
   IonRouterOutlet,
+  IonTabBar,
+  IonTabButton,
   IonTabs,
   setupIonicReact,
 } from '@ionic/react';
+
+// Ionicons
+import { alarm, calendar, home, map, people } from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
 import useNotifications from './hooks/useNotifications';
 
-// Routes and TabBar
-import AppRoutes from './components/AppRoutes';
-import AppTabBar from './components/AppTabBar';
+// Pages
+import About from './pages/About';
+import DripSchedule from './pages/DripSchedule';
+import EmergencyServices from './pages/EmergencyServices';
+import FoodTrucks from './pages/FoodTrucks';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import MapPage from './pages/MapPage';
+import Notifications from './pages/Notifications';
+import QuestsPage from './pages/Quests';
+import Raceing from './pages/Racing';
+import RacerProfile from './pages/RacerProfile';
+import Raffles from './pages/Raffles';
+import ScavengerHunt from './pages/ScavengerHunt';
+import SchedulePage from './pages/SchedulePage';
+import TrickCompPage from './pages/TrickComp';
+import Team from './pages/Team';
+import Sponsors from './pages/Sponsors';
+import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
-// Firebase
-import { isFirebaseInitialized } from './firebase';
+import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp } from '@capacitor/app';
-import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
-import { Capacitor } from '@capacitor/core';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
+
+/* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
@@ -44,6 +68,21 @@ import '@ionic/react/css/display.css';
 
 // Theme
 import './theme/variables.css';
+import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
+import TicketsPage from './pages/TicketsPage';
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* import '@ionic/react/css/palettes/dark.always.css'; */
+/* import '@ionic/react/css/palettes/dark.class.css'; */
+//import '@ionic/react/css/palettes/dark.system.css';
+
+console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 
 setupIonicReact();
 
@@ -51,16 +90,13 @@ const AnalyticsTracker = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Only try to use Firebase Analytics if on web and Firebase is initialized
-    if (isFirebaseInitialized() && !Capacitor.isNativePlatform()) {
-      const screenName = location.pathname || 'Home';
-      FirebaseAnalytics.setCurrentScreen({
-        screenName,
-        screenClassOverride: screenName,
-      }).catch((error) => {
-        console.error('Error setting current screen:', error);
-      });
-    }
+    const screenName = location.pathname || 'Home'; // Customize as needed
+    FirebaseAnalytics.setCurrentScreen({
+      screenName,
+      screenClassOverride: screenName, // Optional: override CAPBridgeViewController
+    })
+      .then(() => console.log(`Screen set to: ${screenName}`))
+      .catch((err) => console.error('Error setting screen:', err));
   }, [location]);
 
   return null;
@@ -68,22 +104,30 @@ const AnalyticsTracker = () => {
 
 const App: React.FC = () => {
   const { notifications, removeNotification } = useNotifications();
-  const router = useIonRouter();
-
   useEffect(() => {
     SplashScreen.hide();
   }, []);
 
+  //const history = useHistory();
+  const router = useIonRouter();
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
       const url = new URL(event.url);
+      console.log('deep link2: ', url);
+      console.log('deep link host name: ', url.host);
       if (url.host === 'quests') {
-        const questId = url.pathname.split('/')[1];
+        const questId = url.pathname.split('/')[1]; // Get questId (2)
+        const key = url.searchParams.get('key'); // Get key (abc)
+        console.log('found a quest');
+        console.log('history.push ', `/quests/${questId}?key=${key}`);
+        //history.push(`/quests/${questId}?key=${key}`);
         router.push(`/quests/${questId}`);
+        console.log('pushed');
       }
     });
 
     return () => {
+      // Clean up the listener when the component is unmounted
       CapacitorApp.removeAllListeners();
     };
   }, [router]);
@@ -95,12 +139,92 @@ const App: React.FC = () => {
           <AnalyticsTracker />
           <IonTabs>
             <IonRouterOutlet>
-              <AppRoutes
-                notifications={notifications}
-                removeNotification={removeNotification}
-              />
+              <Route path="/racer-profile/:racerId">
+                <RacerProfile />
+              </Route>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route path="/drip-schedule">
+                <DripSchedule />
+              </Route>
+              <Route path="/app-check">
+                <FireBaseAppCheckPage />
+              </Route>
+              <Route path="/emergency-services">
+                <EmergencyServices />
+              </Route>
+              <Route path="/food-trucks">
+                <FoodTrucks />
+              </Route>
+              <Route exact path="/home">
+                <Home
+                  notifications={notifications}
+                  removeNotification={removeNotification}
+                />
+              </Route>
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/map/:locationName?">
+                <MapPage />
+              </Route>
+              <Route path="/notifications">
+                <Notifications notifications={notifications} />
+              </Route>
+              <Route path="/quests/:questId">
+                <QuestsPage />
+              </Route>
+              <Route path="/quests">
+                <QuestsPage />
+              </Route>
+              <Route path="/tickets">
+                <TicketsPage />
+              </Route>
+              <Route path="/race-information">
+                <Raceing />
+              </Route>
+              <Route path="/raffles-giveaways">
+                <Raffles />
+              </Route>
+              <Route path="/schedule">
+                <SchedulePage />
+              </Route>
+              <Route path="/scavenger-hunt">
+                <ScavengerHunt />
+              </Route>
+              <Route path="/trick-comp">
+                <TrickCompPage />
+              </Route>
+              <Route path="/team">
+                <Team />
+              </Route>
+              <Route path="/sponsors">
+                <Sponsors />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
             </IonRouterOutlet>
-            <AppTabBar notifications={notifications} />
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon aria-hidden="true" icon={home} />
+                <IonLabel>Home</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="map" href="/map">
+                <IonIcon aria-hidden="true" icon={map} />
+                <IonLabel>Map</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="schedule" href="/schedule">
+                <IonIcon aria-hidden="true" icon={calendar} />
+                <IonLabel>Schedule</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="notifcations" href="/notifications">
+                <IonIcon icon={alarm} />
+                {notifications.length > 0 && (
+                  <IonBadge color="danger">{notifications.length}</IonBadge>
+                )}
+                <IonLabel>Notifications </IonLabel>
+              </IonTabButton>
+            </IonTabBar>
           </IonTabs>
         </IonReactRouter>
       </IonApp>

@@ -87,12 +87,14 @@ const useNotifications = (): UseNotificationsReturn => {
     });
 
     PushNotifications.addListener('registration', async (token: Token) => {
+      console.log('Push registration success, token: ' + token.value);
       loadNotifications();
       const storedToken = localStorage.getItem(
         PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY
       );
 
       if (storedToken !== token.value) {
+        console.log('New token detected, sending to server...');
         try {
           await updateTopicSubscription('all_users', token.value, true);
           localStorage.setItem(
@@ -102,6 +104,8 @@ const useNotifications = (): UseNotificationsReturn => {
         } catch (error) {
           console.error('Registration Error:', error);
         }
+      } else {
+        console.log('Token unchanged, no need to update server.');
       }
 
       // Initialize topic subscriptions
@@ -118,12 +122,21 @@ const useNotifications = (): UseNotificationsReturn => {
         console.error('Failed to parse local notification settings:', error);
       }
 
+      console.log('localNotificationSettings: ', localNotificationSettings);
+
       let updatedLocalSettings = false;
 
       for (const topic of Object.keys(defaultNotificationSettings)) {
+        console.log('Evaluating topic ', topic);
         if (!(topic in localNotificationSettings)) {
+          console.log(`Topic subscription (${topic}) not set locally`);
+
           if (defaultNotificationSettings[topic].enabled) {
+            console.log(
+              `Topic (${topic}) is enabled by default - attempting to subscribe`
+            );
             await updateTopicSubscription(topic, token.value, true);
+            console.log(`Subscribed to topic: (${topic})`);
           }
 
           localNotificationSettings[topic] = {
@@ -132,10 +145,15 @@ const useNotifications = (): UseNotificationsReturn => {
           };
 
           updatedLocalSettings = true;
+        } else {
+          console.log(
+            `Topic ${topic} found in localNotificationSettings. Skipping.`
+          );
         }
       }
 
       if (updatedLocalSettings) {
+        console.log(`Updating local storage: (${localNotificationSettings})`);
         window.localStorage.setItem(
           NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY,
           JSON.stringify(localNotificationSettings)
@@ -144,12 +162,13 @@ const useNotifications = (): UseNotificationsReturn => {
     });
 
     PushNotifications.addListener('registrationError', (error: any) => {
-      console.error('Error on registration: ' + JSON.stringify(error));
+      console.log('Error on registration: ' + JSON.stringify(error));
     });
 
     PushNotifications.addListener(
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
+        console.log('Push received: ' + JSON.stringify(notification));
         setNotifications((prev) =>
           [notification, ...prev].slice(0, MAX_PREVIEW_MESSAGES)
         );
@@ -159,6 +178,10 @@ const useNotifications = (): UseNotificationsReturn => {
 
     // Listener for when a notification is tapped
     const notificationTapped = async (actionPerformed: ActionPerformed) => {
+      // TODO: Navigate to notifications page?
+      console.log(
+        'actionPerformed.notification.id: ' + actionPerformed.notification.id
+      );
       setNotifications((prev) => {
         var r = prev;
         if (!prev.find((n) => n.id === actionPerformed.notification.id)) {
@@ -176,6 +199,7 @@ const useNotifications = (): UseNotificationsReturn => {
 
     // Fetch delivered notifications when app is resumed
     const appResumed = async () => {
+      console.log('App resumed - fetching delivered notifications.');
       loadNotifications();
     };
     App.addListener('resume', appResumed);
@@ -183,6 +207,7 @@ const useNotifications = (): UseNotificationsReturn => {
     return () => {
       PushNotifications.removeAllListeners();
       App.removeAllListeners();
+      console.log('useNotifications cleanup - all listeners removed');
     };
   }, []);
 

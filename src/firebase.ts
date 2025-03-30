@@ -1,10 +1,12 @@
+// Import the functions you need from the SDKs you need
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAnalytics, Analytics } from 'firebase/analytics';
-import { getFirestore, Firestore } from 'firebase/firestore';
-import { getAuth, Auth } from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
+import { getFirestore } from 'firebase/firestore';
 import { Capacitor } from '@capacitor/core';
+import { getAuth } from 'firebase/auth';
 
-// Firebase configuration
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyA9aeJTaNMCOhu1PTTJGXNDgbT6ibYrB6w',
   authDomain: 'project3-449305.firebaseapp.com',
@@ -15,52 +17,18 @@ const firebaseConfig = {
   measurementId: 'G-8CWCF62FDF',
 };
 
-// Define types for our Firebase services
-interface FirebaseServices {
-  app: FirebaseApp | null;
-  auth: Auth | null;
-  db: Firestore | null;
-  analytics: Analytics | null;
+let firebaseApp: FirebaseApp | undefined;
+
+// Initialize Firebase only for Web
+if (!Capacitor.isNativePlatform()) {
+  if (getApps().length === 0) {
+    firebaseApp = initializeApp(firebaseConfig);
+  } else {
+    firebaseApp = getApps()[0]; // Use existing app
+  }
 }
 
-// Initialize Firebase based on platform
-const initializeFirebase = (): FirebaseServices => {
-  let app: FirebaseApp | null = null;
-
-  // For web platform
-  if (!Capacitor.isNativePlatform()) {
-    try {
-      if (getApps().length === 0) {
-        app = initializeApp(firebaseConfig);
-      } else {
-        app = getApps()[0];
-      }
-
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-      const analytics = getAnalytics(app);
-
-      return { app, auth, db, analytics };
-    } catch (error) {
-      console.error('Error initializing Firebase for web:', error);
-      return { app: null, auth: null, db: null, analytics: null };
-    }
-  }
-
-  // For native platform
-  // You could initialize Firebase differently for native if needed
-  // For now, return null services
-  return { app: null, auth: null, db: null, analytics: null };
-};
-
-// Export Firebase services
-export const firebase = initializeFirebase();
-export const app = firebase.app;
-export const auth = firebase.auth;
-export const db = firebase.db;
-export const analytics = firebase.analytics;
-
-// Helper function to check if Firebase is initialized
-export const isFirebaseInitialized = (): boolean => {
-  return !!firebase.app;
-};
+export { firebaseApp };
+export const auth = firebaseApp ? getAuth(firebaseApp) : null;
+export const db = firebaseApp ? getFirestore(firebaseApp) : null;
+export const analytics = firebaseApp ? getAnalytics(firebaseApp) : null;

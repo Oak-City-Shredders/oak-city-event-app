@@ -74,6 +74,7 @@ const LocationTracker: React.FC = () => {
     try {
       // Check permission status
       const permStatus = await Geolocation.checkPermissions();
+      console.log('Permission status:', permStatus);
       if (permStatus.location === 'denied') {
         setError('Location permission denied. Enable it in settings.');
         return;
@@ -99,6 +100,7 @@ const LocationTracker: React.FC = () => {
             return;
           }
           if (pos) {
+            console.log('Position updated:', pos);
             setPosition({
               lat: pos.coords.latitude,
               lng: pos.coords.longitude,
@@ -109,6 +111,7 @@ const LocationTracker: React.FC = () => {
 
       // Get current position
       const coordinates = await Geolocation.getCurrentPosition();
+      console.log('Current position:', coordinates);
       setPosition({
         lat: coordinates.coords.latitude,
         lng: coordinates.coords.longitude,
@@ -213,9 +216,12 @@ const LocationMarker: React.FC = () => {
   ]);
 
   const map = useMap();
+  console.log(`map zoom: ${map.getZoom()}`);
 
   const mapEvent = useMapEvents({
     click(e) {
+      console.log('click', e.latlng);
+      console.log(e);
       setSelectedPosition([e.latlng.lat, e.latlng.lng] as LatLngExpression);
     },
     locationfound(e) {
@@ -364,6 +370,7 @@ const DraggableMarker = ({ initialPosition }: { initialPosition: LatLng }) => {
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
+          console.log('dragend', marker.getLatLng());
           setPosition(marker.getLatLng());
         }
       },
@@ -404,6 +411,9 @@ const TooltipMarker = ({
   poi: PointOfInterest;
   filter: POIFilter | undefined;
 }) => {
+  //console.log("PopupMarker Rendered: ", poi);
+  //console.log("Filter: ", filter);
+
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const handleClick = async () => {
@@ -436,6 +446,7 @@ const TooltipMarker = ({
       console.error('POI isImage but no bounds provided');
       return null;
     }
+    //console.log("ImageOverlay Rendered: ", poi.bounds);
 
     return (
       <ImageOverlay
@@ -461,6 +472,7 @@ const TooltipMarker = ({
         : poi.icon === 'arrowDown'
         ? arrowDown
         : undefined;
+    //console.log("labelIcon:", labelIcon)
     const customDivIcon = labelIcon
       ? divIcon({
           html: renderToString(<IonIcon icon={labelIcon} size="large" />),
@@ -536,11 +548,13 @@ export interface POIFilter {
 
 const ChangeView: React.FC<{ coords: LatLngExpression }> = ({ coords }) => {
   const map = useMap(); // Gets the map instance
+  console.log('coords:', coords);
   map.setView(coords, 18, { animate: true }); // Updates the view
   return null;
 };
 
 const SetView = ({ center }: { center: LatLng }) => {
+  console.log('SetView');
   //road juncture
   //const initialLat = 35.72107099788361
   //const initialLng = -78.45067660036304
@@ -556,6 +570,7 @@ const SetView = ({ center }: { center: LatLng }) => {
 
   //35.719116420515824, -78.45264351172615
 
+  console.log('center', center);
   const [lastPosition, setLastPosition] = useState({
     lat: center.lat,
     lng: center.lng,
@@ -568,6 +583,7 @@ const SetView = ({ center }: { center: LatLng }) => {
     map.attributionControl.setPrefix(false);
     map.setView(lastPosition, lastZoom);
     map.whenReady(() => {
+      console.log('ready');
       setLastPosition([center.lat, center.lng] as LatLngExpression);
     });
   }, [map, center]);
@@ -579,6 +595,8 @@ const SetView = ({ center }: { center: LatLng }) => {
 
   const mapEvent = useMapEvents({
     click(e) {
+      console.log('click', e.latlng);
+      console.log(e);
       mapEvent.flyTo(e.latlng, mapEvent.getZoom());
       //setSelectedPosition([
       //   e.latlng.lat,
@@ -586,18 +604,24 @@ const SetView = ({ center }: { center: LatLng }) => {
       //] as LatLngExpression);
     },
     zoomend(e) {
+      console.log('zoomend', e.target.getZoom());
       e.target.getZoom() !== lastZoom && setLastZoom(e.target.getZoom());
       //setLastPosition(e.target.getCenter() as LatLngExpression);
     },
     moveend(e) {
+      console.log('moveend', e.target.getCenter());
       e.target.getCenter() !== lastPosition &&
         setLastPosition(e.target.getCenter() as LatLngExpression);
     },
-    movestart(e) {},
+    movestart(e) {
+      console.log('move start');
+    },
   });
 
   setTimeout(function () {
+    console.log('map size invalidated');
     map.invalidateSize();
+    //console.log("client height", map.getContainer().clientHeight)
   }, 0);
   return null;
 };
@@ -607,7 +631,10 @@ const MyMapContainer: React.FC<MyMapProps> = ({
   pointsOfInterest,
   poiFilters,
 }) => {
+  console.log('MyMapContainer Rendered: ', centerOn);
   const centeredOnPOI = pointsOfInterest.find((p) => p.name === centerOn);
+
+  console.log(`centered on '${JSON.stringify(centeredOnPOI)}' `);
 
   //const initialLat = 35.717140528123075
   //const initialLng = -78.45191998873842
@@ -622,6 +649,8 @@ const MyMapContainer: React.FC<MyMapProps> = ({
 
         ];
     console.log("startpos", startPos)*/
+  console.log('initialLat', initialLat);
+  console.log('initialLng', initialLng);
 
   return (
     <>
@@ -714,6 +743,7 @@ const MyMap: React.FC<MyMapProps> = ({
   const LongPressHandler = () => {
     const map = useMapEvents({
       mousedown: (e) => {
+        console.log('mouse down');
         timerRef.current = setTimeout(() => {
           setLongPressCoords(e.latlng);
           handleLongPress(e.latlng.lat, e.latlng.lng);
