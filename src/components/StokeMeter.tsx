@@ -39,11 +39,11 @@ const checklistItems: StokeItem[] = [
     text: 'Joined the Discord chat',
     link: 'https://discord.gg/r9xx5V2s',
   },
-  {
+  /*{
     id: 7,
     text: 'Ordered Shred Fest jersey',
     link: 'https://www.oakcityshredfest.com/squirrelshop/p/2025-oak-city-race-jersey-custom-name-number',
-  },
+  },*/
   { id: 8, text: 'Charged Device' },
   { id: 9, text: 'Packed gear' },
 ];
@@ -54,6 +54,26 @@ export default function StokeMeter() {
     'stoke-meter-v3c',
     checklistItems
   );
+
+  // Filter and modify items based on jersey (id: 7) status
+  const getProcessedItems = () => {
+    const jerseyItem = stokeItems.find((item) => item.id === 7);
+
+    if (jerseyItem) {
+      if (jerseyItem.completed) {
+        // If checked, keep item but remove link
+        return stokeItems.map((item) =>
+          item.id === 7 ? { ...item, link: undefined } : item
+        );
+      } else {
+        // If not checked, remove item completely
+        return stokeItems.filter((item) => item.id !== 7);
+      }
+    }
+    return stokeItems;
+  };
+
+  const processedItems = getProcessedItems();
 
   const handleCheck = async (id: number) => {
     checkVibrate(
@@ -71,7 +91,7 @@ export default function StokeMeter() {
     setIsListVisible((prev) => !prev);
   };
 
-  const completedCount = stokeItems.filter((item) => item.completed).length;
+  const completedCount = processedItems.filter((item) => item.completed).length;
 
   const subTitle = () => {
     switch (true) {
@@ -83,13 +103,12 @@ export default function StokeMeter() {
         return 'Full Stoke is in sight!  🔥';
       case completedCount > 7:
         return 'Fully Stoked about Oak City Shred Fest! 🤘';
-
       default:
         return 'Are you ready for the fest?';
     }
   };
 
-  const progress = completedCount / stokeItems.length;
+  const progress = completedCount / processedItems.length;
 
   return (
     <IonCard className="stoke-meter">
@@ -108,8 +127,8 @@ export default function StokeMeter() {
             <IonProgressBar value={progress} className="custom-progress-bar" />
           </div>
           <p className="text-lg text-center">
-            {stokeItems.filter((i) => i.completed).length} of{' '}
-            {stokeItems.length} completed
+            {processedItems.filter((i) => i.completed).length} of{' '}
+            {processedItems.length} completed
           </p>
         </motion.div>
 
@@ -119,7 +138,7 @@ export default function StokeMeter() {
               Check off your tasks to get fully stoked for Shred Fest!
             </p>
             <IonList>
-              {stokeItems.map((item, index) => (
+              {processedItems.map((item, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -10 }}
@@ -131,7 +150,7 @@ export default function StokeMeter() {
                       checked={item.completed}
                       onIonChange={() => handleCheck(item.id)}
                       disabled={item.id === 1}
-                      style={{ flexGrow: 1 }} // Makes checkbox take up available space
+                      style={{ flexGrow: 1 }}
                     />
                     <div
                       style={{ textAlign: 'right', minWidth: 'fit-content' }}
