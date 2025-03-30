@@ -12,16 +12,13 @@ export async function updateTopicSubscription(
   enable: boolean
 ) {
   const url = enable ? SUBSCRIBE_TOPIC_URL : UNSUBSCRIBE_TOPIC_URL;
-  console.log('fetching:', url);
   try {
     const options = {
       url: url,
       headers: { 'Content-Type': 'application/json' },
       data: { token: token, topic },
     };
-
     const response: HttpResponse = await CapacitorHttp.post(options);
-    console.log('Response:', response);
 
     if (!response.status || response.status < 200 || response.status >= 300) {
       throw new Error(

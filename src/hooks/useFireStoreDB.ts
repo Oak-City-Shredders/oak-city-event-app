@@ -4,6 +4,7 @@ import {
   FirebaseFirestore,
   QueryFilterConstraint,
 } from '@capacitor-firebase/firestore';
+import { isFirebaseInitialized } from '../firebase';
 
 // Define a type for where conditions
 type WhereCondition = {
@@ -26,6 +27,7 @@ interface FireStoreDBHook<T> {
   loading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
+  firebaseAvailable: boolean;
 }
 
 function useFireStoreDB<T>(
@@ -37,11 +39,21 @@ function useFireStoreDB<T>(
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const [firebaseAvailable, setFirebaseAvailable] = useState<boolean>(
+    isFirebaseInitialized()
+  );
+
+  // Check if Firebase is available on mount and when dependencies change
+  useEffect(() => {
+    setFirebaseAvailable(isFirebaseInitialized());
+  }, [dependencies]);
 
   const fetchData = useCallback(async () => {
-    if (dependencies?.some((item) => !item)) {
+    // Check if dependencies are met and Firebase is initialized
+    if (dependencies?.some((item) => !item) || !isFirebaseInitialized()) {
       return;
     }
+
     setLoading(true);
     setError(null);
     try {
@@ -58,6 +70,9 @@ function useFireStoreDB<T>(
               ...snapshot.data,
             } as T,
           ]);
+        } else {
+          // Document exists but has no data
+          setData([]);
         }
       } else {
         // Collection fetch with optional where conditions
@@ -97,33 +112,36 @@ function useFireStoreDB<T>(
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       setError(err);
-      console.log(error);
+      console.error('Firestore error:', error);
     } finally {
-      console.log('Fetch complete - setting loading to false');
       setLoading(false);
     }
-  }, [collectionId, docId]); // Add where to dependencies
+  }, [collectionId, docId, where, dependencies]);
 
-  // Fetch data on initial render
+  // Fetch data on initial render and when Firebase status changes
   useEffect(() => {
     let isMounted = true;
-    // Fetch delivered notifications when app is resumed
-    const appResumed = async () => {
-      console.log('App resumed - fetching sheets data.');
-      if (isMounted && !loading) fetchData();
-    };
-    App.addListener('resume', appResumed);
 
-    fetchData();
+    // Only attempt to fetch if Firebase is available
+    if (isFirebaseInitialized()) {
+      // Fetch delivered notifications when app is resumed
+      const appResumed = async () => {
+        if (isMounted && !loading) fetchData();
+      };
+      App.addListener('resume', appResumed);
+
+      fetchData();
+    } else {
+      console.log('Firebase not initialized. Skipping Firestore fetch.');
+    }
 
     return () => {
       isMounted = false;
       App.removeAllListeners();
-      console.log('home cleanup - all listeners removed');
     };
-  }, [fetchData]);
+  }, [fetchData, firebaseAvailable]);
 
-  return { data, loading, error, refetch: fetchData };
+  return { data, loading, error, refetch: fetchData, firebaseAvailable };
 }
 
 export default useFireStoreDB;

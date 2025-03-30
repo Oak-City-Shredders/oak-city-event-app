@@ -40,7 +40,6 @@ interface Ticket {
 
 const TicketsPage: React.FC = () => {
   const { user } = useAuth();
-  console.log('user', user);
   const {
     data: ticketData,
     loading,

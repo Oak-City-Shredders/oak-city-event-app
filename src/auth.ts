@@ -17,13 +17,11 @@ export const registerUser = async (email: string, password: string) => {
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    console.log('Signing in..');
     const userCredential =
       await FirebaseAuthentication.signInWithEmailAndPassword({
         email,
         password,
       });
-    console.log('returned with user:' + userCredential);
     return userCredential.user;
   } catch (error) {
     console.error('Error logging in:', error);
@@ -43,7 +41,6 @@ export const resetPassword = async (email: string) => {
 export const logoutUser = async () => {
   try {
     await FirebaseAuthentication.signOut();
-    console.log('User signed out');
   } catch (error) {
     console.error('Error signing out:', error);
   }
@@ -68,7 +65,6 @@ export const sendEmailVerification = async () => {
         },
       },
     });
-    console.log('send email verification');
   } catch (error) {
     console.error('Error sending email verificaiton:', error);
   }
