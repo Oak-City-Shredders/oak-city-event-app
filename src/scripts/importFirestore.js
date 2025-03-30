@@ -21,8 +21,10 @@ try {
     for (const [collectionName, documents] of Object.entries(data)) {
       for (const [docId, docData] of Object.entries(documents)) {
         await db.collection(collectionName).doc(docId).set(docData);
+        console.log(`✅ Imported document ${docId} into ${collectionName}`);
       }
     }
+    console.log('🎉 Import complete.');
   }
 
   importData().catch(console.error);

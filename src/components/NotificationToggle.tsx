@@ -66,7 +66,7 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
       });
       setNotificationsError('');
     } catch (error) {
-      console.error(`Error updating registration for ${topic} topic`);
+      console.log(`Error updating registration for ${topic} topic`);
       setNotificationsError(
         `Error updating registration for ${topic} notifications`
       );
