@@ -188,7 +188,7 @@ const Home: React.FC<HomeProps> = ({
           <IonGrid>
             <IonRow>
               {/* active notifications */}
-              {notificationPermission !== 'granted' &&
+              {/* {notificationPermission !== 'granted' &&
                 Capacitor.isNativePlatform() && (
                   <IonCol
                     size={colSize}
@@ -210,7 +210,7 @@ const Home: React.FC<HomeProps> = ({
                       </IonList>
                     </IonCard>
                   </IonCol>
-                )}
+                )} */}
               {notifications.length > 0 && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
                   <IonCard className="ion-padding">
