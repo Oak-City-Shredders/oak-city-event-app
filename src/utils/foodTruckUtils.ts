@@ -65,7 +65,7 @@ export const mapFoodTruckData = (
 ): MappedFoodTruck[] => {
   return data.map((truck) => ({
     image: truck.Image,
-    route: truck.link,
+    link: truck.link,
     description: truck.description,
     title: truck.Name,
     isOpenForOrders: Boolean(truck.IsOpenForOrders === 'Yes'),
