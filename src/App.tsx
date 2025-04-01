@@ -103,7 +103,8 @@ const AnalyticsTracker = () => {
 };
 
 const App: React.FC = () => {
-  const { notifications, removeNotification } = useNotifications();
+  const { notifications, removeNotification, notificationPermission } =
+    useNotifications();
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -161,6 +162,7 @@ const App: React.FC = () => {
                 <Home
                   notifications={notifications}
                   removeNotification={removeNotification}
+                  notificationPermission={notificationPermission}
                 />
               </Route>
               <Route exact path="/login" component={Login} />
@@ -216,13 +218,6 @@ const App: React.FC = () => {
               <IonTabButton tab="schedule" href="/schedule">
                 <IonIcon aria-hidden="true" icon={calendar} />
                 <IonLabel>Schedule</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="notifcations" href="/notifications">
-                <IonIcon icon={alarm} />
-                {notifications.length > 0 && (
-                  <IonBadge color="danger">{notifications.length}</IonBadge>
-                )}
-                <IonLabel>Notifications </IonLabel>
               </IonTabButton>
             </IonTabBar>
           </IonTabs>
