@@ -77,7 +77,9 @@ const Team: React.FC = () => {
                         />
                       </div>
                       <IonCardHeader>
-                        <IonCardTitle>{sponsor.name}</IonCardTitle>
+                        <IonCardTitle style={{ fontSize: '1.2em' }}>
+                          {sponsor.name}
+                        </IonCardTitle>
                       </IonCardHeader>
                       <div className="ion-hide-sm-down">
                         <IonCardContent

@@ -80,7 +80,7 @@ const ScavengerHunt: React.FC = () => {
                         alt={item.name}
                         src={item.imageLink}
                         style={{
-                          background: 'black',
+                          background: 'lightgray',
                           position: 'absolute',
                           top: 0,
                           left: 0,
@@ -110,7 +110,7 @@ const ScavengerHunt: React.FC = () => {
                           style={{
                             display: 'inline-block',
                             padding: '4px 8px',
-                            backgroundColor: '#FFD700',
+                            backgroundColor: item.sponsorshipTier || 'gold',
                             color: '#000',
                             borderRadius: '16px',
                             fontSize: '12px',
@@ -119,7 +119,7 @@ const ScavengerHunt: React.FC = () => {
                             maxWidth: '200px',
                           }}
                         >
-                          Gold Squirrel
+                          {item.sponsorshipTier} Squirrel
                         </IonLabel>
                       </div>
                     </IonCardContent>
