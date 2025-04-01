@@ -20,7 +20,6 @@ import PageHeader from '../components/PageHeader';
 
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
-  console.log(sponsors);
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank');
   };
