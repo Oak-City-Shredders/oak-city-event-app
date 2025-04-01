@@ -91,7 +91,9 @@ const ScavengerHunt: React.FC = () => {
                       />
                     </div>
                     <IonCardHeader style={{ paddingBottom: '0' }}>
-                      <IonCardTitle>{item.name}</IonCardTitle>
+                      <IonCardTitle style={{ fontSize: '1.3em' }}>
+                        {item.name}
+                      </IonCardTitle>
                       {/* <IonCardSubtitle>{item.prize}</IonCardSubtitle> */}
                     </IonCardHeader>
                     <IonCardContent
