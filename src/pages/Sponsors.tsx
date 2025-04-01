@@ -20,7 +20,6 @@ import PageHeader from '../components/PageHeader';
 
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
-  console.log(sponsors);
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank');
   };
@@ -43,27 +42,55 @@ const Team: React.FC = () => {
         ) : (
           <>
             <IonGrid>
-              <IonRow>
+              <IonRow className="ion-align-items-stretch">
                 {sponsors.map((sponsor, index: number) => (
-                  <IonCol sizeXs="12" sizeSm="4" sizeLg="3" key={index}>
+                  <IonCol
+                    sizeXs="6"
+                    sizeMd="4"
+                    sizeLg="3"
+                    key={index}
+                    style={{ padding: '8px' }}
+                  >
                     <IonCard
                       key={index}
                       onClick={() => handleCardClick(sponsor.websiteLink)}
-                      style={{ marginTop: '6px', marginBottom: '6px' }}
+                      style={{
+                        margin: '0',
+                        height: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
                     >
-                      <IonImg
-                        src={sponsor.imageLink}
-                        alt={sponsor.name}
-                        style={{ backgroundColor: '#e6e6e6' }} // Very light gray, almost white
-                      />
+                      <div style={{ position: 'relative', paddingTop: '75%' }}>
+                        <IonImg
+                          src={sponsor.imageLink}
+                          alt={sponsor.name}
+                          style={{
+                            backgroundColor: '#e6e6e6', // Very light gray, almost white
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'contain',
+                          }}
+                        />
+                      </div>
                       <IonCardHeader>
                         <IonCardTitle>{sponsor.name}</IonCardTitle>
                       </IonCardHeader>
-                      {sponsor.description && (
-                        <IonCardContent>
-                          <p>{sponsor.description}</p>
+                      <div className="ion-hide-sm-down">
+                        <IonCardContent
+                          style={{
+                            flexGrow: 1,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'flex-start',
+                          }}
+                        >
+                          {sponsor.description && <p>{sponsor.description}</p>}
                         </IonCardContent>
-                      )}
+                      </div>
                     </IonCard>
                   </IonCol>
                 ))}
