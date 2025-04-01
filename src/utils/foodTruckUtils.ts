@@ -29,7 +29,7 @@ export interface FireDBFoodTruck {
 
 export interface MappedFoodTruck {
   image: string; // From truck.Image
-  route: string; // From truck.link
+  link: string; // From truck.link
   description: string; // From truck.description
   title: string; // From truck.Name
   statusMessage: StatusMessage;
@@ -65,7 +65,7 @@ export const mapFoodTruckData = (
 ): MappedFoodTruck[] => {
   return data.map((truck) => ({
     image: truck.Image,
-    route: truck.link,
+    link: truck.link,
     description: truck.description,
     title: truck.Name,
     isOpenForOrders: Boolean(truck.IsOpenForOrders === 'Yes'),
