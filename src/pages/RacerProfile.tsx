@@ -66,7 +66,7 @@ const RacerProfile: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         {loading ? (
-          <IonLoading isOpen={loading} message={'Loading...'} />
+          <p>Loading profile...</p>
         ) : error ? (
           <IonText>
             Error loading racer profile data, please check back later.
