@@ -163,7 +163,7 @@ const FoodTruckSwiper: React.FC = () => {
                     ) : (
                       <div></div>
                     )}
-                    {truck.route && (
+                    {truck.link && (
                       <IonButton
                         className={styles.menuButton}
                         color={'light'}
@@ -172,7 +172,7 @@ const FoodTruckSwiper: React.FC = () => {
                         size={'small'}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCardClick(truck.route);
+                          handleCardClick(truck.link);
                         }}
                       >
                         <IonIcon slot="start" icon={fastFood}></IonIcon>
