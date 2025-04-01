@@ -20,7 +20,6 @@ import {
 import { locationOutline, colorPaletteOutline } from 'ionicons/icons';
 
 import PageHeader from '../components/PageHeader';
-import NotificationToggle from '../components/NotificationToggle';
 import useScavengerHunt from '../hooks/useScavengerHunt';
 
 const ScavengerHunt: React.FC = () => {
@@ -33,7 +32,6 @@ const ScavengerHunt: React.FC = () => {
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
       <IonContent>
-        <NotificationToggle topic={'scavengerHunt'} />
         <div
           style={{ margin: '16px', borderRadius: '8px', overflow: 'hidden' }}
         >
