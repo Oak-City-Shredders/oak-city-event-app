@@ -8,6 +8,15 @@ jobs:
     runs-on: macos-latest
 
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest
+
+      - name: Check Xcode version
+        run: |
+          xcodebuild -version
+          xcodebuild -showsdks
+        
       # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -84,11 +93,6 @@ jobs:
         run: |
           cd ios/App
           pod install
-
-      - name: Check Xcode version
-        run: |
-          xcodebuild -version
-          xcodebuild -showsdks
 
       # Build the iOS app
       - name: Build iOS app
