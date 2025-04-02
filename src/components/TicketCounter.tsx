@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IonText } from '@ionic/react';
+import { IonSkeletonText, IonText } from '@ionic/react';
 import './TicketCounter.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 
@@ -45,7 +45,13 @@ export default function TicketCounter() {
   return (
     <div className="ticket-count">
       <IonText>
-        <h1>{loading ? '' : `${ticketCount} Tickets Sold!`}</h1>
+        <h1>
+          {loading ? (
+            <IonSkeletonText animated={true} />
+          ) : (
+            `${ticketCount} Tickets Sold!`
+          )}
+        </h1>
       </IonText>
     </div>
   );

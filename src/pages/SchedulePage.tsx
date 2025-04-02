@@ -56,7 +56,7 @@ const SchedulePage: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         {loading ? (
-          <IonLoading isOpen={loading} message={'Loading...'} />
+          <p>Loading events...</p>
         ) : error ? (
           <IonText>
             Error loading calendar data, please check back later.

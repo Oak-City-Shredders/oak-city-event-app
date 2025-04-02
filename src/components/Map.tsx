@@ -771,6 +771,7 @@ const MyMap: React.FC<MyMapProps> = ({
       maxBounds={maxBounds}
       style={{ height: '100%', width: '100vw' }}
       minZoom={16}
+      maxZoom={20}
     >
       <MyMapContainer
         pointsOfInterest={pointsOfInterest}

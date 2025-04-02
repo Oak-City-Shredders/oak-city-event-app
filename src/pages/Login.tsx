@@ -26,7 +26,7 @@ import {
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
-import usePreferenceSettings from '../hooks/usePreferenceSettings';
+import PreferencesCard from '../components/PreferencesCard';
 import styles from './Login.module.css';
 import {
   logInOutline,
@@ -41,15 +41,6 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
-
-  const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
-
-  const togglePreference = (key: string) => {
-    setPreferenceSettings((prev) => {
-      preferenceSettings[key].enabled = !preferenceSettings[key].enabled;
-      return preferenceSettings;
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -208,6 +199,7 @@ const Login: React.FC = () => {
                     </IonButton>
                   </IonCardContent>
                 </IonCard>
+                <PreferencesCard />
               </div>
             </div>
           </div>
@@ -237,7 +229,7 @@ const Login: React.FC = () => {
               </h2>
               <p className={styles.subtitle}>
                 {activeTab === 'signup'
-                  ? 'Join our racing community today'
+                  ? 'Join today'
                   : 'Sign in to access your account'}
               </p>
             </div>
@@ -317,23 +309,7 @@ const Login: React.FC = () => {
                   )}
                 </IonCardContent>
               </IonCard>
-              <IonCard>
-                <IonCardHeader>
-                  <IonCardTitle>Preferences</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  {Object.keys(preferenceSettings).map((key) => (
-                    <IonItem key={key}>
-                      <IonToggle
-                        checked={preferenceSettings[key].enabled}
-                        onIonChange={() => togglePreference(key)}
-                      >
-                        {preferenceSettings[key].name}
-                      </IonToggle>
-                    </IonItem>
-                  ))}
-                </IonCardContent>
-              </IonCard>
+              <PreferencesCard />
             </div>
           </div>
         </div>

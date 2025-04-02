@@ -177,7 +177,7 @@ const Home: React.FC<HomeProps> = ({
             <IonToolbar>
               <IonImg
                 className="shred-fest-logo"
-                src="/images/shred-fest-logo.webp"
+                src="/images/shred-fest-logo-horizontal3.webp"
                 alt="Oak City Shred Fest 5"
               />
             </IonToolbar>

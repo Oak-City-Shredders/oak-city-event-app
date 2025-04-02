@@ -11,12 +11,15 @@ import {
   IonIcon,
   IonLabel,
   IonPage,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/react';
 import { calendar, location, person, ticket } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import styles from './TicketsPage.module.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import PageHeader from '../components/PageHeader';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface FireDBTickets {
   id: string;
@@ -40,17 +43,18 @@ interface Ticket {
 
 const TicketsPage: React.FC = () => {
   const { user } = useAuth();
-  console.log('user', user);
   const {
     data: ticketData,
     loading,
     error,
+    refetch,
   } = useFireStoreDB<FireDBTickets>(
     'Tickets-v2',
     undefined,
     [{ field: 'Email', operator: '==', value: user?.email }],
     [!!user]
   );
+  const handleRefresh = useRefreshHandler(refetch);
 
   const tickets = ticketData
     ? (ticketData.map((ticket) => ({
@@ -69,6 +73,9 @@ const TicketsPage: React.FC = () => {
       <PageHeader title="Tickets" />
 
       <IonContent className="ion-padding">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         {loading ? (
           <IonCard>
             <IonCardHeader>
