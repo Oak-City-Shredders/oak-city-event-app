@@ -229,7 +229,7 @@ const Login: React.FC = () => {
               </h2>
               <p className={styles.subtitle}>
                 {activeTab === 'signup'
-                  ? 'Join our racing community today'
+                  ? 'Join today'
                   : 'Sign in to access your account'}
               </p>
             </div>
