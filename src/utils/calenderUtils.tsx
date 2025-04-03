@@ -1,5 +1,15 @@
 import { IonIcon } from '@ionic/react';
-import { build, lockOpen, accessibility, alarm } from 'ionicons/icons';
+import {
+  build,
+  lockOpen,
+  accessibility,
+  alarm,
+  volumeHigh,
+  bonfire,
+  pizza,
+  beer,
+  film,
+} from 'ionicons/icons';
 import { GoogleCalendarEvent } from '../hooks/useGoogleCalendar';
 
 // Define types for the event and the grouped events
@@ -35,6 +45,11 @@ const ICONS: Record<string, JSX.Element> = {
   clinic: <IonIcon aria-hidden="true" slot="start" icon={build} />,
   tour: <IonIcon aria-hidden="true" slot="start" icon={accessibility} />,
   open: <IonIcon aria-hidden="true" slot="start" icon={lockOpen} />,
+  dj: <IonIcon aria-hidden="true" slot="start" icon={volumeHigh} />,
+  fire: <IonIcon aria-hidden="true" slot="start" icon={bonfire} />,
+  food: <IonIcon aria-hidden="true" slot="start" icon={pizza} />,
+  beer: <IonIcon aria-hidden="true" slot="start" icon={beer} />,
+  movie: <IonIcon aria-hidden="true" slot="start" icon={film} />,
 };
 
 // Function to group events by date
