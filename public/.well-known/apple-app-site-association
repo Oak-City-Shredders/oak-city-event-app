@@ -1,0 +1,14 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "PS73AG5B34.com.oakcityshredfest.app",
+                "paths": [
+                    "/tickets",
+                    "/tickets/*"
+                ]
+            }
+        ]
+    }
+}

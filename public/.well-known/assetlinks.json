@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.oakcityshredfest.app",
+            "sha256_cert_fingerprints": [
+                "0D:C1:CD:79:AA:BB:CB:EE:D7:C3:D1:4A:28:7E:52:F0:98:CA:86:83:A6:E3:C1:3D:02:A9:D1:9B:C3:A2:0B:50"
+            ]
+        }
+    }
+]

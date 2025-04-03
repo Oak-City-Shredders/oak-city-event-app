@@ -15,14 +15,13 @@ import {
   IonContent,
   IonText,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
-  IonToggle,
   IonIcon,
   IonSegment,
   IonSegmentButton,
   SegmentValue,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
@@ -34,9 +33,10 @@ import {
   mailOutline,
   personAddOutline,
 } from 'ionicons/icons';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const Login: React.FC = () => {
-  const { user, loading, error: authError } = useAuth();
+  const { user, loading, error: authError, refreshAuth } = useAuth();
   const [activeTab, setActiveTab] = useState<string>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,8 +57,6 @@ const Login: React.FC = () => {
       } else {
         await handleLogin();
       }
-      setEmail('');
-      setPassword('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -132,11 +130,16 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleRefresh = useRefreshHandler(refreshAuth);
+
   if (user) {
     return (
       <IonPage>
         <PageHeader title={user ? 'Your Profile' : 'Sign In'} />
         <IonContent className="ion-padding">
+          <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+            <IonRefresherContent />
+          </IonRefresher>
           <div className={styles.container}>
             <div className={styles.wrapper}>
               <div className={styles.header}>
@@ -212,6 +215,9 @@ const Login: React.FC = () => {
     <IonPage>
       <PageHeader title={user ? 'Your Profile' : 'Sign In'} />
       <IonContent className="ion-padding">
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         <div className={styles.container}>
           <div className={styles.wrapper}>
             <div className={styles.header}>
