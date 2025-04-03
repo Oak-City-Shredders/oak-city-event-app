@@ -184,27 +184,24 @@ const TicketsPage: React.FC = () => {
             </IonCard>
             {tickets.map((ticket) => {
               return (
-                <IonCard key={ticket.id}>
+                <IonCard key={ticket.id} className={styles.ticket}>
                   <IonCardContent>
                     <div className={styles.ticketHeader}>
                       <h3 className={styles.ticketTitle}>{ticket.title}</h3>
-                      <IonBadge
-                        color={ticket.type === 'vip' ? 'warning' : 'primary'}
-                        className={styles.badge}
-                      >
-                        {ticket.type}
-                      </IonBadge>
+                      {ticket.type === 'vip' && (
+                        <IonBadge color={'warning'} className={styles.badge}>
+                          {ticket.type}
+                        </IonBadge>
+                      )}
                     </div>
                     <div className={styles.ticketInfo}>
                       <div className={styles.infoRow}>
-                        <IonLabel>
-                          <IonIcon
-                            slot="start"
-                            icon={calendar}
-                            className={styles.infoIcon}
-                          />
-                          Purchase Date:
-                        </IonLabel>
+                        <IonIcon
+                          slot="start"
+                          icon={calendar}
+                          className={styles.infoIcon}
+                        />
+                        <IonLabel>Purchase Date: </IonLabel>
                         {new Date(ticket.purchaseDate).toLocaleDateString()}
                       </div>
                       <div className={styles.infoRow}>
@@ -220,9 +217,7 @@ const TicketsPage: React.FC = () => {
                       </div>
                     </div>
                     {ticket.quantity > 1 && (
-                      <div className={styles.price}>
-                        Qty&nbsp;{ticket.quantity}
-                      </div>
+                      <div className={styles.price}>Qty {ticket.quantity}</div>
                     )}
                   </IonCardContent>
                 </IonCard>
