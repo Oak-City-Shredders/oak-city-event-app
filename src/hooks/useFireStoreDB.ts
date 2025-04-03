@@ -128,26 +128,31 @@ function useFireStoreDB<T>(
     }
 
     // Fetch on app resume if data is stale
-    const appResumed = async () => {
-      console.log('App resumed');
-      const currentTime = Date.now();
-      const isDataStale = cache.current.timestamp
-        ? currentTime - cache.current.timestamp > STALE_TIME
-        : true;
+    let appResumedListener: { remove: () => void }; // Type for the listener handle
+    (async () => {
+      const appResumed = async () => {
+        console.log('App resumed');
+        const currentTime = Date.now();
+        const isDataStale = cache.current.timestamp
+          ? currentTime - cache.current.timestamp > STALE_TIME
+          : true;
 
-      if (isMounted && !loading && (!cache.current.data || isDataStale)) {
-        console.log('App resumed - fetching fresh data due to staleness');
-        fetchData();
-      } else if (cache.current.data) {
-        console.log('App resumed - using cached data');
-        setData(cache.current.data);
-      }
-    };
-    App.addListener('resume', appResumed);
+        if (isMounted && !loading && (!cache.current.data || isDataStale)) {
+          console.log('App resumed - fetching fresh data due to staleness');
+          fetchData();
+        } else if (cache.current.data) {
+          console.log('App resumed - using cached data');
+          setData(cache.current.data);
+        }
+      };
+      appResumedListener = await App.addListener('resume', appResumed);
+    })();
 
     return () => {
       isMounted = false;
-      App.removeAllListeners();
+      if (appResumedListener) {
+        appResumedListener.remove();
+      }
     };
   }, [fetchData, loading, error]);
 

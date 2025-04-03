@@ -132,6 +132,7 @@ const App: React.FC = () => {
 
     return () => {
       CapacitorApp.removeAllListeners();
+      console.log('App cleanup - all listeners removed');
     };
   }, [router]);
 

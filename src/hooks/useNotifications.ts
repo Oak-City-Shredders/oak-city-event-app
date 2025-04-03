@@ -4,8 +4,6 @@ import {
   PushNotificationSchema,
   Token,
   ActionPerformed,
-  PermissionStatus,
-  RegistrationError,
 } from '@capacitor/push-notifications';
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
@@ -196,15 +194,25 @@ const useNotifications = (): UseNotificationsReturn => {
     );
 
     // Fetch delivered notifications when app is resumed
-    const appResumed = async () => {
-      console.log('App resumed - fetching delivered notifications.');
-      loadNotifications();
-    };
-    App.addListener('resume', appResumed);
+    let appResumedListener: { remove: () => void }; // Type for the listener handle
+    (async () => {
+      const appResumed = async () => {
+        loadNotifications();
+        try {
+          const permissionStatus = await PushNotifications.checkPermissions();
+          setNotificationPermission(permissionStatus.receive);
+        } catch (error) {
+          console.error('Error checking notification permissions:', error);
+        }
+      };
+      appResumedListener = await App.addListener('resume', appResumed);
+    })();
 
     return () => {
       PushNotifications.removeAllListeners();
-      App.removeAllListeners();
+      if (appResumedListener) {
+        appResumedListener.remove();
+      }
       console.log('useNotifications cleanup - all listeners removed');
     };
   }, []);
