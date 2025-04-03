@@ -149,8 +149,11 @@ const TicketsPage: React.FC = () => {
               <p className={styles.message}>
                 You don't have any tickets associated with your account.
               </p>
-              <IonButton expand="block" routerLink="/events">
-                Browse Available Events
+              <IonButton
+                expand="block"
+                href="https://www.oakcityshredfest.com/"
+              >
+                Get Your Tickets
               </IonButton>
             </IonCardContent>
           </IonCard>
