@@ -71,7 +71,7 @@ const Team: React.FC = () => {
                             src={sponsor.imageLink}
                             alt={sponsor.name}
                             style={{
-                              backgroundColor: '#e6e6e6', // Very light gray, almost white
+                              backgroundColor: 'lightgray', // Very light gray, almost white
                               position: 'absolute',
                               top: 0,
                               left: 0,
