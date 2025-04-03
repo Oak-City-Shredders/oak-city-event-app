@@ -23,12 +23,12 @@ import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 interface FireDBTickets {
   id: string;
-  ['Email']: string;
-  ['Lineitem name']: string;
-  ['Lineitem quantity']: string;
-  ['Billing Name']: string;
-  ['Order ID']: string;
-  ['Paid at']: string;
+  ['Customer Email']: string;
+  ['Product Name']: string;
+  ['Quantity']: string;
+  ['Display Name']: string;
+  ['Order Number']: string;
+  ['Created On']: string;
 }
 
 interface Ticket {
@@ -49,9 +49,9 @@ const TicketsPage: React.FC = () => {
     error,
     refetch,
   } = useFireStoreDB<FireDBTickets>(
-    'Tickets-v2',
+    'Tickets-alpha3',
     undefined,
-    [{ field: 'Email', operator: '==', value: user?.email }],
+    [{ field: 'Customer Email', operator: '==', value: user?.email }],
     [!!user]
   );
   const handleRefresh = useRefreshHandler(refetch);
@@ -59,12 +59,14 @@ const TicketsPage: React.FC = () => {
   const tickets = ticketData
     ? (ticketData.map((ticket) => ({
         id: ticket.id,
-        type: ticket['Lineitem name'],
-        orderId: ticket['Order ID'],
+        type: ticket['Product Name'].toLocaleLowerCase().includes('vip')
+          ? 'vip'
+          : 'general',
+        orderId: ticket['Order Number'],
         userId: user?.uid || '',
-        purchaseDate: ticket['Paid at'],
-        quantity: Number(ticket['Lineitem quantity']) || 0,
-        ticketName: ticket['Billing Name'],
+        purchaseDate: ticket['Created On'],
+        quantity: Number(ticket['Quantity']) || 0,
+        ticketName: ticket['Display Name'],
       })) as Ticket[])
     : [];
 
