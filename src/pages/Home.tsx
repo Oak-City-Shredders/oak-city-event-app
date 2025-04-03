@@ -54,6 +54,7 @@ import {
   useRandomRacerId,
 } from '../hooks/useRefetchableData';
 import useGoogleCalendar from '../hooks/useGoogleCalendar';
+import { PermissionState } from '@capacitor/core';
 
 const iconMap = {
   race: flagOutline, // Racing related
