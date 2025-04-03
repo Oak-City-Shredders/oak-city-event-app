@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 import { PermissionState } from '@capacitor/core';
+import { App } from '@capacitor/app';
 
 interface UseNotificationPermissionsReturn {
   notificationPermission: PermissionState;
@@ -21,9 +22,29 @@ const useNotificationPermissions = (): UseNotificationPermissionsReturn => {
       }
     };
     checkPushNotificationsPermissions();
+
+    // Fetch delivered notifications when app is resumed
+    let appResumedListener: { remove: () => void }; // Type for the listener handle
+    (async () => {
+      const appResumed = async () => {
+        try {
+          const permissionStatus = await PushNotifications.checkPermissions();
+          setNotificationPermission(permissionStatus.receive);
+        } catch (error) {
+          console.error('Error checking notification permissions:', error);
+        }
+      };
+      appResumedListener = await App.addListener('resume', appResumed);
+    })();
+
+    return () => {
+      if (appResumedListener) {
+        appResumedListener.remove();
+      }
+      console.log('useNotifications cleanup - all listeners removed');
+    };
   }, []);
 
-  // TODO
   const [notificationPermission, setNotificationPermission] =
     useState<PermissionState>('prompt');
 
