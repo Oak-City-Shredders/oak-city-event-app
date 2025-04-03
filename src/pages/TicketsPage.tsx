@@ -13,8 +13,11 @@ import {
   IonPage,
   IonRefresher,
   IonRefresherContent,
+  IonCardSubtitle,
+  IonList,
+  IonItem,
 } from '@ionic/react';
-import { calendar, location, person, ticket } from 'ionicons/icons';
+import { calendar, person, ticket, ticketOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
 import styles from './TicketsPage.module.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
@@ -29,6 +32,7 @@ interface FireDBTickets {
   ['Display Name']: string;
   ['Order Number']: string;
   ['Created On']: string;
+  ['Name']: string;
 }
 
 interface Ticket {
@@ -39,6 +43,7 @@ interface Ticket {
   purchaseDate: string;
   quantity: number;
   ticketName: string;
+  title: string;
 }
 
 const TicketsPage: React.FC = () => {
@@ -59,6 +64,7 @@ const TicketsPage: React.FC = () => {
   const tickets = ticketData
     ? (ticketData.map((ticket) => ({
         id: ticket.id,
+        title: ticket['Product Name'],
         type: ticket['Product Name'].toLocaleLowerCase().includes('vip')
           ? 'vip'
           : 'general',
@@ -66,7 +72,9 @@ const TicketsPage: React.FC = () => {
         userId: user?.uid || '',
         purchaseDate: ticket['Created On'],
         quantity: Number(ticket['Quantity']) || 0,
-        ticketName: ticket['Display Name'],
+        ticketName: ticket['Display Name']
+          ? ticket['Display Name']
+          : ticket['Name'],
       })) as Ticket[])
     : [];
 
@@ -161,12 +169,25 @@ const TicketsPage: React.FC = () => {
           </IonCard>
         ) : (
           <div className={styles.ticketList}>
+            <IonCard className="ion-padding">
+              <IonCardSubtitle>Your tickets are below</IonCardSubtitle>
+              <IonList lines={'none'}>
+                <IonItem>
+                  <IonIcon
+                    aria-hidden="true"
+                    icon={ticketOutline}
+                    slot="start"
+                  />
+                  <IonLabel>Showing tickets linked to {user.email}</IonLabel>
+                </IonItem>
+              </IonList>
+            </IonCard>
             {tickets.map((ticket) => {
               return (
                 <IonCard key={ticket.id}>
                   <IonCardContent>
                     <div className={styles.ticketHeader}>
-                      <h3 className={styles.ticketTitle}>{ticket.type}</h3>
+                      <h3 className={styles.ticketTitle}>{ticket.title}</h3>
                       <IonBadge
                         color={ticket.type === 'vip' ? 'warning' : 'primary'}
                         className={styles.badge}
@@ -189,6 +210,13 @@ const TicketsPage: React.FC = () => {
                       <div className={styles.infoRow}>
                         <IonIcon icon={person} className={styles.infoIcon} />
                         {ticket.ticketName}
+                      </div>
+                      <div className={styles.infoRow}>
+                        <IonIcon
+                          icon={ticketOutline}
+                          className={styles.infoIcon}
+                        />
+                        {ticket.orderId}
                       </div>
                     </div>
                     {ticket.quantity > 1 && (
