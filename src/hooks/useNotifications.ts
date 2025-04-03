@@ -30,7 +30,6 @@ const defaultNotificationSettings: Record<string, NotificationSetting> = {
 };
 
 interface UseNotificationsReturn {
-  pushToken: string | null;
   notifications: PushNotificationSchema[];
   notificationPermission: PermissionState;
   removeNotification: (notification: PushNotificationSchema) => void;
@@ -211,7 +210,6 @@ const useNotifications = (): UseNotificationsReturn => {
   }, []);
 
   return {
-    pushToken,
     notifications,
     notificationPermission,
     removeNotification,
