@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
   FirebaseAuthentication,
   User,
@@ -10,6 +16,7 @@ interface AuthContextType {
   error: string | null;
   signOut: () => Promise<void>;
   clearError: () => void;
+  refreshAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,12 +28,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const refreshAuth = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Get current user from Firebase
+      await FirebaseAuthentication.reload();
+      const result = await FirebaseAuthentication.getCurrentUser();
+      setUser(result.user ?? null);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Failed to refresh authentication state'
+      );
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     // Listen for authentication state changes
     const setupAuthListener = async () => {
       try {
         FirebaseAuthentication.addListener('authStateChange', (state) => {
           try {
+            console.log('Auth state changed:', state);
             setUser(state.user ?? null);
             setLoading(false);
             setError(null);
@@ -86,7 +115,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, signOut, clearError }}>
+    <AuthContext.Provider
+      value={{ user, loading, error, signOut, clearError, refreshAuth }}
+    >
       {children}
     </AuthContext.Provider>
   );
