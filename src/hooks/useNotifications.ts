@@ -10,6 +10,7 @@ import {
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { updateTopicSubscription } from '../utils/notificationUtils';
+import { PermissionState } from '@capacitor/core';
 
 export const PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY =
   'push_notification_token';
@@ -40,11 +41,8 @@ const useNotifications = (): UseNotificationsReturn => {
     []
   );
 
-  // TODO
   const [notificationPermission, setNotificationPermission] =
     useState<PermissionState>('prompt');
-  // TODO
-  const [pushToken, setPushToken] = useState<string | null>(null);
 
   const removeNotification = (notification: PushNotificationSchema) => {
     setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
@@ -84,6 +82,7 @@ const useNotifications = (): UseNotificationsReturn => {
       } else {
         console.error('Push notification permission denied');
       }
+      setNotificationPermission(result.receive);
     });
 
     PushNotifications.addListener('registration', async (token: Token) => {
