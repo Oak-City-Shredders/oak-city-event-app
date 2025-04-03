@@ -105,11 +105,11 @@ const AnalyticsTracker = () => {
 const App: React.FC = () => {
   const { notifications, removeNotification, notificationPermission } =
     useNotifications();
+
   useEffect(() => {
     SplashScreen.hide();
   }, []);
 
-  //const history = useHistory();
   const router = useIonRouter();
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
@@ -125,15 +125,14 @@ const App: React.FC = () => {
         const key = url.searchParams.get('key'); // Get key (abc)
         console.log('found a quest');
         console.log('history.push ', `/quests/${questId}?key=${key}`);
-        //history.push(`/quests/${questId}?key=${key}`);
         router.push(`/quests/${questId}`);
         console.log('pushed');
       }
     });
 
     return () => {
-      // Clean up the listener when the component is unmounted
       CapacitorApp.removeAllListeners();
+      console.log('App cleanup - all listeners removed');
     };
   }, [router]);
 

@@ -188,30 +188,6 @@ const Home: React.FC<HomeProps> = ({
           </IonRefresher>
           <IonGrid>
             <IonRow>
-              {/* active notifications */}
-              {/* {notificationPermission !== 'granted' &&
-                Capacitor.isNativePlatform() && (
-                  <IonCol
-                    size={colSize}
-                    sizeLg={colSizeLg}
-                    key={'notifications_disabled'}
-                  >
-                    <IonCard className="ion-padding">
-                      <IonList>
-                        <IonItem>
-                          <IonIcon icon={notificationsOff} slot="start" />
-                          <IonLabel>
-                            <h2>Notifications Disabled</h2>
-                            <p>
-                              Enable notifcations in your system settings to
-                              receive updates.
-                            </p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonList>
-                    </IonCard>
-                  </IonCol>
-                )} */}
               {notifications.length > 0 && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
                   <IonCard className="ion-padding">

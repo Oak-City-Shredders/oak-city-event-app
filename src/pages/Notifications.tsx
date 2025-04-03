@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  RefresherEventDetail,
   IonRefresher,
   IonRefresherContent,
   IonPage,
@@ -10,6 +9,8 @@ import {
   IonLabel,
   IonCard,
   IonCardContent,
+  IonIcon,
+  IonCardSubtitle,
 } from '@ionic/react';
 import { PushNotificationSchema } from '@capacitor/push-notifications';
 import useFireStoreDB from '../hooks/useFireStoreDB';
@@ -19,6 +20,13 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import PageHeader from '../components/PageHeader';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import { notificationsOff } from 'ionicons/icons';
+import { Capacitor } from '@capacitor/core';
+import {
+  NativeSettings,
+  AndroidSettings,
+  IOSSettings,
+} from 'capacitor-native-settings';
 
 interface NotificationsPageProps {
   notifications: PushNotificationSchema[];
@@ -90,6 +98,18 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
 
   const handleRefresh = useRefreshHandler(refetch);
 
+  const checkAndOpenSettings = async () => {
+    try {
+      await NativeSettings.open({
+        optionAndroid: AndroidSettings.ApplicationDetails,
+        optionIOS: IOSSettings.App,
+      });
+      console.log('Opened app settings to enable notifications');
+    } catch (error) {
+      console.error('Error opening settings:', error);
+    }
+  };
+
   return (
     <IonPage>
       <PageHeader title="Notifications" />
@@ -97,20 +117,32 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
+        {/* active notifications */}
+        {notificationPermission !== 'granted' &&
+          Capacitor.isNativePlatform() && (
+            <IonCard className="ion-padding">
+              <IonCardSubtitle>Notifications Disabled</IonCardSubtitle>
+              <IonList lines={'none'}>
+                <IonItem onClick={() => checkAndOpenSettings()}>
+                  <IonIcon
+                    aria-hidden="true"
+                    icon={notificationsOff}
+                    slot="start"
+                  />
+                  <IonLabel>
+                    You have notifications disabled. Click here to open your
+                    system settings and enable notifications.
+                  </IonLabel>
+                </IonItem>
+              </IonList>
+            </IonCard>
+          )}
         {loading ? (
           <p>Loading notifications...</p>
         ) : error ? (
           <p>Error loading notifications</p>
         ) : sheetNotifications.length > 0 ? (
           <>
-            {notificationPermission === 'denied' && (
-              <IonCard>
-                <IonCardContent>
-                  You have not granted permission to receive push notifications.
-                  Please enable them in your device settings.
-                </IonCardContent>
-              </IonCard>
-            )}
             <IonList>
               {sheetNotifications.map((notification, index) => (
                 <IonItem key={index}>
