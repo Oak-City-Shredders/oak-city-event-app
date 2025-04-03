@@ -17,6 +17,8 @@ import {
 
 import useSponsors from '../hooks/useSponsors';
 import PageHeader from '../components/PageHeader';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ErrorMessage from '../components/ErrorMessage';
 
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
@@ -35,71 +37,77 @@ const Team: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
-        {loading ? (
-          <p>Loading food trucks...</p>
-        ) : error ? (
-          <p>Error loading food trucks</p>
-        ) : (
-          <>
-            <IonGrid>
-              <IonRow className="ion-align-items-stretch">
-                {sponsors.map((sponsor, index: number) => (
-                  <IonCol
-                    sizeXs="6"
-                    sizeMd="4"
-                    sizeLg="3"
-                    key={index}
-                    style={{ padding: '8px' }}
-                  >
-                    <IonCard
+        <div>
+          {loading ? (
+            <LoadingSpinner />
+          ) : error ? (
+            <ErrorMessage message="Error loading the sponsors" />
+          ) : (
+            <>
+              <IonGrid>
+                <IonRow className="ion-align-items-stretch">
+                  {sponsors.map((sponsor, index: number) => (
+                    <IonCol
+                      sizeXs="6"
+                      sizeMd="4"
+                      sizeLg="3"
                       key={index}
-                      onClick={() => handleCardClick(sponsor.websiteLink)}
-                      style={{
-                        margin: '0',
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                      }}
+                      style={{ padding: '8px' }}
                     >
-                      <div style={{ position: 'relative', paddingTop: '75%' }}>
-                        <IonImg
-                          src={sponsor.imageLink}
-                          alt={sponsor.name}
-                          style={{
-                            backgroundColor: '#e6e6e6', // Very light gray, almost white
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'contain',
-                          }}
-                        />
-                      </div>
-                      <IonCardHeader>
-                        <IonCardTitle style={{ fontSize: '1.2em' }}>
-                          {sponsor.name}
-                        </IonCardTitle>
-                      </IonCardHeader>
-                      <div className="ion-hide-sm-down">
-                        <IonCardContent
-                          style={{
-                            flexGrow: 1,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'flex-start',
-                          }}
+                      <IonCard
+                        key={index}
+                        onClick={() => handleCardClick(sponsor.websiteLink)}
+                        style={{
+                          margin: '0',
+                          height: '100%',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        <div
+                          style={{ position: 'relative', paddingTop: '75%' }}
                         >
-                          {sponsor.description && <p>{sponsor.description}</p>}
-                        </IonCardContent>
-                      </div>
-                    </IonCard>
-                  </IonCol>
-                ))}
-              </IonRow>
-            </IonGrid>
-          </>
-        )}
+                          <IonImg
+                            src={sponsor.imageLink}
+                            alt={sponsor.name}
+                            style={{
+                              backgroundColor: '#e6e6e6', // Very light gray, almost white
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain',
+                            }}
+                          />
+                        </div>
+                        <IonCardHeader>
+                          <IonCardTitle style={{ fontSize: '1.2em' }}>
+                            {sponsor.name}
+                          </IonCardTitle>
+                        </IonCardHeader>
+                        <div className="ion-hide-sm-down">
+                          <IonCardContent
+                            style={{
+                              flexGrow: 1,
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'flex-start',
+                            }}
+                          >
+                            {sponsor.description && (
+                              <p>{sponsor.description}</p>
+                            )}
+                          </IonCardContent>
+                        </div>
+                      </IonCard>
+                    </IonCol>
+                  ))}
+                </IonRow>
+              </IonGrid>
+            </>
+          )}
+        </div>
       </IonContent>
     </IonPage>
   );
