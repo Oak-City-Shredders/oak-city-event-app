@@ -110,7 +110,6 @@ const App: React.FC = () => {
     SplashScreen.hide();
   }, []);
 
-  //const history = useHistory();
   const router = useIonRouter();
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
@@ -126,14 +125,12 @@ const App: React.FC = () => {
         const key = url.searchParams.get('key'); // Get key (abc)
         console.log('found a quest');
         console.log('history.push ', `/quests/${questId}?key=${key}`);
-        //history.push(`/quests/${questId}?key=${key}`);
         router.push(`/quests/${questId}`);
         console.log('pushed');
       }
     });
 
     return () => {
-      // Clean up the listener when the component is unmounted
       CapacitorApp.removeAllListeners();
     };
   }, [router]);

@@ -102,33 +102,3 @@ const FireBaseAppCheckPage: React.FC = () => {
 };
 
 export default FireBaseAppCheckPage;
-
-/*import { FirebaseAppCheck } from '@capacitor-firebase/app-check';
-
-const initialize = async () => {
-  await FirebaseAppCheck.initialize({
-    provider: undefined,
-  });
-};
-
-const getToken = async () => {
-  const token = FirebaseAppCheck.getToken({
-    forceRefresh: false,
-  });
-  console.log('Token: ', token);
-  return token;
-};
-
-const setTokenAutoRefreshEnabled = async () => {
-  await FirebaseAppCheck.setTokenAutoRefreshEnabled({ enabled: true });
-};
-
-const addTokenChangedListener = async () => {
-  await FirebaseAppCheck.addListener('tokenChanged', (event) => {
-    console.log('tokenChanged', { event });
-  });
-};
-
-const removeAllListeners = async () => {
-  await FirebaseAppCheck.removeAllListeners();
-};*/
