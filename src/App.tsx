@@ -114,6 +114,10 @@ const App: React.FC = () => {
   useEffect(() => {
     CapacitorApp.addListener('appUrlOpen', (event) => {
       const url = new URL(event.url);
+      const pathname = url.pathname;
+      if (pathname === '/tickets') {
+        router.push('/tickets');
+      }
       console.log('deep link2: ', url);
       console.log('deep link host name: ', url.host);
       if (url.host === 'quests') {
