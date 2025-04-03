@@ -298,7 +298,9 @@ const Raceing: React.FC = () => {
                             onClick={() => navigateToRacerProfile(racer.id)}
                           >
                             <div className="racer-item-content">
-                              <span className="racer-name">{racer.name}</span>
+                              <span className="racer-name">
+                                {racer.nickName ? racer.nickName : racer.name}
+                              </span>
                               {racer.team && (
                                 <>
                                   <span className="team-separator">•</span>

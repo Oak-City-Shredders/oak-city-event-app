@@ -105,6 +105,7 @@ const AnalyticsTracker = () => {
 const App: React.FC = () => {
   const { notifications, removeNotification, notificationPermission } =
     useNotifications();
+
   useEffect(() => {
     SplashScreen.hide();
   }, []);
