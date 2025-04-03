@@ -121,7 +121,7 @@ function useFireStoreDB<T>(
       ? now - cache.current.timestamp > STALE_TIME
       : true;
 
-    if ((!cache.current.data || isStale) && isMounted && !loading) {
+    if ((!cache.current.data || isStale) && isMounted && !loading && !error) {
       fetchData();
     } else if (cache.current.data) {
       setData(cache.current.data); // Use fresh cached data
@@ -149,7 +149,7 @@ function useFireStoreDB<T>(
       isMounted = false;
       App.removeAllListeners();
     };
-  }, [fetchData]);
+  }, [fetchData, loading, error]);
 
   // Refetch forces a new fetch, ignoring cache
   const refetch = useCallback(() => fetchData(true), [fetchData]);
