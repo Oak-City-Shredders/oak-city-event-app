@@ -1,8 +1,8 @@
 // React & React Router
 import { useEffect } from 'react';
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
-import { useIonRouter } from '@ionic/react';
+import { IonContent, IonPage, useIonRouter } from '@ionic/react';
 
 // Capacitor
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -103,10 +103,106 @@ const AnalyticsTracker = () => {
   return null;
 };
 
-const App: React.FC = () => {
+const TabsLayout: React.FC = () => {
   const { notifications, removeNotification, notificationPermission } =
     useNotifications();
 
+  const location = useLocation();
+
+  // List of routes that should show the tab bar
+  const showTabs = ['/home', '/schedule', '/map'].includes(location.pathname);
+
+  return (
+    <IonTabs>
+      <IonRouterOutlet>
+        <Route path="/racer-profile/:racerId" exact={true}>
+          <RacerProfile />
+        </Route>
+        <Route path="/about" exact={true}>
+          <About />
+        </Route>
+        <Route path="/drip-schedule" exact={true}>
+          <DripSchedule />
+        </Route>
+        <Route path="/app-check" exact={true}>
+          <FireBaseAppCheckPage />
+        </Route>
+        <Route path="/emergency-services" exact={true}>
+          <EmergencyServices />
+        </Route>
+        <Route path="/food-trucks" exact={true}>
+          <FoodTrucks />
+        </Route>
+        <Route path="/home" exact={true}>
+          <Home
+            notifications={notifications}
+            removeNotification={removeNotification}
+            notificationPermission={notificationPermission}
+          />
+        </Route>
+        <Route path="/login" exact={true} component={Login} />
+        <Route path="/map/:locationName?" exact={true}>
+          <MapPage />
+        </Route>
+        <Route path="/notifications" exact={true}>
+          <Notifications notifications={notifications} />
+        </Route>
+        <Route path="/quests/:questId" exact={true}>
+          <QuestsPage />
+        </Route>
+        <Route path="/quests" exact={true}>
+          <QuestsPage />
+        </Route>
+        <Route path="/tickets" exact={true}>
+          <TicketsPage />
+        </Route>
+        <Route path="/race-information" exact={true}>
+          <Raceing />
+        </Route>
+        <Route path="/raffles-giveaways" exact={true}>
+          <Raffles />
+        </Route>
+        <Route path="/schedule" exact={true}>
+          <SchedulePage />
+        </Route>
+        <Route path="/scavenger-hunt" exact={true}>
+          <ScavengerHunt />
+        </Route>
+        <Route path="/trick-comp" exact={true}>
+          <TrickCompPage />
+        </Route>
+        <Route path="/team" exact={true}>
+          <Team />
+        </Route>
+        <Route path="/sponsors" exact={true}>
+          <Sponsors />
+        </Route>
+        <Route path="/" exact={true}>
+          <Redirect to="/home" />
+        </Route>
+        <Route>
+          <NotFound />
+        </Route>
+      </IonRouterOutlet>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="home" href="/home">
+          <IonIcon aria-hidden="true" icon={home} />
+          <IonLabel>Home</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="map" href="/map">
+          <IonIcon aria-hidden="true" icon={map} />
+          <IonLabel>Map</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="schedule" href="/schedule">
+          <IonIcon aria-hidden="true" icon={calendar} />
+          <IonLabel>Schedule</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
+    </IonTabs>
+  );
+};
+
+const App: React.FC = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -137,97 +233,93 @@ const App: React.FC = () => {
     };
   }, [router]);
 
+  // Create an EmailVerified component
+  const EmailVerified = () => (
+    <IonPage>
+      <IonContent>
+        <div style={{ padding: '20px', textAlign: 'center' }}>
+          <h2>Email Verification Successful!</h2>
+          <p>Thank you for verifying your email address.</p>
+          <IonBadge color="success">Verified</IonBadge>
+        </div>
+      </IonContent>
+    </IonPage>
+  );
+
   return (
     <AuthProvider>
       <IonApp>
         <IonReactRouter>
           <AnalyticsTracker />
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route path="/racer-profile/:racerId">
-                <RacerProfile />
+
+          {/* Main router outlet - contains both standalone and tabbed routes */}
+          <IonRouterOutlet>
+            <Switch>
+              {/* Standalone routes without tabs */}
+              <Route path="/email-verified" exact>
+                <EmailVerified />
               </Route>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/drip-schedule">
-                <DripSchedule />
-              </Route>
-              <Route path="/app-check">
-                <FireBaseAppCheckPage />
-              </Route>
-              <Route path="/emergency-services">
-                <EmergencyServices />
-              </Route>
-              <Route path="/food-trucks">
-                <FoodTrucks />
-              </Route>
-              <Route exact path="/home">
-                <Home
-                  notifications={notifications}
-                  removeNotification={removeNotification}
-                  notificationPermission={notificationPermission}
-                />
-              </Route>
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/map/:locationName?">
-                <MapPage />
-              </Route>
-              <Route path="/notifications">
-                <Notifications notifications={notifications} />
-              </Route>
-              <Route path="/quests/:questId">
-                <QuestsPage />
-              </Route>
-              <Route path="/quests">
-                <QuestsPage />
-              </Route>
-              <Route path="/tickets">
-                <TicketsPage />
-              </Route>
-              <Route path="/race-information">
-                <Raceing />
-              </Route>
-              <Route path="/raffles-giveaways">
-                <Raffles />
-              </Route>
-              <Route path="/schedule">
-                <SchedulePage />
-              </Route>
-              <Route path="/scavenger-hunt">
-                <ScavengerHunt />
-              </Route>
-              <Route path="/trick-comp">
-                <TrickCompPage />
-              </Route>
-              <Route path="/team">
-                <Team />
-              </Route>
-              <Route path="/sponsors">
-                <Sponsors />
-              </Route>
-              <Route exact path="/">
-                <Redirect to="/home" />
-              </Route>
-              <Route>
-                <NotFound />
-              </Route>
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
-                <IonIcon aria-hidden="true" icon={home} />
-                <IonLabel>Home</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="map" href="/map">
-                <IonIcon aria-hidden="true" icon={map} />
-                <IonLabel>Map</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="schedule" href="/schedule">
-                <IonIcon aria-hidden="true" icon={calendar} />
-                <IonLabel>Schedule</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
+
+              <Route
+                path="/racer-profile/:racerId"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/about" exact={true} component={TabsLayout} />
+              <Route
+                path="/drip-schedule"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/app-check" exact={true} component={TabsLayout} />
+              <Route
+                path="/emergency-services"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/food-trucks" exact={true} component={TabsLayout} />
+              <Route path="/home" exact={true} component={TabsLayout} />
+              <Route path="/login" exact={true} component={TabsLayout} />
+              <Route
+                path="/map/:locationName?"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/notifications"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/quests/:questId"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/quests" exact={true} component={TabsLayout} />
+              <Route path="/tickets" exact={true} component={TabsLayout} />
+              <Route
+                path="/race-information"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/raffles-giveaways"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/schedule" exact={true} component={TabsLayout} />
+              <Route
+                path="/scavenger-hunt"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/trick-comp" exact={true} component={TabsLayout} />
+              <Route path="/team" exact={true} component={TabsLayout} />
+              <Route path="/sponsors" exact={true} component={TabsLayout} />
+              <Redirect exact from="/" to="/home" />
+              <Route component={NotFound} />
+            </Switch>
+          </IonRouterOutlet>
         </IonReactRouter>
       </IonApp>
     </AuthProvider>

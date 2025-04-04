@@ -79,7 +79,7 @@ const About: React.FC = () => {
               Kenward Pope, Mark Grzyb
             </p>
             <p>
-              <b>Photos:</b> Special thanks to Cori @ArmorDilloz and Alex
+              <b>Photos:</b> Special thanks to Cory @ArmorDilloz and Alex
               Mononen for their amazing photos
             </p>
           </IonCardContent>
