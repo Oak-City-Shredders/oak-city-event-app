@@ -19,6 +19,7 @@ import useSponsors from '../hooks/useSponsors';
 import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
@@ -26,10 +27,7 @@ const Team: React.FC = () => {
     window.open(route, '_blank');
   };
 
-  const handleRefresh = async (event: CustomEvent<RefresherEventDetail>) => {
-    await refetch(); // Call the refetch function from firebase db
-    event.detail.complete(); // Notify Ionic that the refresh is complete
-  };
+  const handleRefresh = useRefreshHandler(refetch);
   return (
     <IonPage>
       <PageHeader title="Sponsors" />
