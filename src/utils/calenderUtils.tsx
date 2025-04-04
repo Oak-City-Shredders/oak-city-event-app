@@ -62,16 +62,13 @@ export const groupEventsByDays = (
     const startDate = event.start.date || event.start.dateTime.split('T')[0];
     if (!grouped[startDate]) grouped[startDate] = [];
 
-    const formattedTime = new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }).format(new Date(event.start.dateTime || event.start.date));
+    const formattedStartTime = formatEventTime(event.start);
+    const formattedEndTime = formatEventTime(event.end);
 
     grouped[startDate].push({
       title: event.summary || '',
-      startTime: formattedTime,
-      endTime: event.end.dateTime || event.end.date,
+      startTime: formattedStartTime,
+      endTime: formattedEndTime,
       description: event.description || '',
       location: event.location || '',
       icon: getIcon(event.summary),
@@ -112,3 +109,10 @@ export const getFormattedDate = (dateString: string): string => {
 export const isToday = (dateString: string): boolean => {
   return new Date().toISOString().split('T')[0] === dateString;
 };
+
+const formatEventTime = (eventTime: any) =>
+  new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }).format(new Date(eventTime.dateTime || eventTime.date));

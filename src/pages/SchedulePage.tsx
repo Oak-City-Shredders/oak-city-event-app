@@ -85,7 +85,9 @@ const SchedulePage: React.FC = () => {
                       >
                         {item.icon}
                         <IonLabel>
-                          <h2>{item.startTime}</h2>
+                          <h2>
+                            {item.startTime} - {item.endTime}
+                          </h2>
                           <div>
                             <strong>{item.title}</strong>
                             <div style={{ whiteSpace: 'pre-wrap' }}>
