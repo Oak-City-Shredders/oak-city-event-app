@@ -12,17 +12,81 @@ import {
   useIonRouter,
   IonIcon,
 } from '@ionic/react';
-import { LayoutItem } from '../data/homePageLayout';
-import { ticket } from 'ionicons/icons';
 
-interface HomePageMenuProps {
-  homePageLayout: LayoutItem[];
-}
+import {
+  calendar,
+  flag,
+  ticket,
+  trophy,
+  search,
+  compass,
+  shirt,
+  people,
+  fastFood,
+  help,
+  information,
+} from 'ionicons/icons';
 
-const HomePageMenu: React.FC<HomePageMenuProps> = ({ homePageLayout }) => {
+import styles from './HomePageMenu.module.css';
+
+const HomePageMenu: React.FC = () => {
   const router = useIonRouter();
+
+  const menuItems = [
+    {
+      label: 'Tickets',
+      route: '/tickets',
+      icon: ticket,
+    },
+    {
+      label: 'Racing',
+      route: '/race-information',
+      icon: flag,
+    },
+    {
+      label: 'Trick Comp',
+      route: '/trick-comp',
+      icon: trophy,
+    },
+    {
+      label: 'Scavenger Hunt',
+      route: '/scavenger-hunt',
+      icon: search,
+    },
+    {
+      label: 'Side Quests',
+      route: '/quests',
+      icon: compass,
+    },
+    {
+      label: 'Drip Schedule',
+      route: '/drip-schedule',
+      icon: shirt,
+    },
+    {
+      label: 'Sponsors',
+      route: '/sponsors',
+      icon: people,
+    },
+    {
+      label: 'Food Trucks',
+      route: '/food-trucks',
+      icon: fastFood,
+    },
+    {
+      label: 'Get Help',
+      route: '/emergency-services',
+      icon: help,
+    },
+    {
+      label: 'About',
+      route: '/about',
+      icon: information,
+    },
+  ];
+
   const handleMenuItemClick = (route: string) => {
-    router.push(route, 'forward'); // "forward" for a page transition effect
+    router.push(route, 'forward');
   };
 
   return (
@@ -34,84 +98,20 @@ const HomePageMenu: React.FC<HomePageMenuProps> = ({ homePageLayout }) => {
       </IonHeader>
       <IonContent>
         <IonList>
-          <IonMenuToggle key={homePageLayout.length + 7}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/tickets');
-              }}
-            >
-              <IonLabel>
-                <IonIcon icon={ticket} />
-                &nbsp;Tickets
-              </IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle key={homePageLayout.length + 2}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/schedule');
-              }}
-            >
-              <IonLabel>Schedule</IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle key={homePageLayout.length + 1}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/race-information');
-              }}
-            >
-              <IonLabel>Racing</IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          {homePageLayout.map((item, index) => (
+          {menuItems.map((item, index) => (
             <IonMenuToggle key={index}>
               <IonItem
                 button
-                key={item.route}
-                onClick={() => {
-                  handleMenuItemClick(item.route);
-                }}
+                onClick={() => handleMenuItemClick(item.route)}
+                className={styles.item}
               >
-                <IonLabel>{item.title}</IonLabel>
+                <IonLabel>
+                  <IonIcon icon={item.icon} className={styles.menuItemIcon} /> 
+                  {item.label}
+                </IonLabel>
               </IonItem>
             </IonMenuToggle>
           ))}
-        </IonList>
-        <IonList>
-          <IonMenuToggle key={homePageLayout.length + 5}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/food-trucks');
-              }}
-            >
-              <IonLabel>Food Trucks</IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle key={homePageLayout.length + 3}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/emergency-services');
-              }}
-            >
-              <IonLabel>Get Help</IonLabel>
-            </IonItem>
-          </IonMenuToggle>
-          <IonMenuToggle key={homePageLayout.length + 4}>
-            <IonItem
-              button
-              onClick={() => {
-                handleMenuItemClick('/about');
-              }}
-            >
-              <IonLabel>About</IonLabel>
-            </IonItem>
-          </IonMenuToggle>
         </IonList>
       </IonContent>
     </IonMenu>
