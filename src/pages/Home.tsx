@@ -146,7 +146,7 @@ const Home: React.FC<HomeProps> = ({
 
   return (
     <>
-      <HomePageMenu homePageLayout={homePageLayout}></HomePageMenu>
+      <HomePageMenu />
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
