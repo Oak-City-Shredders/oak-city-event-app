@@ -45,6 +45,7 @@ import SchedulePage from './pages/SchedulePage';
 import TrickCompPage from './pages/TrickComp';
 import Team from './pages/Team';
 import Sponsors from './pages/Sponsors';
+import NotFound from './components/NotFound';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
@@ -207,6 +208,9 @@ const App: React.FC = () => {
               </Route>
               <Route exact path="/">
                 <Redirect to="/home" />
+              </Route>
+              <Route>
+                <NotFound />
               </Route>
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
