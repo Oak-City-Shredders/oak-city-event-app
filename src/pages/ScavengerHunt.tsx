@@ -16,6 +16,8 @@ import {
   IonSegment,
   IonSegmentButton,
   IonIcon,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/react';
 import { locationOutline, colorPaletteOutline } from 'ionicons/icons';
 
@@ -23,6 +25,7 @@ import PageHeader from '../components/PageHeader';
 import useScavengerHunt from '../hooks/useScavengerHunt';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
+import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const ScavengerHunt: React.FC = () => {
   const { scavengerHunt, loading, error, refetch } = useScavengerHunt();
@@ -30,10 +33,14 @@ const ScavengerHunt: React.FC = () => {
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank');
   };
+  const handleRefresh = useRefreshHandler(refetch);
   return (
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
       <IonContent>
+        <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
+          <IonRefresherContent />
+        </IonRefresher>
         {loading ? (
           <LoadingSpinner />
         ) : error ? (
