@@ -11,6 +11,7 @@ import {
   IonList,
   IonCard,
   IonSkeletonText,
+  useIonRouter,
 } from '@ionic/react';
 import { motion } from 'framer-motion';
 import './StokeMeter.css';
@@ -33,6 +34,7 @@ interface StokeItem {
 }
 
 export default function StokeMeter() {
+  const router = useIonRouter();
   const { data, loading, error, refetch } =
     useFireStoreDB<FireStoreStokeItem>('StokeMeter');
 
@@ -104,6 +106,17 @@ export default function StokeMeter() {
 
   const progress = completedCount / stokeItemsUpdatedWithLocal.length;
 
+  const handleLinkClick = (link: string) => {
+    // Check if the link is an external URL
+    if (link.startsWith('http://') || link.startsWith('https://')) {
+      // Open external link in a new tab/window
+      window.open(link, '_blank', 'noopener,noreferrer');
+    } else {
+      // Treat it as an internal route and navigate within the app
+      router.push(link); // Adjust this based on your routing system
+    }
+  };
+
   return loading ? (
     <IonCard className="stoke-meter">
       <IonCardHeader>
@@ -170,6 +183,10 @@ export default function StokeMeter() {
                       {item.link ? (
                         <a
                           href={item.link}
+                          onClick={(e) => {
+                            e.preventDefault(); // Prevent default <a> behavior
+                            handleLinkClick(item.link || ''); // Handle the navigation
+                          }}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ whiteSpace: 'nowrap' }}
