@@ -1,5 +1,5 @@
 import './Home.css';
-import CardLayout from '../components/CardLayout';
+//import CardLayout from '../components/CardLayout';
 import { homePageLayout } from '../data/homePageLayout';
 import {
   IonContent,
@@ -244,10 +244,10 @@ const Home: React.FC<HomeProps> = ({
               </IonCol>
             </IonRow>
           </IonGrid>
-          <CardLayout
+          {/* <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
-          />
+          /> */}
           <IonGrid>
             <IonRow>
               {dynamicContent.map(
