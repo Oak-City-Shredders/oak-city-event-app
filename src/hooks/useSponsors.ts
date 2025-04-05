@@ -32,8 +32,9 @@ const useSponsors = () => {
       }));
 
     return mappedData.sort((a, b) => {
-      const orderA = parseInt(a.order, 10);
-      const orderB = parseInt(b.order, 10);
+      // Convert to numbers for reliable numeric comparison
+      const orderA = parseInt(a.order) || 0;
+      const orderB = parseInt(b.order) || 0;
       return orderA - orderB;
     });
   }, [data]);
