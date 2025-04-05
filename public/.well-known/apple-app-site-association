@@ -8,7 +8,9 @@
                     "/tickets",
                     "/tickets/*",
                     "/email-verified",
-                    "/email-verified/*"
+                    "/email-verified/*",
+                    "/",
+                    "/*"
                 ]
             }
         ]
