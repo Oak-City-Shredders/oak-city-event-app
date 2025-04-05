@@ -13,6 +13,7 @@
   flex-direction: row;
   display: flex;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 .event-card-header {
