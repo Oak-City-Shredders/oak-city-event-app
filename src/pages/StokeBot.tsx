@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   IonPage,
   IonContent,
@@ -9,7 +9,7 @@ import {
   IonSpinner,
 } from '@ionic/react';
 import { send } from 'ionicons/icons';
-import styles from './StokeBot.module.css'; // Import your CSS module
+import styles from './StokeBot.module.css';
 
 import PageHeader from '../components/PageHeader';
 
@@ -21,13 +21,29 @@ interface Message {
 const StokeBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: "Hello Squirrel! I'm StokeBot. How can I help build your stoke today?  I know a lot about the Oak City Shredders community, and I'm here to help you find events, activities, and resources to keep your stoke high!",
+      text: "Hello Squirrel! I'm StokeBot. How can I help build your stoke today? I know a lot about the Oak City Shredders community, and I'm here to help you find events, activities, and resources to keep your stoke high!",
       isUser: false,
     },
   ]);
   const [newMessage, setNewMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
+
+  // Add a ref for the content component
+  const contentRef = useRef<HTMLIonContentElement>(null);
+
+  // Add an effect to scroll to bottom when messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Function to scroll to the bottom of the chat
+  const scrollToBottom = () => {
+    console.log('scrollToBottom called');
+    if (contentRef.current) {
+      contentRef.current.scrollToBottom(300);
+    }
+  };
 
   const sendMessage = async () => {
     if (newMessage.trim()) {
@@ -89,7 +105,7 @@ const StokeBot: React.FC = () => {
     <IonPage className={styles.container}>
       <PageHeader title="StokeBot" />
 
-      <IonContent>
+      <IonContent scrollEvents={true} ref={contentRef}>
         <div className={styles.messageList}>
           {messages.map((message, index) => (
             <div

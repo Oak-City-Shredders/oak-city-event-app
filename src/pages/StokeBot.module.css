@@ -4,7 +4,7 @@
 
 .messageList {
   padding: 10px;
-  height: calc(100% - 60px);
+  min-height: calc(100% - 60px);
   overflow-y: auto;
 }
 
