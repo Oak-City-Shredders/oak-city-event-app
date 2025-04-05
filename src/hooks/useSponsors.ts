@@ -12,6 +12,8 @@ interface FireDBSponsor {
   website_link: string;
 }
 
+const tierPriority = { title: 1, platinum: 2, gold: 3, silver: 4 };
+
 const useSponsors = () => {
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBSponsor>('Sponsors');
@@ -32,7 +34,20 @@ const useSponsors = () => {
       }));
 
     return mappedData.sort((a, b) => {
-      // Convert to numbers for reliable numeric comparison
+      const tierA =
+        tierPriority[
+          a.sponsorshipTier.toLowerCase() as keyof typeof tierPriority
+        ] || 5;
+      const tierB =
+        tierPriority[
+          b.sponsorshipTier.toLowerCase() as keyof typeof tierPriority
+        ] || 5;
+
+      if (tierA !== tierB) {
+        return tierA - tierB;
+      }
+
+      // If tiers are the same, sort by order
       const orderA = parseInt(a.order) || 0;
       const orderB = parseInt(b.order) || 0;
       return orderA - orderB;
