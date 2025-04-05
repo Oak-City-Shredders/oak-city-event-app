@@ -146,6 +146,7 @@ const Home: React.FC<HomeProps> = ({
 
   return (
     <>
+      <div id="overlay-root" />
       <HomePageMenu />
       <IonPage id="main-content">
         <IonHeader translucent={true}>
