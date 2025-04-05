@@ -83,7 +83,7 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
           className="event-bar-and-summary"
           onClick={(e) => {
             e.stopPropagation();
-            router.push(`/schedule/up-next`);
+            router.push(`/schedule`);
           }}
         >
           <div className="event-vertical-bar"></div>

@@ -159,7 +159,11 @@ const Login: React.FC = () => {
       setError('Verification email sent! Check your inbox.');
     } catch (error: any) {
       console.error('Failed to resend verification email', error);
-      setError(error.code || 'Resend verification failed.');
+      setError(
+        (error.code === 'auth/too-many-requests'
+          ? 'Verification email already sent.  Wait a bit and try again if your email does not arrive in a few minutes'
+          : error.code) || 'Resend verification failed.'
+      );
     }
   };
 

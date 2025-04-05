@@ -56,6 +56,7 @@ export const logoutUser = async () => {
     console.log('User signed out');
   } catch (error) {
     console.error('Error signing out:', error);
+    throw error;
   }
 };
 
@@ -80,5 +81,6 @@ export const sendEmailVerification = async () => {
     console.log('send email verification');
   } catch (error) {
     console.error('Error sending email verificaiton:', error);
+    throw error;
   }
 };
