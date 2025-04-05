@@ -9,6 +9,7 @@ import {
   pizza,
   beer,
   film,
+  speedometer,
 } from 'ionicons/icons';
 import { GoogleCalendarEvent } from '../hooks/useGoogleCalendar';
 
@@ -81,6 +82,14 @@ const ICONS: Record<string, JSX.Element> = {
   ),
   movie: (
     <IonIcon aria-hidden="true" slot="start" icon={film} color={iconColor} />
+  ),
+  ride: (
+    <IonIcon
+      aria-hidden="true"
+      slot="start"
+      icon={speedometer}
+      color={iconColor}
+    />
   ),
 };
 
