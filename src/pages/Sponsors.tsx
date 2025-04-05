@@ -9,10 +9,11 @@ import {
   IonRefresherContent,
   IonCardTitle,
   IonImg,
-  RefresherEventDetail,
   IonCol,
   IonGrid,
   IonRow,
+  IonChip,
+  IonCardSubtitle,
 } from '@ionic/react';
 
 import useSponsors from '../hooks/useSponsors';
@@ -20,6 +21,25 @@ import PageHeader from '../components/PageHeader';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+
+const sponsorshipTiers = {
+  Title: {
+    name: 'Title Sponsor',
+    color: '#1F3A93', // Dark Blue
+  },
+  Platinum: {
+    name: 'Platinum Sponsor',
+    color: '#E5E4E2', // Platinum Gray
+  },
+  Gold: {
+    name: 'Gold Sponsor',
+    color: '#FFD700', // Rich Gold
+  },
+  Silver: {
+    name: 'Silver Sponsor',
+    color: '#C0C0C0', // Cool Silver
+  },
+};
 
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
@@ -83,6 +103,25 @@ const Team: React.FC = () => {
                           <IonCardTitle style={{ fontSize: '1.2em' }}>
                             {sponsor.name}
                           </IonCardTitle>
+                          {sponsor.sponsorshipTier && (
+                            <IonCardSubtitle>
+                              <IonChip
+                                color="light"
+                                style={{
+                                  backgroundColor:
+                                    sponsorshipTiers[
+                                      sponsor.sponsorshipTier as keyof typeof sponsorshipTiers
+                                    ].color,
+                                  minHeight: '12px',
+                                  fontSize: '0.7em',
+                                  margin: 0,
+                                  marginBottom: '4px',
+                                }}
+                              >
+                                {sponsor.sponsorshipTier}
+                              </IonChip>
+                            </IonCardSubtitle>
+                          )}
                         </IonCardHeader>
                         <div className="ion-hide-sm-down">
                           <IonCardContent
