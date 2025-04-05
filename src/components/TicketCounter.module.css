@@ -1,0 +1,46 @@
+.ticketComponent {
+  transition: all 1s ease-in-out;
+  will-change: postion, transform, top, left, width, opacity;
+}
+
+/* Full view */
+.ticketCounterContainer {
+  position: relative;
+  background-color: var(--ion-color-primary);
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  z-index: 1000;
+  border-radius: 8px;
+  margin: 0 16px 0 16px; /* Margin for spacing */
+  text-align: center;
+}
+
+.ticketCounterContainerMinifying {
+  position: relative;
+
+  background-color: var(--ion-color-secondary);
+  z-index: 1000;
+  box-shadow: 10px 15px 8px rgba(0, 0, 0, 0.25);
+  transform: translateY(-300%) translateX(-15%) scale(0.5);
+}
+
+/* Minified floating view */
+.ticketCounterContainerMinified {
+  position: absolute;
+
+  top: 3rem;
+
+  width: fit-content;
+  border-radius: 8px;
+  background-color: var(--ion-color-secondary);
+  z-index: 1000;
+  box-shadow: 10px 15px 8px rgba(0, 0, 0, 0.25);
+  transform: scale(0.5);
+  opacity: 0.95;
+}
+
+.ticketCountHeader {
+  padding: 8px;
+  margin-top: 12px;
+}

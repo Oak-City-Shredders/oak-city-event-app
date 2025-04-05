@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { IonSkeletonText, IonText } from '@ionic/react';
-import './TicketCounter.css';
+import styles from './TicketCounter.module.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
+import ReactDOM from 'react-dom';
 
 interface FireDBTicketsSold {
   Sold: string;
@@ -11,6 +12,10 @@ interface FireDBTicketsSold {
 export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
+  const [isMinified, setIsMinified] = useState(false);
+  const [isInPortal, setIsInPortal] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const portalRoot = document.getElementById('overlay-root');
 
   const { data, loading } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
 
@@ -23,29 +28,51 @@ export default function TicketCounter() {
 
   useEffect(() => {
     let count = 0;
-    let speed = 150; // Initial speed (in ms)
+    let speed = 150;
 
     const updateCounter = () => {
-      if (count >= ticketsSold) {
+      if (count >= ticketsSold || (isMinified && isInPortal)) {
         setTicketCount(ticketsSold);
         return;
       }
 
       count += 1;
       setTicketCount(count);
-      // Reduce the interval time to create an accelerating effect
-      speed = Math.max(5, speed * 0.97); // Decrease speed (min 5ms)
-
+      speed = Math.max(5, speed * 0.97);
       setTimeout(updateCounter, speed);
     };
 
     updateCounter();
   }, [ticketsSold]);
 
-  return (
-    <div className="ticket-count">
+  const handleTicketCounterClick = () => {
+    if (!isMinified) {
+      // Minify: animate first, then portal
+      setIsMinified(true);
+      setTimeout(() => {
+        setIsInPortal(true);
+      }, 1000); // Match your CSS transition duration
+    } else {
+      // Unminify: remove from portal first, then restore
+      setIsInPortal(false);
+
+      setIsMinified(false);
+    }
+  };
+
+  const content = (
+    <div
+      className={`${
+        isMinified
+          ? isInPortal
+            ? styles.ticketCounterContainerMinified
+            : styles.ticketCounterContainerMinifying
+          : styles.ticketCounterContainer
+      } ${styles.ticketComponent}`}
+      onClick={handleTicketCounterClick}
+    >
       <IonText>
-        <h1>
+        <h1 className={styles.ticketCountHeader}>
           {loading ? (
             <IonSkeletonText animated={true} />
           ) : (
@@ -55,4 +82,10 @@ export default function TicketCounter() {
       </IonText>
     </div>
   );
+
+  if (isInPortal && portalRoot) {
+    return ReactDOM.createPortal(content, portalRoot);
+  }
+
+  return content;
 }
