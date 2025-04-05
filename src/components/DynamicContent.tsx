@@ -45,7 +45,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({
   };
 
   return (
-    <IonCard style={{ marginTop: '0' }}>
+    <IonCard style={{ marginTop: '0', marginBottom: '16px' }}>
       {imageLink && <IonImg src={imageLink} onClick={onToggleView} />}
       <IonCardHeader onClick={onToggleView}>
         {title && <IonCardTitle>{title}</IonCardTitle>}

@@ -45,13 +45,13 @@ export default function TicketCounter() {
   return (
     <div className="ticket-count">
       <IonText>
-        <h1>
-          {loading ? (
-            <IonSkeletonText animated={true} />
-          ) : (
-            `${ticketCount} Tickets Sold!`
-          )}
-        </h1>
+        {loading ? (
+          <IonSkeletonText animated={true} />
+        ) : (
+          <IonText color="dark">
+            <h2>{ticketCount} Tickets Sold!</h2>
+          </IonText>
+        )}
       </IonText>
     </div>
   );
