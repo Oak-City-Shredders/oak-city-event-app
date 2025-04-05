@@ -31,13 +31,11 @@ const useScavengerHunt = () => {
         prize: scavengerHuntPrize.prize,
       }));
 
-    return mappedData.sort((a, b) =>
-      parseInt(a.order) > parseInt(b.order)
-        ? 1
-        : parseInt(a.order) < parseInt(b.order)
-        ? -1
-        : 0
-    );
+    return mappedData.sort((a, b) => {
+      const orderA = parseInt(a.order, 10);
+      const orderB = parseInt(b.order, 10);
+      return orderA - orderB;
+    });
   }, [data]);
 
   return { scavengerHunt, loading, error, refetch };
