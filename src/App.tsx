@@ -21,7 +21,7 @@ import {
 } from '@ionic/react';
 
 // Ionicons
-import { alarm, calendar, home, map, people } from 'ionicons/icons';
+import { calendar, chatbox, home, map } from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
@@ -71,6 +71,7 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 import TicketsPage from './pages/TicketsPage';
+import StokeBot from './pages/StokeBot';
 
 /**
  * Ionic Dark Mode
@@ -115,6 +116,9 @@ const TabsLayout: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
+        <Route path="/stoke-bot" exact>
+          <StokeBot />
+        </Route>
         <Route path="/racer-profile/:racerId" exact={true}>
           <RacerProfile />
         </Route>
@@ -197,6 +201,10 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={calendar} />
           <IonLabel>Schedule</IonLabel>
         </IonTabButton>
+        <IonTabButton tab="stoke-bot" href="/stoke-bot">
+          <IonIcon aria-hidden="true" icon={chatbox} />
+          <IonLabel>StokeBot</IonLabel>
+        </IonTabButton>
       </IonTabBar>
     </IonTabs>
   );
@@ -259,7 +267,7 @@ const App: React.FC = () => {
               <Route path="/email-verified" exact>
                 <EmailVerified />
               </Route>
-
+              <Route path="/stoke-bot" exact component={TabsLayout} />
               <Route
                 path="/racer-profile/:racerId"
                 exact={true}

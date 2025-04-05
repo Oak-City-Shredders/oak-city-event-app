@@ -16,7 +16,7 @@ jobs:
         run: |
           xcodebuild -version
           xcodebuild -showsdks
-        
+
       # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -61,7 +61,7 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Add Calendar API Key
+      - name: Add API Keys
         env:
           CALENDAR_API_KEY: ${{ secrets.CALENDAR_API_KEY }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
@@ -72,6 +72,7 @@ jobs:
           echo "VITE_REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
+          echo "VITE_REACT_APP_OAK_CITY_APP_KEY=$VITE_REACT_APP_OAK_CITY_APP_KEY" >> .env
 
       # Restore GoogleService-Info.plist from secret
       - name: Restore GoogleService-Info.plist
@@ -169,7 +170,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Add Calendar API Key
+      - name: Add API Keys
         env:
           CALENDAR_API_KEY: ${{ secrets.CALENDAR_API_KEY }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
@@ -180,6 +181,7 @@ jobs:
           echo "VITE_REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
+          echo "VITE_REACT_APP_OAK_CITY_APP_KEY=$VITE_REACT_APP_OAK_CITY_APP_KEY" >> .env
 
       # Build the React app
       - name: Build React app
