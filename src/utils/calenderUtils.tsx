@@ -39,17 +39,49 @@ interface GroupedEvents {
 }
 
 const iconSize = 40;
+const iconColor = 'primary';
 
 // Mapping of event title keywords to icon
 const ICONS: Record<string, JSX.Element> = {
-  clinic: <IonIcon aria-hidden="true" slot="start" icon={build} />,
-  tour: <IonIcon aria-hidden="true" slot="start" icon={accessibility} />,
-  open: <IonIcon aria-hidden="true" slot="start" icon={lockOpen} />,
-  dj: <IonIcon aria-hidden="true" slot="start" icon={volumeHigh} />,
-  fire: <IonIcon aria-hidden="true" slot="start" icon={bonfire} />,
-  food: <IonIcon aria-hidden="true" slot="start" icon={pizza} />,
-  beer: <IonIcon aria-hidden="true" slot="start" icon={beer} />,
-  movie: <IonIcon aria-hidden="true" slot="start" icon={film} />,
+  clinic: (
+    <IonIcon aria-hidden="true" slot="start" icon={build} color={iconColor} />
+  ),
+  tour: (
+    <IonIcon
+      aria-hidden="true"
+      slot="start"
+      icon={accessibility}
+      color={iconColor}
+    />
+  ),
+  open: (
+    <IonIcon
+      aria-hidden="true"
+      slot="start"
+      icon={lockOpen}
+      color={iconColor}
+    />
+  ),
+  dj: (
+    <IonIcon
+      aria-hidden="true"
+      slot="start"
+      icon={volumeHigh}
+      color={iconColor}
+    />
+  ),
+  fire: (
+    <IonIcon aria-hidden="true" slot="start" icon={bonfire} color={iconColor} />
+  ),
+  food: (
+    <IonIcon aria-hidden="true" slot="start" icon={pizza} color={iconColor} />
+  ),
+  beer: (
+    <IonIcon aria-hidden="true" slot="start" icon={beer} color={iconColor} />
+  ),
+  movie: (
+    <IonIcon aria-hidden="true" slot="start" icon={film} color={iconColor} />
+  ),
 };
 
 // Function to group events by date
@@ -86,7 +118,9 @@ export const getIcon = (eventTitle: string = ''): JSX.Element => {
   return (
     ICONS[
       Object.keys(ICONS).find((key) => title.includes(key)) || 'default'
-    ] || <IonIcon aria-hidden="true" slot="start" icon={alarm} />
+    ] || (
+      <IonIcon aria-hidden="true" slot="start" icon={alarm} color={iconColor} />
+    )
   );
 };
 
