@@ -1,0 +1,39 @@
+.container {
+  height: 100%;
+}
+
+.messageList {
+  padding: 10px;
+  height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.userMessage {
+  background-color: #3880ff;
+  color: white;
+  margin-left: auto;
+}
+
+.botMessage {
+  background-color: #f4f5f8;
+  color: #000;
+}
+
+.inputArea {
+  padding: 10px;
+  background: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}

@@ -48,6 +48,7 @@ jobs:
           echo "VITE_REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
+          echo "VITE_REACT_APP_OAK_CITY_APP_KEY=$VITE_REACT_APP_OAK_CITY_APP_KEY" >> .env
 
       # Build the React app
       - name: Build React app
