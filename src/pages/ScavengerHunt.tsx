@@ -214,26 +214,26 @@ const ScavengerHunt: React.FC = () => {
                         </p>
                       </IonText>
 
-                      <IonItem lines="full">
-                        <div
-                          style={{
-                            width: '24px',
-                            height: '24px',
-                            borderRadius: '50%',
-                            backgroundColor: '#9970FF',
-                            marginRight: '16px',
-                          }}
-                        ></div>
-                        <IonLabel>
-                          <h2>Purple Squirrels</h2>
-                          <p>
-                            The person who collects the most purple squirrels
-                            will snag an exclusive prize.
-                          </p>
-                        </IonLabel>
-                      </IonItem>
-
                       <IonList>
+                        <IonItem lines="full">
+                          <div
+                            style={{
+                              width: '24px',
+                              height: '24px',
+                              borderRadius: '50%',
+                              backgroundColor: '#9970FF',
+                              marginRight: '16px',
+                            }}
+                          ></div>
+                          <IonLabel>
+                            <h2>Purple Squirrels</h2>
+                            <p>
+                              The person who collects the most purple squirrels
+                              will snag an exclusive prize.
+                            </p>
+                          </IonLabel>
+                        </IonItem>
+
                         <IonItem lines="full">
                           <div
                             style={{

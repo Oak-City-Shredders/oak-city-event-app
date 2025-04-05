@@ -67,22 +67,13 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-// Theme
-import './theme/variables.css';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 import TicketsPage from './pages/TicketsPage';
 import StokeBot from './pages/StokeBot';
+// Theme
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-//import '@ionic/react/css/palettes/dark.system.css';
+import './theme/variables.css';
+import '@ionic/react/css/palettes/dark.system.css';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 

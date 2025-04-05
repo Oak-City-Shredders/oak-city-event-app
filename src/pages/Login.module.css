@@ -36,14 +36,14 @@
   font-size: 1.875rem;
   line-height: 2.25rem;
   font-weight: 800;
-  color: #111827;
+  color: var(ionc-color-dark);
 }
 
 .subtitle {
   margin-top: 0.5rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
-  color: #4b5563;
+  color: var(ionc-color-dark);
 }
 
 .content {
@@ -51,7 +51,7 @@
 }
 
 .segment {
-  background-color: white;
+  background-color: var(ion-color-light);
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 }

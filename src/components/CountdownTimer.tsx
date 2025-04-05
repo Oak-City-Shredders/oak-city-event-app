@@ -66,7 +66,7 @@ const getTimeLeft = (): CountdownProps => {
     };
 
   return {
-    statusMessage: `Shred Fest 5 is coming up in ${dayjs().to(
+    statusMessage: `Shred Fest 5 is in ${dayjs().to(
       festivalStartDate,
       true
     )}! 🎉`,

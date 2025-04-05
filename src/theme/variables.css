@@ -64,3 +64,19 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-dark-shade: #292929;
   --ion-color-dark-tint: #444444;
 }
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #14c88f;
+  }
+
+  :root.ios {
+    --ion-color-primary: #14c88f;
+  }
+
+  /* This sets a different background and item background for the default theme on md */
+  :root.md {
+    --ion-color-primary: #14c88f;
+  }
+}

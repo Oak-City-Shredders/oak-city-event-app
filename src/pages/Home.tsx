@@ -154,6 +154,7 @@ const Home: React.FC<HomeProps> = ({
             <IonButtons slot="end">
               <IonButton routerLink="/notifications">
                 <IonIcon
+                  color="dark"
                   icon={
                     notificationPermission === 'granted'
                       ? notificationsIcon
@@ -165,11 +166,11 @@ const Home: React.FC<HomeProps> = ({
                 )}
               </IonButton>
               <IonButton routerLink="/login">
-                <IonIcon icon={personCircleOutline} size="large" />
+                <IonIcon color="dark" icon={personCircleOutline} size="large" />
               </IonButton>
             </IonButtons>
             <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
+              <IonMenuButton color="dark"></IonMenuButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
