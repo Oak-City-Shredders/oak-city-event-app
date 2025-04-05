@@ -26,6 +26,7 @@ import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import NotificationToggle from '../components/NotificationToggle';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import './SchedulePage.css';
 
 const SchedulePage: React.FC = () => {
   const router = useIonRouter();
@@ -85,26 +86,35 @@ const SchedulePage: React.FC = () => {
                       >
                         {item.icon}
                         <IonLabel>
-                          <h2>
-                            {item.startTime} - {item.endTime}
-                          </h2>
+                          <IonText color="medium">
+                            <h2>
+                              {item.startTime} - {item.endTime}
+                            </h2>
+                          </IonText>
                           <div>
-                            <strong>{item.title}</strong>
-                            <div style={{ whiteSpace: 'pre-wrap' }}>
+                            <IonText className="schedule-text">
+                              {item.title}
+                            </IonText>
+                            <IonText
+                              className="schedule-description"
+                              style={{ whiteSpace: 'pre-wrap' }}
+                            >
                               {item.description && ` - ${item.description} `}
-                            </div>
+                            </IonText>
                             {item.location && (
                               <IonLabel
                                 onClick={() => navigateToMap(item.location)}
                               >
-                                {` at the `}{' '}
+                                <IonText color="medium">{` at the `} </IonText>
                                 <span
                                   style={{
                                     textDecoration: 'underline',
                                   }}
                                 >
                                   <IonIcon icon={locationOutline} />
-                                  {item.location}
+                                  <IonText color="secondary">
+                                    {item.location}
+                                  </IonText>
                                 </span>
                               </IonLabel>
                             )}
