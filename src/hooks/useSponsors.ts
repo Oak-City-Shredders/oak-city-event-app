@@ -21,7 +21,11 @@ const useSponsors = () => {
     if (!data) return [];
 
     const mappedData = data
-      .filter((sponsor) => sponsor.name.trim() !== '')
+      .filter(
+        (sponsor) =>
+          sponsor.name.trim() !== '' &&
+          sponsor.sponsorship_tier.toLowerCase() !== 'vendor'
+      )
       .map((sponsor) => ({
         id: sponsor.id,
         imageLink: sponsor.image_link,
