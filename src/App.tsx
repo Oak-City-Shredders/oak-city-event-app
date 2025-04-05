@@ -82,7 +82,7 @@ import StokeBot from './pages/StokeBot';
 
 /* import '@ionic/react/css/palettes/dark.always.css'; */
 /* import '@ionic/react/css/palettes/dark.class.css'; */
-//import '@ionic/react/css/palettes/dark.system.css';
+import '@ionic/react/css/palettes/dark.system.css';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 

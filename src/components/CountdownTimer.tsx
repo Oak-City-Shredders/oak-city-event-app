@@ -24,7 +24,6 @@ type EventStatus =
   | 'eventEnded'; // Event has ended
 
 interface CountdownProps {
-  statusMessage: string;
   timeLeft: {
     d: number;
     h: number;
@@ -66,10 +65,6 @@ const getTimeLeft = (): CountdownProps => {
     };
 
   return {
-    statusMessage: `Shred Fest 5 is coming up in ${dayjs().to(
-      festivalStartDate,
-      true
-    )}! 🎉`,
     timeLeft: { d, h, m, s },
     status: 'timeRemaining',
   };
