@@ -116,7 +116,10 @@ const SchedulePage: React.FC = () => {
                                       }}
                                     >
                                       <IonIcon icon={locationOutline} />
-                                      <IonText color="secondary">
+                                      <IonText
+                                        color="secondary"
+                                        className="bold-font"
+                                      >
                                         {item.location}
                                       </IonText>
                                     </span>
