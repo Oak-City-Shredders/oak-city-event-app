@@ -31,13 +31,14 @@ const useScavengerHunt = () => {
         prize: scavengerHuntPrize.prize,
       }));
 
-    return mappedData.sort((a, b) =>
-      parseInt(a.order) > parseInt(b.order)
-        ? 1
-        : parseInt(a.order) < parseInt(b.order)
-        ? -1
-        : 0
-    );
+    return mappedData.sort((a, b) => {
+      // Convert to numbers for reliable numeric comparison
+      const orderA = parseInt(a.order) || 0;
+      const orderB = parseInt(b.order) || 0;
+
+      // Standard sorting function should return a number
+      return orderA - orderB;
+    });
   }, [data]);
 
   return { scavengerHunt, loading, error, refetch };
