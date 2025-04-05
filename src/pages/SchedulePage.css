@@ -1,0 +1,12 @@
+.schedule-text {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+}
+
+.schedule-description {
+  color: var(--ion-color-medium);
+}
+
+.bold-font {
+  font-weight: 600;
+}

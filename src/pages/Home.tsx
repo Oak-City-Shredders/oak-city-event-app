@@ -1,5 +1,5 @@
 import './Home.css';
-import CardLayout from '../components/CardLayout';
+//import CardLayout from '../components/CardLayout';
 import { homePageLayout } from '../data/homePageLayout';
 import {
   IonContent,
@@ -146,7 +146,7 @@ const Home: React.FC<HomeProps> = ({
 
   return (
     <>
-      <HomePageMenu homePageLayout={homePageLayout}></HomePageMenu>
+      <HomePageMenu />
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
@@ -154,6 +154,7 @@ const Home: React.FC<HomeProps> = ({
             <IonButtons slot="end">
               <IonButton routerLink="/notifications">
                 <IonIcon
+                  color="dark"
                   icon={
                     notificationPermission === 'granted'
                       ? notificationsIcon
@@ -165,11 +166,11 @@ const Home: React.FC<HomeProps> = ({
                 )}
               </IonButton>
               <IonButton routerLink="/login">
-                <IonIcon icon={personCircleOutline} size="large" />
+                <IonIcon color="dark" icon={personCircleOutline} size="large" />
               </IonButton>
             </IonButtons>
             <IonButtons slot="start">
-              <IonMenuButton></IonMenuButton>
+              <IonMenuButton color="dark"></IonMenuButton>
             </IonButtons>
           </IonToolbar>
         </IonHeader>
@@ -244,10 +245,10 @@ const Home: React.FC<HomeProps> = ({
               </IonCol>
             </IonRow>
           </IonGrid>
-          <CardLayout
+          {/* <CardLayout
             items={homePageLayout}
             handleCardClick={handleCardClick}
-          />
+          /> */}
           <IonGrid>
             <IonRow>
               {dynamicContent.map(

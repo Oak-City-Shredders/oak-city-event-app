@@ -13,6 +13,7 @@
   flex-direction: row;
   display: flex;
   align-items: center;
+  padding-bottom: 16px;
 }
 
 .event-card-header {
@@ -72,7 +73,7 @@
 }
 
 .calendar-event-summary-and-description {
-  color: var(--ion-color-medium);
+  color: var(--ion-color-light);
   display: flex;
   flex-direction: column; /* Stack description and time vertically */
   flex: 1; /* Takes up remaining space in the parent flex container */
@@ -101,7 +102,7 @@
   display: flex;
   flex-direction: row; /* Stack description and time vertically */
   flex: 1; /* Takes up remaining space in the parent flex container */
-  color: var(--ion-color-medium);
+  color: var(--ion-color-light);
   font-size: 0.9em;
   font-weight: 600;
   overflow: hidden;
@@ -123,4 +124,5 @@
   );
   margin-left: 5px;
   min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+  border-radius: 4px;
 }

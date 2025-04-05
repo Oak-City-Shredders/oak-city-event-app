@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   loginUser,
   registerUser,
   resetPassword,
   logoutUser,
   sendEmailVerification,
+  deleteUser,
 } from '../auth';
 import {
   IonButton,
@@ -22,6 +23,8 @@ import {
   SegmentValue,
   IonRefresher,
   IonRefresherContent,
+  IonCardSubtitle,
+  IonCardHeader,
 } from '@ionic/react';
 import { useAuth } from '../context/AuthContext';
 import PageHeader from '../components/PageHeader';
@@ -32,8 +35,12 @@ import {
   logOutOutline,
   mailOutline,
   personAddOutline,
+  trashBin,
 } from 'ionicons/icons';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
+import { checkVibrate } from '../utils/vibrate';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { App } from '@capacitor/app';
 
 const Login: React.FC = () => {
   const { user, loading, error: authError, refreshAuth } = useAuth();
@@ -41,6 +48,31 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
+  const [isAdvancedVisible, setIsAdvancedVisible] = useState(false);
+
+  useEffect(() => {
+    // Fetch delivered notifications when app is resumed
+    let appResumedListener: { remove: () => void }; // Type for the listener handle
+    (async () => {
+      const appResumed = async () => {
+        try {
+          refreshAuth(); // Refresh auth state when app resumes
+          //const permissionStatus = await PushNotifications.checkPermissions();
+          //setNotificationPermission(permissionStatus.receive);
+        } catch (error) {
+          console.error('Error refreshing auth:', error);
+        }
+      };
+      appResumedListener = await App.addListener('resume', appResumed);
+    })();
+
+    return () => {
+      if (appResumedListener) {
+        appResumedListener.remove();
+      }
+      console.log('login cleanup - all listeners removed');
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,13 +106,24 @@ const Login: React.FC = () => {
   };
 
   const handleCreate = async () => {
-    setError(''); // Clear previous errors
+    setError('');
+
     try {
       const user = await registerUser(email, password);
       console.log('Created user:', user);
-    } catch (error: any) {
-      console.error('Create User failed', error);
-      setError(error.code || 'Account creation failed.');
+
+      try {
+        await sendEmailVerification();
+        console.log('Verification email sent successfully');
+      } catch (emailError: any) {
+        console.warn('Failed to send verification email', emailError);
+        setError(emailError.code || 'Verification email could not be sent');
+        // Note: User was still created successfully, so we don't return here
+      }
+    } catch (registrationError: any) {
+      console.error('User creation failed', registrationError);
+      setError(registrationError.code || 'Account creation failed');
+      return;
     }
   };
 
@@ -116,7 +159,11 @@ const Login: React.FC = () => {
       setError('Verification email sent! Check your inbox.');
     } catch (error: any) {
       console.error('Failed to resend verification email', error);
-      setError(error.code || 'Resend verification failed.');
+      setError(
+        (error.code === 'auth/too-many-requests'
+          ? 'Verification email already sent.  Wait a bit and try again if your email does not arrive in a few minutes'
+          : error.code) || 'Resend verification failed.'
+      );
     }
   };
 
@@ -128,6 +175,29 @@ const Login: React.FC = () => {
       console.error('Failed to resend verification email', error);
       setError(error.code || 'Resend verification failed.');
     }
+  };
+
+  const handleDeleteAccount = async () => {
+    setError(''); // Clear previous errors
+    try {
+      await deleteUser();
+      console.log('Deleted user');
+      setError('Your account has been deleted successfully.');
+    } catch (error: any) {
+      console.error('Delete User failed', error);
+      setError(
+        (error.code === 'auth/requires-recent-login'
+          ? 'It has been too long since your last sign in to delete your account.  You must sign out and sign in again to delete your account'
+          : error.code) || 'User Account deletion failed.'
+      );
+    }
+  };
+
+  const onToggleAdvanced = async () => {
+    checkVibrate(
+      async () => await Haptics.impact({ style: ImpactStyle.Medium })
+    );
+    setIsAdvancedVisible((prev) => !prev);
   };
 
   const handleRefresh = useRefreshHandler(refreshAuth);
@@ -185,7 +255,7 @@ const Login: React.FC = () => {
                           onClick={handleSendVerification}
                           disabled={loading}
                         >
-                          <IonIcon icon={mailOutline} />
+                          <IonIcon className={styles.icon} icon={mailOutline} />
                           Send Verification Email
                         </IonButton>
                       </div>
@@ -197,12 +267,40 @@ const Login: React.FC = () => {
                       onClick={handleSignOut}
                       className={styles.submitButton}
                     >
-                      <IonIcon icon={logOutOutline} />
+                      <IonIcon className={styles.icon} icon={logOutOutline} />
                       Sign Out
                     </IonButton>
                   </IonCardContent>
                 </IonCard>
                 <PreferencesCard />
+                <IonCard>
+                  <IonCardHeader onClick={() => onToggleAdvanced()}>
+                    <IonCardSubtitle>Advanced</IonCardSubtitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <IonButton
+                      expand="block"
+                      onClick={onToggleAdvanced}
+                      color={isAdvancedVisible ? 'primary' : 'medium'}
+                      className={styles.toggleButton}
+                    >
+                      {isAdvancedVisible
+                        ? 'Hide Advanced Options'
+                        : 'Show Advanced Options'}
+                    </IonButton>
+                    {isAdvancedVisible && (
+                      <IonButton
+                        expand="block"
+                        onClick={handleDeleteAccount}
+                        color="danger"
+                        disabled={loading}
+                      >
+                        <IonIcon className={styles.icon} icon={trashBin} />
+                        Delete My Account
+                      </IonButton>
+                    )}
+                  </IonCardContent>
+                </IonCard>
               </div>
             </div>
           </div>

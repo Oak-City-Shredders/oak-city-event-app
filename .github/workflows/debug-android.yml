@@ -37,17 +37,19 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Add Calendar API Key
+      - name: Add API Keys
         env:
           CALENDAR_API_KEY: ${{ secrets.CALENDAR_API_KEY }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
           GOOGLE_SHEET_RACING_INFO_ID: ${{ secrets.GOOGLE_SHEET_RACING_INFO_ID }}
           GOOGLE_SHEETS_API_KEY: ${{ secrets.GOOGLE_SHEETS_API_KEY }}
+          VITE_REACT_APP_OAK_CITY_APP_KEY: ${{ secrets.VITE_REACT_APP_OAK_CITY_APP_KEY }}
         run: |
           echo "VITE_REACT_APP_CALENDAR_API_KEY=$CALENDAR_API_KEY" >> .env
           echo "VITE_REACT_APP_CALENDAR_ID=$CALENDAR_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID=$GOOGLE_SHEET_RACING_INFO_ID" >> .env
           echo "VITE_REACT_APP_GOOGLE_SHEETS_API_KEY=$GOOGLE_SHEETS_API_KEY" >> .env
+          echo "VITE_REACT_APP_OAK_CITY_APP_KEY=$VITE_REACT_APP_OAK_CITY_APP_KEY" >> .env
 
       # Build the React app
       - name: Build React app

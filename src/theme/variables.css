@@ -1,12 +1,12 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
 :root {
-  --ion-color-primary: #38e4ae;
+  --ion-color-primary: #14c88f;
   --ion-color-primary-rgb: 36, 168, 16;
   --ion-color-primary-contrast: #000000;
   --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: #20940e;
-  --ion-color-primary-tint: #3ab128;
+  --ion-color-primary-shade: #12ad7c;
+  --ion-color-primary-tint: #19f9b2;
 
   --ion-color-secondary: #38c4e4;
   --ion-color-secondary-rgb: 1, 99, 170;
@@ -63,4 +63,20 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-dark-contrast-rgb: 255, 255, 255;
   --ion-color-dark-shade: #292929;
   --ion-color-dark-tint: #444444;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #14c88f;
+  }
+
+  :root.ios {
+    --ion-color-primary: #14c88f;
+  }
+
+  /* This sets a different background and item background for the default theme on md */
+  :root.md {
+    --ion-color-primary: #14c88f;
+  }
 }

@@ -1,6 +1,16 @@
 // src/auth.ts
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
 
+export const deleteUser = async () => {
+  try {
+    await FirebaseAuthentication.deleteUser();
+    console.log('User deleted successfully');
+  } catch (error) {
+    console.error('Error deleting user: ', error);
+    throw error;
+  }
+};
+
 export const registerUser = async (email: string, password: string) => {
   try {
     const userCredential =
@@ -46,6 +56,7 @@ export const logoutUser = async () => {
     console.log('User signed out');
   } catch (error) {
     console.error('Error signing out:', error);
+    throw error;
   }
 };
 
@@ -55,8 +66,7 @@ export const sendEmailVerification = async () => {
       actionCodeSettings: {
         // URL you want to redirect back to. The domain (www.example.com) for this
         // URL must be in the authorized domains list in the Firebase Console.
-        url: 'https://rideoakcity.com/tickets',
-        // This must be true.
+        url: 'https://rideoakcity.com/email-verified',
         handleCodeInApp: true,
         iOS: {
           bundleId: 'com.oakcityshredfest.app',
@@ -71,5 +81,6 @@ export const sendEmailVerification = async () => {
     console.log('send email verification');
   } catch (error) {
     console.error('Error sending email verificaiton:', error);
+    throw error;
   }
 };

@@ -1,0 +1,39 @@
+.container {
+  height: 100%;
+}
+
+.messageList {
+  padding: 10px;
+  min-height: calc(100% - 60px);
+  overflow-y: auto;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+}
+
+.userMessage {
+  background-color: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+  margin-left: auto;
+}
+
+.botMessage {
+  background-color: var(--ion-color-secondary);
+  color: var(--ion-color-secondary-contrast);
+}
+
+.inputArea {
+  padding: 10px;
+  background: var(--ion-color-medium);
+  border-top: 2px solid var(--ion-color-dark);
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
