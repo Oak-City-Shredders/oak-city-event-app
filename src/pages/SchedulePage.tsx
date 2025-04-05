@@ -87,9 +87,9 @@ const SchedulePage: React.FC = () => {
                         {item.icon}
                         <IonLabel>
                           <IonText color="medium">
-                            <h2>
+                            <h3>
                               {item.startTime} - {item.endTime}
-                            </h2>
+                            </h3>
                           </IonText>
                           <div>
                             <IonText className="schedule-text">
@@ -99,23 +99,29 @@ const SchedulePage: React.FC = () => {
                               className="schedule-description"
                               style={{ whiteSpace: 'pre-wrap' }}
                             >
-                              {item.description && ` - ${item.description} `}
+                              <h3>
+                                {item.description && `${item.description} `}
+                              </h3>
                             </IonText>
                             {item.location && (
                               <IonLabel
                                 onClick={() => navigateToMap(item.location)}
                               >
-                                <IonText color="medium">{` at the `} </IonText>
-                                <span
-                                  style={{
-                                    textDecoration: 'underline',
-                                  }}
-                                >
-                                  <IonIcon icon={locationOutline} />
-                                  <IonText color="secondary">
-                                    {item.location}
-                                  </IonText>
-                                </span>
+                                <IonText color="medium">
+                                  <h3>
+                                    {` at the `}{' '}
+                                    <span
+                                      style={{
+                                        textDecoration: 'underline',
+                                      }}
+                                    >
+                                      <IonIcon icon={locationOutline} />
+                                      <IonText color="secondary">
+                                        {item.location}
+                                      </IonText>
+                                    </span>
+                                  </h3>
+                                </IonText>
                               </IonLabel>
                             )}
                           </div>
