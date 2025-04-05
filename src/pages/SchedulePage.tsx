@@ -16,6 +16,7 @@ import {
 } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar
+import DOMPurify from 'dompurify';
 import {
   groupEventsByDays,
   isToday,
@@ -99,9 +100,11 @@ const SchedulePage: React.FC = () => {
                               className="schedule-description"
                               style={{ whiteSpace: 'pre-wrap' }}
                             >
-                              <h3>
-                                {item.description && `${item.description} `}
-                              </h3>
+                              <h3
+                                dangerouslySetInnerHTML={{
+                                  __html: DOMPurify.sanitize(item.description),
+                                }}
+                              />
                             </IonText>
                             {item.location && (
                               <IonLabel
