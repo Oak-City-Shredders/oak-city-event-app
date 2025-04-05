@@ -35,8 +35,6 @@ const useSponsors = () => {
       // Convert to numbers for reliable numeric comparison
       const orderA = parseInt(a.order) || 0;
       const orderB = parseInt(b.order) || 0;
-
-      // Standard sorting function should return a number
       return orderA - orderB;
     });
   }, [data]);
