@@ -69,7 +69,7 @@
 
 .ticketInfo {
   font-size: 0.875rem;
-  color: #4b5563;
+  color: var(--ion-color-light-contrast);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
