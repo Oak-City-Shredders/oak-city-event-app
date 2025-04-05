@@ -75,6 +75,9 @@ const StokeBot: React.FC = () => {
           setThreadId(data.threadId);
         }
 
+        if (data.error) {
+          throw new Error(data.error);
+        }
         const botResponse: Message = {
           text: data.reply,
           isUser: false,
@@ -83,7 +86,9 @@ const StokeBot: React.FC = () => {
         setMessages((prev) => [...prev, botResponse]);
       } catch (error) {
         const errorMessage: Message = {
-          text: "Sorry, I couldn't process your message. Please try again.",
+          text: `Sorry, I couldn't process your message. ${
+            error instanceof Error ? error.message : 'Please try again later.'
+          }`,
           isUser: false,
         };
         setMessages((prev) => [...prev, errorMessage]);
