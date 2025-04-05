@@ -71,12 +71,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-primary: #14c88f;
   }
 
-  :root.ios {
+  .ios {
     --ion-color-primary: #14c88f;
   }
 
   /* This sets a different background and item background for the default theme on md */
-  :root.md {
+  .md {
     --ion-color-primary: #14c88f;
   }
 }
