@@ -124,4 +124,5 @@
   );
   margin-left: 5px;
   min-width: 0; /* Crucial: Allows shrinking and enables truncation */
+  border-radius: 4px;
 }
