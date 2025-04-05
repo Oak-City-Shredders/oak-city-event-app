@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   IonLabel,
   IonIcon,
   IonCard,
-  IonButton,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   useIonRouter,
 } from '@ionic/react';
-import { calendar, timeOutline } from 'ionicons/icons';
+import { timeOutline } from 'ionicons/icons';
 import dayjs from 'dayjs';
 import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar
 
@@ -17,7 +16,9 @@ import './NextEvent.css';
 interface NextEventProps {}
 const NextEvent: React.FC<NextEventProps> = ({}) => {
   const router = useIonRouter();
-  const { data: calendarData, loading, error, refetch } = useGoogleCalendar(5);
+  const { loading, error, getUpcomingEvents } = useGoogleCalendar();
+
+  const upcomingEvents = getUpcomingEvents();
 
   function getFormattedTime(date: Date): string {
     return new Intl.DateTimeFormat('default', {
@@ -27,34 +28,18 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
     }).format(date);
   }
 
-  if (loading || error || calendarData.length < 1) {
+  if (loading || error || upcomingEvents.length < 1) {
     return <></>;
   }
 
-  const nextEvent = calendarData[0];
+  const nextEvent = upcomingEvents[0];
   const eventStartDateTime = new Date(nextEvent.start.dateTime);
-  const eventEndDateTime = new Date(nextEvent.end.dateTime);
   const month = eventStartDateTime.toLocaleString('default', {
     month: 'short',
   });
-
-  /*
-  // This is a button that could be included in the widget but isn't needed now because schedule page is pretty limited
-  
-  <IonButton
-    color={'medium'}
-    fill="outline"
-    slot="end"
-    size={'small'}
-    onClick={(e) => {
-    e.stopPropagation();
-    router.push('/schedule');
-    }}
-    >
-    <IonIcon slot="start" icon={calendar}></IonIcon>
-    View All Events
-    </IonButton>
-    */
+  const dayOfWeek = eventStartDateTime.toLocaleString('default', {
+    weekday: 'short',
+  });
 
   return (
     <IonCard className="next-event-card" onClick={undefined}>
@@ -78,28 +63,38 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
               {eventStartDateTime.getDate()}
             </div>
           </div>
+          <div className="calendar-icon-footer">{dayOfWeek}</div>
         </div>
-        <div
-          className="event-bar-and-summary"
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/schedule`);
-          }}
-        >
-          <div className="event-vertical-bar"></div>
-          <div className="calendar-event-summary-and-description">
-            <div className="calendar-event-summary">{nextEvent.summary}</div>
-            <div className="calendar-event-description">
-              {nextEvent.description}
-            </div>
-            <div className="calendar-event-time">
-              {' '}
-              <IonIcon icon={timeOutline}></IonIcon>&nbsp;
-              {`${getFormattedTime(eventStartDateTime)} - ${getFormattedTime(
-                eventEndDateTime
-              )}`}
-            </div>
-          </div>
+        <div className="events-container">
+          {upcomingEvents.map((event, index) => {
+            const eventStartDateTime = new Date(event.start.dateTime);
+            const eventEndDateTime = new Date(event.end.dateTime);
+            return (
+              <div
+                key={index}
+                className="event-bar-and-summary"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/schedule`);
+                }}
+              >
+                <div className="event-vertical-bar"></div>
+                <div className="calendar-event-summary-and-description">
+                  <div className="calendar-event-summary">{event.summary}</div>
+                  <div className="calendar-event-description">
+                    {event.description}
+                  </div>
+                  <div className="calendar-event-time">
+                    {' '}
+                    <IonIcon icon={timeOutline}></IonIcon>&nbsp;
+                    {`${getFormattedTime(
+                      eventStartDateTime
+                    )} - ${getFormattedTime(eventEndDateTime)}`}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </IonCardContent>
     </IonCard>

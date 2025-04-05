@@ -26,10 +26,6 @@ const FoodTrucks: React.FC = () => {
     return mapFoodTruckData(data);
   }, [data]);
 
-  const handleCardClick = (route: string): void => {
-    window.open(route, '_blank');
-  };
-
   const handleRefresh = useRefreshHandler(refetch);
 
   return (

@@ -24,7 +24,7 @@
 .calendar-icon {
   flex: 0 0 50px;
 
-  height: 60px;
+  height: 65px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -92,7 +92,7 @@
   max-width: 100%;
 }
 .event-vertical-bar {
-  background-color: var(--ion-color-secondary);
+  background-color: var(--ion-color-primary-shade);
   width: 4px;
   margin-top: 5px;
   margin-left: 6px;
@@ -125,4 +125,20 @@
   margin-left: 5px;
   min-width: 0; /* Crucial: Allows shrinking and enables truncation */
   border-radius: 4px;
+}
+
+.events-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  gap: 5px;
+}
+
+.calendar-icon-footer {
+  color: var(--ion-color-dark);
+  text-align: center;
+  padding: 1px;
+  font-size: 10px;
+  font-weight: 600;
 }

@@ -1,6 +1,4 @@
 import './Home.css';
-//import CardLayout from '../components/CardLayout';
-import { homePageLayout } from '../data/homePageLayout';
 import {
   IonContent,
   IonHeader,
@@ -16,7 +14,6 @@ import {
   IonIcon,
   IonCard,
   IonButton,
-  useIonRouter,
   IonRefresher,
   IonRefresherContent,
   IonGrid,
@@ -96,20 +93,18 @@ const Home: React.FC<HomeProps> = ({
   removeNotification,
   notificationPermission,
 }) => {
-  const router = useIonRouter();
-
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const { refetch: refetchFoodTruck } = useFoodTruckData();
   const { refetch: refetchRacerSpotlight } = useRandomRacerId();
-  const { refetch: refetchCalendar } = useGoogleCalendar(5);
+  //const { refetch: refetchCalendar } = useGoogleCalendar(5);
   const handleRefresh = useRefreshHandlers([
     refetch,
     refetchFoodTruck,
     refetchRacerSpotlight,
-    refetchCalendar,
+    //refetchCalendar,
   ]);
 
   const dynamicContent: DynamicContentProps[] = !data
@@ -128,10 +123,6 @@ const Home: React.FC<HomeProps> = ({
           buttonLink: dc['Button Link'],
         }))
         .reverse();
-
-  const handleCardClick = (route: string) => {
-    router.push(route, 'forward'); // "forward" for a page transition effect
-  };
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
@@ -245,10 +236,6 @@ const Home: React.FC<HomeProps> = ({
               </IonCol>
             </IonRow>
           </IonGrid>
-          {/* <CardLayout
-            items={homePageLayout}
-            handleCardClick={handleCardClick}
-          /> */}
           <IonGrid>
             <IonRow>
               {dynamicContent.map(
