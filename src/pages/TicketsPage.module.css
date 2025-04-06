@@ -63,7 +63,7 @@
 .ticketTitle {
   font-size: 1.25rem; /* Slightly larger for emphasis */
   font-weight: 700;
-  color: #1f2937; /* Darker color for contrast */
+  color: var(--ion-color-dark); /* Darker color for contrast */
   text-transform: uppercase; /* Common for ticket titles */
 }
 

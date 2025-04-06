@@ -16,6 +16,7 @@ import {
   IonCardSubtitle,
   IonList,
   IonItem,
+  IonText,
 } from '@ionic/react';
 import { calendar, person, ticket, ticketOutline } from 'ionicons/icons';
 import { useAuth } from '../context/AuthContext';
@@ -187,12 +188,14 @@ const TicketsPage: React.FC = () => {
                 <IonCard key={ticket.id} className={styles.ticket}>
                   <IonCardContent>
                     <div className={styles.ticketHeader}>
-                      <h3 className={styles.ticketTitle}>{ticket.title}</h3>
-                      {ticket.type === 'vip' && (
-                        <IonBadge color={'warning'} className={styles.badge}>
-                          {ticket.type}
-                        </IonBadge>
-                      )}
+                      <IonText>
+                        <h3 className={styles.ticketTitle}>{ticket.title}</h3>
+                        {ticket.type === 'vip' && (
+                          <IonBadge color={'warning'} className={styles.badge}>
+                            {ticket.type}
+                          </IonBadge>
+                        )}
+                      </IonText>
                     </div>
                     <div className={styles.ticketInfo}>
                       <div className={styles.infoRow}>
