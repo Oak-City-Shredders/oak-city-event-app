@@ -14,6 +14,7 @@ import {
   IonRow,
   IonChip,
   IonCardSubtitle,
+  IonText,
 } from '@ionic/react';
 
 import useSponsors from '../hooks/useSponsors';
@@ -106,7 +107,6 @@ const Team: React.FC = () => {
                           {sponsor.sponsorshipTier && (
                             <IonCardSubtitle>
                               <IonChip
-                                color="light"
                                 style={{
                                   backgroundColor:
                                     sponsorshipTiers[
@@ -118,7 +118,9 @@ const Team: React.FC = () => {
                                   marginBottom: '4px',
                                 }}
                               >
-                                {sponsor.sponsorshipTier}
+                                <IonText style={{ color: 'black' }}>
+                                  {sponsor.sponsorshipTier}
+                                </IonText>
                               </IonChip>
                             </IonCardSubtitle>
                           )}
