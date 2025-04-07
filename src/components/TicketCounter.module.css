@@ -1,0 +1,49 @@
+.ticketCount {
+  padding: 16px;
+  margin: 0 16px;
+  text-align: center;
+  background: linear-gradient(
+    45deg,
+    var(--ion-color-tertiary),
+    var(--ion-color-primary)
+  );
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px,
+    rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px;
+  h2 {
+    margin-top: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.5px;
+  }
+}
+
+.skeleton {
+  height: 45px;
+  width: '60%';
+  margin: '8px auto';
+  background-color: var(--ion-color-light);
+  opacity: '0.3';
+}
+
+.viewButton {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 8px 0 16px;
+  font-size: 0.875rem;
+}
