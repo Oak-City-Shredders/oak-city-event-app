@@ -411,9 +411,6 @@ const TooltipMarker = ({
   poi: PointOfInterest;
   filter: POIFilter | undefined;
 }) => {
-  //console.log("PopupMarker Rendered: ", poi);
-  //console.log("Filter: ", filter);
-
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const handleClick = async () => {
@@ -430,14 +427,14 @@ const TooltipMarker = ({
 
   const poiIcon = poi.icon
     ? new Icon({
-        iconUrl: `/images/map-icons/${poi.icon}`,
-        iconSize: poi.iconSize ? (poi.iconSize as PointExpression) : [24, 24], // Width and height
+        iconUrl: poi.iconUrl ? poi.iconUrl : `/images/map-icons/${poi.icon}`,
+        iconSize: poi.iconSize ? (poi.iconSize as PointExpression) : [24, 24],
         iconAnchor: poi.iconAnchor
           ? (poi.iconAnchor as PointExpression)
-          : [12, 12], // Point where the marker should be anchored
+          : [12, 12],
         popupAnchor: poi.popupAnchor
           ? (poi.popupAnchor as PointExpression)
-          : [1, -34], // Where the popup should appear
+          : [1, -34],
       })
     : customIcon;
 
@@ -524,6 +521,7 @@ export interface PointOfInterest {
   type: string;
   name: string;
   icon: string;
+  iconUrl: string; // Optional URL for custom icon
   iconSize: number[];
   iconAnchor: number[];
   popupAnchor: number[];
@@ -546,36 +544,11 @@ export interface POIFilter {
   isVisible: boolean;
 }
 
-const ChangeView: React.FC<{ coords: LatLngExpression }> = ({ coords }) => {
-  const map = useMap(); // Gets the map instance
-  console.log('coords:', coords);
-  map.setView(coords, 18, { animate: true }); // Updates the view
-  return null;
-};
-
 const SetView = ({ center }: { center: LatLng }) => {
   console.log('SetView');
-  //road juncture
-  //const initialLat = 35.72107099788361
-  //const initialLng = -78.45067660036304
-
-  // forest between field
-  //const initialLat = 35.717140528123075
-  //const initialLng = -78.45191998873842
-
-  //35.717140528123075, -78.45191998873842
-
-  const initialLat = 35.719431976188595;
-  const initialLng = -78.4526076345532;
-
-  //35.719116420515824, -78.45264351172615
-
-  console.log('center', center);
   const [lastPosition, setLastPosition] = useState({
     lat: center.lat,
     lng: center.lng,
-    //lat: initialLat,
-    //lng: initialLng,
   } as LatLngExpression);
   const [lastZoom, setLastZoom] = useState(17);
   const map = useMap();
@@ -588,20 +561,11 @@ const SetView = ({ center }: { center: LatLng }) => {
     });
   }, [map, center]);
 
-  //const map = useMap();
-  //useEffect(() => {
-  //map.invalidateSize();
-  //}, []);
-
   const mapEvent = useMapEvents({
     click(e) {
       console.log('click', e.latlng);
       console.log(e);
       mapEvent.flyTo(e.latlng, mapEvent.getZoom());
-      //setSelectedPosition([
-      //   e.latlng.lat,
-      //   e.latlng.lng
-      //] as LatLngExpression);
     },
     zoomend(e) {
       console.log('zoomend', e.target.getZoom());
@@ -621,7 +585,6 @@ const SetView = ({ center }: { center: LatLng }) => {
   setTimeout(function () {
     console.log('map size invalidated');
     map.invalidateSize();
-    //console.log("client height", map.getContainer().clientHeight)
   }, 0);
   return null;
 };
@@ -636,19 +599,9 @@ const MyMapContainer: React.FC<MyMapProps> = ({
 
   console.log(`centered on '${JSON.stringify(centeredOnPOI)}' `);
 
-  //const initialLat = 35.717140528123075
-  //const initialLng = -78.45191998873842
-
   const initialLat = centeredOnPOI ? centeredOnPOI.lat : 35.717140528123075;
   const initialLng = centeredOnPOI ? centeredOnPOI.lng : -78.45191998873842;
 
-  /*const startPos: LatLngExpression =
-        [
-            35.718315403969065,
-            -78.45342812474883
-
-        ];
-    console.log("startpos", startPos)*/
   console.log('initialLat', initialLat);
   console.log('initialLng', initialLng);
 

@@ -119,16 +119,13 @@ interface FireDBMapItems {
   Type: string;
   route: string;
   id: string;
+  iconUrl: string;
 }
 
 const MapPage: React.FC = () => {
   console.log('MapPage');
   const { locationName } = useParams<RouteParams>();
   const [poiFilters, setPOIFilters] = useState([] as POIFilter[]);
-
-  const SHEET_ID = import.meta.env
-    .VITE_REACT_APP_GOOGLE_SHEET_RACING_INFO_ID as string;
-  const RANGE = 'MapData!A:P'; // Adjust range based on racer data (e.g., A:C for 3 columns)
 
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBMapItems>('MapData');
@@ -176,12 +173,15 @@ const MapPage: React.FC = () => {
         ? item['Tooltip Offset'].split(',').map(Number)
         : [0, -20],
       isVisible: true,
+      iconUrl: item.iconUrl,
     }));
   }, [data]); // ✅ Only recomputes when `data` changes
 
   useEffect(() => {
     const poiFilters = [
-      ...new Set(pointsOfInterest.map((poi) => poi.type)),
+      ...new Set(
+        pointsOfInterest.filter((poi) => poi.type).map((poi) => poi.type)
+      ),
     ].map((t) => ({
       type: t,
       isVisible: localPOIFilters.find((f) => f.type === t)?.isVisible ?? false,
