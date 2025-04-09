@@ -1,4 +1,4 @@
-name: Set Version for App Store and Google Play Store
+name: Bump App Version for App Store
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT_GITHUB }}
@@ -26,25 +26,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Set new app version
+      - name: Bump app version
         run: npx capacitor-set-version -v ${{ github.event.inputs.next_version }} -b 1
-
-      - name: Create new branch
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git checkout -b bump-version-${{ github.event.inputs.next_version }}
-      
-      - name: Commit changes
-        run: |
-          git add .
-          git commit -m "chore: bump app version to ${{ github.event.inputs.next_version }} for App Store"
-          git push https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }} HEAD:bump-version-${{ github.event.inputs.next_version }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
+          token: ${{ secrets.PAT_GITHUB }}
+          branch: bump-version-${{ github.event.inputs.next_version }}
+          base: main
           title: "Release: Bump app version to ${{ github.event.inputs.next_version }}"
           body: "This PR bumps the app version to ${{ github.event.inputs.next_version }} for the next App Store release."
-          head: bump-version-${{ github.event.inputs.next_version }}
-          base: main
+          commit-message: "chore: bump app version to ${{ github.event.inputs.next_version }} for App Store"
+          delete-branch: true
