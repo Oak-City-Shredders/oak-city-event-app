@@ -255,15 +255,15 @@ const Home: React.FC<HomeProps> = ({
                   </IonCard>
                 </IonCol>
               )}
-              <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
-                <NextEvent />
-              </IonCol>
 
               {preferenceSettings['ticketCounter'].enabled && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
                   <TicketCounter />
                 </IonCol>
               )}
+              <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
+                <NextEvent />
+              </IonCol>
 
               {preferenceSettings['countDown'].enabled && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={4}>

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { IonSkeletonText, IonText } from '@ionic/react';
-import './TicketCounter.css';
+import { IonIcon, IonSkeletonText, IonText, useIonRouter } from '@ionic/react';
 import useFireStoreDB from '../hooks/useFireStoreDB';
+import styles from './TicketCounter.module.css';
+import { useAuth } from '../context/AuthContext';
+import { ticket } from 'ionicons/icons';
 
 interface FireDBTicketsSold {
   Sold: string;
@@ -11,8 +13,11 @@ interface FireDBTicketsSold {
 export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
+  const { user } = useAuth();
+  const router = useIonRouter();
 
   const { data, loading } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
+  let testLoading = true;
 
   useEffect(() => {
     const sold: number = !data
@@ -42,17 +47,32 @@ export default function TicketCounter() {
     updateCounter();
   }, [ticketsSold]);
 
+  const handleViewTickets = () => {
+    if (user && user.emailVerified) {
+      router.push('/tickets');
+    } else {
+      router.push('/login');
+    }
+  };
+
   return (
-    <div className="ticket-count">
-      <IonText>
-        {loading ? (
-          <IonSkeletonText animated={true} />
-        ) : (
+    <div className={styles.ticketCount}>
+      {loading ? (
+        <IonSkeletonText animated={true} className={styles.skeleton} />
+      ) : (
+        <>
           <IonText color="dark">
             <h2>{ticketCount} Tickets Sold!</h2>
           </IonText>
-        )}
-      </IonText>
+          {!user && (
+            <p className={styles.subtitle}>Sign in to view your tickets</p>
+          )}
+          <button onClick={handleViewTickets} className={styles.viewButton}>
+            <IonIcon icon={ticket} />
+            {user ? 'View My Tickets' : 'Sign In'}
+          </button>
+        </>
+      )}
     </div>
   );
 }
