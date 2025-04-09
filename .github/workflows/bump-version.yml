@@ -39,12 +39,13 @@ jobs:
         run: |
           git add .
           git commit -m "chore: bump app version to ${{ github.event.inputs.next_version }} for App Store"
-          git push https://x-access-token:${{ secrets.PAT_GITHUB }}@github.com/${{ github.repository }} HEAD:bump-version-${{ github.event.inputs.next_version }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
+          token: ${{ secrets.PAT_GITHUB }}
+          branch: bump-version-${{ github.event.inputs.next_version }}
+          base: main
           title: "Release: Bump app version to ${{ github.event.inputs.next_version }}"
           body: "This PR bumps the app version to ${{ github.event.inputs.next_version }} for the next App Store release."
-          head: bump-version-${{ github.event.inputs.next_version }}
-          base: main
+          commit-message: "chore: bump app version to ${{ github.event.inputs.next_version }} for App Store"
