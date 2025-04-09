@@ -58,9 +58,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({
             {shortDescription}
           </IonText>
         )}
-        {(detailedImageLink ||
-          detailedDescription ||
-          (buttonName && buttonLink)) && (
+        {(detailedImageLink || detailedDescription) && (
           <IonIcon
             onClick={onToggleView}
             slot="end"

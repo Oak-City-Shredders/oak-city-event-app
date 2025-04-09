@@ -1,0 +1,13 @@
+.warningText {
+  color: var(--ion-color-warning-contrast);
+}
+
+.icon {
+  font-size: 3rem;
+  padding-right: 7px;
+}
+
+.warningContent {
+  display: flex;
+  align-items: center;
+}
