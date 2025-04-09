@@ -122,7 +122,10 @@ const Home: React.FC<HomeProps> = ({
           buttonName: dc['Button Name'],
           buttonLink: dc['Button Link'],
         }))
-        .reverse();
+        .sort(
+          (a, b) =>
+            new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime()
+        );
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
