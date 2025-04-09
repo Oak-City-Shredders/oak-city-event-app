@@ -50,8 +50,10 @@ import {
   useFoodTruckData,
   useRandomRacerId,
 } from '../hooks/useRefetchableData';
-import useGoogleCalendar from '../hooks/useGoogleCalendar';
 import { PermissionState } from '@capacitor/core';
+import OutdatedVersionNotice from '../components/OutdatedVersionNotice';
+import { useEffect, useState } from 'react';
+import { App } from '@capacitor/app';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -88,6 +90,13 @@ interface FireDBDynamicContent {
   id: string;
 }
 
+interface FireDBVersion {
+  id: string;
+  priority: string;
+  minVersion: string;
+  platform: string;
+}
+
 const Home: React.FC<HomeProps> = ({
   notifications,
   removeNotification,
@@ -95,6 +104,36 @@ const Home: React.FC<HomeProps> = ({
 }) => {
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
+  const {
+    data: versionData,
+    loading: versionLoading,
+    error: versionError,
+    refetch: versionRefetch,
+  } = useFireStoreDB<FireDBVersion>('versions');
+
+  const platform = Capacitor.getPlatform();
+  const minVersion = !versionData
+    ? '0.0.0'
+    : versionData.find((v) => v.platform === platform)?.minVersion || '0.0.0';
+  console.log('minVersion', minVersion);
+
+  const [currentVersion, setCurrentVersion] = useState<string>('0.0.0');
+  useEffect(() => {
+    const fetchAppInfo = async () => {
+      try {
+        const info = await App.getInfo();
+        setCurrentVersion(info.version); // e.g., "1.0.0"
+        console.log('currentVersion', info.version);
+
+        //setBuildNumber(info.build); // e.g., "42"
+      } catch (error) {
+        console.error('Error fetching app info:', error);
+      }
+    };
+
+    platform !== 'web' && fetchAppInfo();
+  }, []);
+
   const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
 
   const { refetch: refetchFoodTruck } = useFoodTruckData();
@@ -183,6 +222,13 @@ const Home: React.FC<HomeProps> = ({
           </IonRefresher>
           <IonGrid>
             <IonRow>
+              <IonCol size={colSize} sizeLg={colSizeLg} key={100}>
+                <OutdatedVersionNotice
+                  currentVersion={currentVersion}
+                  minVersion={minVersion}
+                  loading={false}
+                />
+              </IonCol>
               {notifications.length > 0 && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
                   <IonCard className="ion-padding">
