@@ -104,12 +104,12 @@ const FoodTruckSwiper: React.FC = () => {
 
   return (
     <>
-      <IonText className={styles.title}>
+      {/* <IonText className={styles.title}>
         <IonLabel>
           <IonIcon slot="start" icon={fastFoodOutline} />
           Food Trucks
         </IonLabel>
-      </IonText>
+      </IonText> */}
       <IonCard className={styles.container} onClick={undefined}>
         <IonCardContent className={styles.carouselContainer}>
           <Swiper

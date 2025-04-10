@@ -56,9 +56,9 @@ const ScavengerHunt: React.FC = () => {
               }}
             >
               <img
-                src="/images/scavenger-hunt-small.webp"
+                src="/images/scavenger-hunt/fake-squirrels.webp"
                 alt="Scavenger Hunt"
-                style={{ width: '100%', objectFit: 'cover', height: '100%' }}
+                style={{ borderRadius: '8px' }}
               />
             </div>
             <div style={{ margin: '16px', marginBottom: '0' }}>
