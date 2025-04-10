@@ -82,7 +82,7 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
                 <div className="calendar-event-summary-and-description">
                   <div className="calendar-event-summary">{event.summary}</div>
                   <div className="calendar-event-description">
-                    {event.description}
+                    at the {event.location}
                   </div>
                   <div className="calendar-event-time">
                     {' '}
