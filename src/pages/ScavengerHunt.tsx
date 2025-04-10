@@ -161,7 +161,7 @@ const ScavengerHunt: React.FC = () => {
                 <IonCard>
                   <IonCardHeader>
                     <IonCardTitle className="ion-text-center">
-                      Hunt the squirrels, unlock the fun, win the fame!
+                      Hunt the squirrels, unlock the fun, win the trophy!
                     </IonCardTitle>
                     {/* <IonCardSubtitle className="ion-text-center">
                     Starts Thursday morning and runs until the awards ceremony
@@ -171,104 +171,118 @@ const ScavengerHunt: React.FC = () => {
                   <IonCardContent>
                     <div className="ion-margin-bottom">
                       <IonText>
-                        <h2
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          <IonIcon
-                            icon={locationOutline}
-                            style={{ marginRight: '8px' }}
-                          />{' '}
-                          Where to Look
-                        </h2>
                         <p>
-                          The squirrels are scattered everywhere! From the
-                          FloatTrack to Stoke Park, and even down by the lake,
-                          you'll need your wits, eyes, and maybe a little luck
-                          to find them all.
+                          Welcome to the wildest hunt of the weekend, the Oak
+                          City Shred Fest Scavenger Hunt! We’ve hidden hundreds
+                          of 3D printed squirrels all around the event grounds,
+                          and it’s your mission to find as many as you can.
                         </p>
                       </IonText>
                     </div>
+                    <div className="ion-margin-bottom">
+                      <div className="ion-margin-bottom">
+                        <IonText>
+                          <h2
+                            style={{
+                              fontWeight: 'bold',
+                            }}
+                          >
+                            📍 Where to Hunt
+                          </h2>
+                          <p>
+                            Everywhere! From the Float Track to StOak Park, and
+                            even down by the lake. Keep your eyes peeled, you
+                            never know where one might be tucked away!
+                          </p>
+                        </IonText>
+                      </div>
 
+                      <IonText>
+                        <h2
+                          style={{
+                            fontWeight: 'bold',
+                            marginBottom: '4px',
+                          }}
+                        >
+                          🎨 Squirrel Colors & What They Mean
+                        </h2>
+
+                        <div>
+                          <p>
+                            🟣 Purple Squirrels – Standard squirrels. Most of
+                            them are this color. Collect as many as you can!
+                          </p>
+                          <p>
+                            🟢 Green Squirrels – Rare finds! Each green squirrel
+                            is worth a prize valued at $50 or more.
+                          </p>
+                          <p>
+                            🟡 Gold Squirrels – Ultra rare! There are only about
+                            15 gold squirrels out there, and each one is worth a
+                            prize valued at $150+, thanks to our amazing
+                            sponsors.
+                          </p>
+                        </div>
+                      </IonText>
+                    </div>
                     <div className="ion-margin-bottom">
                       <IonText>
                         <h2
                           style={{
-                            display: 'flex',
-                            alignItems: 'center',
                             fontWeight: 'bold',
                           }}
                         >
-                          <IonIcon
-                            icon={colorPaletteOutline}
-                            style={{ marginRight: '8px' }}
-                          />{' '}
-                          What to Look For
+                          🏆 Win the Trophy
                         </h2>
                         <p>
-                          There are three different squirrel colors, each with
-                          unique prizes:
+                          The hunter with the most total squirrels (of any
+                          color) will be crowned Squirrel Champion and take home
+                          an epic trophy during the awards ceremony on Saturday
+                          night.
                         </p>
                       </IonText>
-
-                      <IonList>
-                        <IonItem lines="full">
-                          <div
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '50%',
-                              backgroundColor: '#9970FF',
-                              marginRight: '16px',
-                            }}
-                          ></div>
-                          <IonLabel>
-                            <h2>Purple Squirrels</h2>
-                            <p>
-                              The person who collects the most purple squirrels
-                              will snag an exclusive prize.
-                            </p>
-                          </IonLabel>
-                        </IonItem>
-
-                        <IonItem lines="full">
-                          <div
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '50%',
-                              backgroundColor: '#2dd36f',
-                              marginRight: '16px',
-                            }}
-                          ></div>
-                          <IonLabel>
-                            <h2>Green Squirrels</h2>
-                            <p>Win exciting prizes from our sponsors!</p>
-                          </IonLabel>
-                        </IonItem>
-
-                        <IonItem lines="full">
-                          <div
-                            style={{
-                              width: '24px',
-                              height: '24px',
-                              borderRadius: '50%',
-                              backgroundColor: '#FFD700',
-                              marginRight: '16px',
-                            }}
-                          ></div>
-                          <IonLabel>
-                            <h2>Gold Squirrels</h2>
-                            <p>
-                              Score the big stuff with prizes valued at $150+!
-                            </p>
-                          </IonLabel>
-                        </IonItem>
-                      </IonList>
+                    </div>{' '}
+                    <div className="ion-margin-bottom">
+                      <IonText>
+                        <h2
+                          style={{
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          🎁 Claiming Prizes
+                        </h2>
+                        <p>
+                          Bring all your squirrels to the awards ceremony to:
+                        </p>
+                        <div style={{ marginLeft: '16px' }}>
+                          <p>- Count your total haul. </p>
+                          <p>
+                            - Claim prizes for any green or gold squirrels you
+                            found.
+                          </p>
+                          <p>
+                            - See if you’ve got what it takes to win the trophy!
+                          </p>
+                        </div>
+                      </IonText>
                     </div>
+                    <div>
+                      <IonText>
+                        <h2
+                          style={{
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          ⏰ Hunt Duration
+                        </h2>
+                        <p>
+                          The hunt kicks off when the gates open and runs until
+                          the awards ceremony on Saturday night. You’ve got all
+                          weekend to explore, search, and squirrel away your
+                          prizes!
+                        </p>
+                      </IonText>
+                    </div>{' '}
                   </IonCardContent>
                 </IonCard>
               </>
