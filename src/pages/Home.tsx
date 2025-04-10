@@ -20,6 +20,9 @@ import {
   IonRow,
   IonCol,
   IonBadge,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -281,6 +284,27 @@ const Home: React.FC<HomeProps> = ({
                 <RacerSpotlight />
               </IonCol>
               <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
+                <IonCard
+                  style={{ marginTop: 0, marginBottom: 0 }}
+                  button
+                  onClick={() => (window.location.href = '/scavenger-hunt')}
+                >
+                  <img src="/images/scavenger-hunt/fake-squirrels.webp" />
+                  <IonCardHeader>
+                    <IonCardTitle>Squirrel Scavenger Hunt</IonCardTitle>
+                  </IonCardHeader>
+
+                  <IonCardContent style={{ paddingBottom: '0px' }}>
+                    Find purple, green, and gold squirrels. Each color unlocks a
+                    different kind of prize generously provided by our amazing
+                    sponsors. Some prizes are big, we're talking $150+ big!
+                  </IonCardContent>
+                  <IonButton fill="clear" routerLink="/scavenger-hunt">
+                    Learn more
+                  </IonButton>
+                </IonCard>
+              </IonCol>
+              <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
                 <FoodTruckSwiper />
               </IonCol>
             </IonRow>
