@@ -1,59 +1,55 @@
-# Introduction
+# Oak City Shred Fest App
 
-This repository hosts the client code for the Oak City Shred Fest app.
+Official mobile + web app for the Oak City Shred Fest — a multi-day PEV racing and culture festival hosted by Oak City Shredders. This app helps attendees explore the event, view live schedules, play the squirrel scavenger hunt, and more.
 
-Latest Production versions:
+---
 
--   [Apple App Store](https://apps.apple.com/us/app/oak-city-shred-fest/id6741046929)
--   [Google Play Store](https://play.google.com/store/apps/details?id=com.oakcityshredfest.app)
--   [Web](http://rideoakcity.com)
+## 📲 Live Apps
 
-Sign up to test:
+- **iOS**: [App Store](https://apps.apple.com/us/app/oak-city-shred-fest/id6741046929)
+- **Android**: [Google Play](https://play.google.com/store/apps/details?id=com.oakcityshredfest.app)
+- **Web**: [rideoakcity.com](http://rideoakcity.com)
 
--   [Apple](https://testflight.apple.com/join/w26AJ7kP)
--   [Android](https://play.google.com/store/apps/details?id=com.oakcityshredfest.app)
+---
 
-# Overview
+## 🚀 Quick Start
 
-This is a Typescript React app with Capacitor for native iOS and Android code
+```bash
+git clone https://github.com/Oak-City-Shredders/oak-city-event-app.git
+cd oak-city-event-app
+npm ci
+npm start
+```
 
-Uses:
+Create a `.env` file from `.sample.env` and contact a maintainer for access tokens.
 
--   UI Components are from Ionic
--   Firebase (Authentication and Messaging)
--   Google Sheets for reading data
--   Google Cloud Run Functions (subscribe to topics)
--   Google Calendar
--   Netlify for Web deployment
+---
 
-# Getting Started
+## 🧱 Built With
 
-### To run project locally
+- [React](https://reactjs.org/)
+- [Ionic + Capacitor](https://ionicframework.com/)
+- [Firebase](https://firebase.google.com/)
+- [Leaflet.js](https://leafletjs.com/)
 
-`git clone ` the URL of this repo
+---
 
-`npm ci`
+## 📚 Documentation
 
-`npm start`
+- [Architecture](./docs/ARCHITECTURE.md)
+- [Deployment](./docs/DEPLOYMENT.md)
+- [API Reference](./docs/API.md)
+- [Contributing](./docs/CONTRIBUTING.md)
 
-create a .env file and contact David or Jared to get the secrets
+Or visit the [📖 Documentation Index](./docs/index.md)
 
-`cp .sample.env ./.env`
+---
 
-### To locally deploy the Web application
+## 👥 Maintainers
 
-(Prerequisites include `git` and `npm`):
+- Josh Christensen – Executive Director, Oak City Shredders
+- David / Jared – Firebase & DevOps
 
-`ionic serve`
+---
 
-To locally deploy iOS and Android requires a more complex setup that includes:
-
--   XCode
--   Apple Developer account, certs, etc
-
-# Deployment
-
-This app is deployed when changes are made to `main` by `netlify`
-See deployments here [https://app.netlify.com/sites/ocsf5/deploys](https://app.netlify.com/sites/ocsf5/deploys)
-
-Android and iOS deployments can be triggered using this [GitHub Action](https://github.com/Oak-City-Shredders/oak-city-event-app/actions/workflows/build-ios.yml)
+For more info about the event, visit [oakcityshredfest.com](https://www.oakcityshredfest.com).
