@@ -13,6 +13,9 @@
 # production
 /build
 
+# test results
+/test-results
+
 # firebase account key
 /serviceAccountKey.json
 
@@ -29,6 +32,7 @@ yarn-error.log*
 
 # local env files
 .env
+
 android/android_upload_keystore.jks
 aps.cer
 CertificateSigningRequest.certSigningRequest
