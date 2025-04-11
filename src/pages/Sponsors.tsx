@@ -45,7 +45,7 @@ const sponsorshipTiers = {
 const Team: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
   const handleCardClick = (route: string): void => {
-    window.open(route, '_blank');
+    window.open(route, '_blank', 'noopener,noreferrer');
   };
 
   const handleRefresh = useRefreshHandler(refetch);

@@ -714,7 +714,7 @@ const MyMap: React.FC<MyMapProps> = ({
     );
     if (isConfirmed) {
       const formURL = `${GoogleFormURL}&entry.1980346688=${lat}&entry.610497468=${lng}`;
-      window.open(formURL, '_blank');
+      window.open(formURL, '_blank', 'noopener,noreferrer');
     }
   };
 

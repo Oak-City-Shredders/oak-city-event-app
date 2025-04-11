@@ -60,7 +60,7 @@ const FireBaseAppCheckPage: React.FC = () => {
   };
 
   const openOnGithub = () => {
-    window.open(githubUrl, '_blank');
+    window.open(githubUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
