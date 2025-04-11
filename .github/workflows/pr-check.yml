@@ -97,6 +97,9 @@ jobs:
       - name: Build React app
         run: npm run build
 
+      - name: Install Playwright Browsers
+        run: npx playwright install
+
       - name: Start Vite Preview Server
         run: |
           npm install -g wait-on
