@@ -31,7 +31,7 @@ const ScavengerHunt: React.FC = () => {
   const { scavengerHunt, loading, error, refetch } = useScavengerHunt();
   const [selectedTab, setSelectedTab] = useState<string>('details');
   const handleCardClick = (route: string): void => {
-    window.open(route, '_blank');
+    window.open(route, '_blank', 'noopener,noreferrer');
   };
   const handleRefresh = useRefreshHandler(refetch);
   return (

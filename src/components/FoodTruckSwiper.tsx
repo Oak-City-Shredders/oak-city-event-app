@@ -97,9 +97,9 @@ const FoodTruckSwiper: React.FC = () => {
     }
   };
 
-  const handleCardClick = (route: string): void => {
+  const handleMenuClick = (route: string): void => {
     console.log('route', route);
-    window.open(route, '_blank');
+    window.open(route, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -172,7 +172,7 @@ const FoodTruckSwiper: React.FC = () => {
                         size={'small'}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCardClick(truck.link);
+                          handleMenuClick(truck.link);
                         }}
                       >
                         <IonIcon slot="start" icon={fastFood}></IonIcon>
