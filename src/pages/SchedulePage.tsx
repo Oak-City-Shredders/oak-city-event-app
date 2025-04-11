@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  RefresherEventDetail,
   IonIcon,
   IonAccordion,
   IonAccordionGroup,
@@ -11,17 +10,12 @@ import {
   IonList,
   IonItem,
   IonText,
-  IonLoading,
   IonPage,
 } from '@ionic/react';
 import { locationOutline } from 'ionicons/icons';
 import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar
 import DOMPurify from 'dompurify';
-import {
-  groupEventsByDays,
-  isToday,
-  getFormattedDate,
-} from '../utils/calenderUtils';
+import { groupEventsByDays, getFormattedDate } from '../utils/calenderUtils';
 import { getErrorMessage } from '../utils/errorUtils';
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
@@ -35,8 +29,34 @@ const SchedulePage: React.FC = () => {
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
   }, [calendarData]);
+
   const navigateToMap = (eventLocation: string) => {
-    router.push(`/map/${eventLocation}`);
+    const normalizedLocation = eventLocation.trim().toLowerCase();
+
+    const internalLocations = [
+      'front gate',
+      'stoak park',
+      'qualifier',
+      'floattrack',
+      'lakeside stage',
+      'stage',
+    ];
+
+    let query = '';
+
+    if (normalizedLocation === 'joasis') {
+      query = '316 Cutler St, Raleigh NC';
+    } else if (internalLocations.includes(normalizedLocation)) {
+      router.push(`/map/${normalizedLocation}`);
+      return;
+    } else {
+      query = eventLocation;
+    }
+
+    const encodedQuery = encodeURIComponent(query);
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedQuery}`;
+
+    window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
   };
 
   const firstKey =
