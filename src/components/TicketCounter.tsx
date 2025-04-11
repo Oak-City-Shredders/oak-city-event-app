@@ -13,18 +13,40 @@ interface FireDBTicketsSold {
 export default function TicketCounter() {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
-  const { user } = useAuth();
-  const router = useIonRouter();
+  const [localError, setLocalError] = useState<string | null>(null);
+  const [rawError, setRawError] = useState<any>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
-  const { data, loading } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
-  let testLoading = true;
+  const { user, loading: authLoading, error: authError } = useAuth();
+  const router = useIonRouter();
+  const { data, loading, error } =
+    useFireStoreDB<FireDBTicketsSold>('TicketsSold');
 
   useEffect(() => {
-    const sold: number = !data
-      ? 0
-      : data.reduce((acc, rec) => acc + parseInt(rec.Sold, 10), 0);
+    if (error) {
+      console.error('Firestore error:', error);
+      setLocalError('Error loading ticket data. Tap for details.');
+      setRawError(error);
+    } else if (authError) {
+      console.error('Auth error:', authError);
+      setLocalError('Authentication error. Tap for details.');
+      setRawError(authError);
+    } else {
+      setLocalError(null);
+      setRawError(null);
+      setShowDetails(false);
+    }
+  }, [error, authError]);
+
+  useEffect(() => {
+    if (!data || error) return;
+
+    const sold: number = data.reduce(
+      (acc, rec) => acc + parseInt(rec.Sold, 10),
+      0
+    );
     setTicketsSold(sold);
-  }, [data]);
+  }, [data, error]);
 
   useEffect(() => {
     let count = 0;
@@ -57,8 +79,24 @@ export default function TicketCounter() {
 
   return (
     <div className={styles.ticketCount}>
-      {loading ? (
+      {loading || authLoading ? (
         <IonSkeletonText animated={true} className={styles.skeleton} />
+      ) : localError ? (
+        <div
+          className={styles.errorMessage}
+          onClick={() => setShowDetails(!showDetails)}
+        >
+          <IonText color="danger">
+            <p>{localError}</p>
+            {showDetails && rawError && (
+              <pre className={styles.errorDetails}>
+                {typeof rawError === 'string'
+                  ? rawError
+                  : JSON.stringify(rawError, null, 2)}
+              </pre>
+            )}
+          </IonText>
+        </div>
       ) : (
         <>
           <IonText color="dark">
