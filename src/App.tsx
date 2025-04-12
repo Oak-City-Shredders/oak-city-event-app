@@ -1,5 +1,5 @@
 // React & React Router
-import React, { useEffect, lazy, Suspense } from 'react';
+import { useEffect } from 'react';
 import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { IonContent, IonPage, useIonRouter } from '@ionic/react';
@@ -27,30 +27,26 @@ import { calendar, chatbox, home, map } from 'ionicons/icons';
 import { AuthProvider } from './context/AuthContext';
 import useNotifications from './hooks/useNotifications';
 
-//Load page components
+// Pages
+import About from './pages/About';
+import DripSchedule from './pages/DripSchedule';
+import EmergencyServices from './pages/EmergencyServices';
+import FoodTrucks from './pages/FoodTrucks';
 import Home from './pages/Home';
-
-// Lazy loaded page components
-const About = lazy(() => import('./pages/About'));
-const DripSchedule = lazy(() => import('./pages/DripSchedule'));
-const EmergencyServices = lazy(() => import('./pages/EmergencyServices'));
-const FoodTrucks = lazy(() => import('./pages/FoodTrucks'));
-const Login = lazy(() => import('./pages/Login'));
-const MapPage = lazy(() => import('./pages/MapPage'));
-const Notifications = lazy(() => import('./pages/Notifications'));
-const QuestsPage = lazy(() => import('./pages/Quests'));
-const Raceing = lazy(() => import('./pages/Racing'));
-const RacerProfile = lazy(() => import('./pages/RacerProfile'));
-const Raffles = lazy(() => import('./pages/Raffles'));
-const ScavengerHunt = lazy(() => import('./pages/ScavengerHunt'));
-const SchedulePage = lazy(() => import('./pages/SchedulePage'));
-const TrickCompPage = lazy(() => import('./pages/TrickComp'));
-const Team = lazy(() => import('./pages/Team'));
-const Sponsors = lazy(() => import('./pages/Sponsors'));
-const NotFound = lazy(() => import('./components/NotFound'));
-const FireBaseAppCheckPage = lazy(() => import('./pages/FireBaseAppCheckPage'));
-const TicketsPage = lazy(() => import('./pages/TicketsPage'));
-const StokeBot = lazy(() => import('./pages/StokeBot'));
+import Login from './pages/Login';
+import MapPage from './pages/MapPage';
+import Notifications from './pages/Notifications';
+import QuestsPage from './pages/Quests';
+import Raceing from './pages/Racing';
+import RacerProfile from './pages/RacerProfile';
+import Raffles from './pages/Raffles';
+import ScavengerHunt from './pages/ScavengerHunt';
+import SchedulePage from './pages/SchedulePage';
+import TrickCompPage from './pages/TrickComp';
+import Team from './pages/Team';
+import Sponsors from './pages/Sponsors';
+import NotFound from './components/NotFound';
+import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp } from '@capacitor/app';
@@ -72,25 +68,16 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
-
+import TicketsPage from './pages/TicketsPage';
+import StokeBot from './pages/StokeBot';
 // Theme
+
 import './theme/variables.css';
 import '@ionic/react/css/palettes/dark.system.css';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 
 setupIonicReact();
-
-// Loading component for Suspense fallback
-const LoadingComponent = () => (
-  <IonPage>
-    <IonContent className="ion-padding ion-text-center">
-      <div style={{ marginTop: '50px' }}>
-        <IonLabel>Loading...</IonLabel>
-      </div>
-    </IonContent>
-  </IonPage>
-);
 
 const AnalyticsTracker = () => {
   const location = useLocation();
@@ -121,39 +108,25 @@ const TabsLayout: React.FC = () => {
     <IonTabs>
       <IonRouterOutlet>
         <Route path="/stoke-bot" exact>
-          <Suspense fallback={<LoadingComponent />}>
-            <StokeBot />
-          </Suspense>
+          <StokeBot />
         </Route>
         <Route path="/racer-profile/:racerId" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <RacerProfile />
-          </Suspense>
+          <RacerProfile />
         </Route>
         <Route path="/about" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <About />
-          </Suspense>
+          <About />
         </Route>
         <Route path="/drip-schedule" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <DripSchedule />
-          </Suspense>
+          <DripSchedule />
         </Route>
         <Route path="/app-check" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <FireBaseAppCheckPage />
-          </Suspense>
+          <FireBaseAppCheckPage />
         </Route>
         <Route path="/emergency-services" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <EmergencyServices />
-          </Suspense>
+          <EmergencyServices />
         </Route>
         <Route path="/food-trucks" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <FoodTrucks />
-          </Suspense>
+          <FoodTrucks />
         </Route>
         <Route path="/home" exact={true}>
           <Home
@@ -162,78 +135,48 @@ const TabsLayout: React.FC = () => {
             notificationPermission={notificationPermission}
           />
         </Route>
-        <Route path="/login" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Login />
-          </Suspense>
-        </Route>
+        <Route path="/login" exact={true} component={Login} />
         <Route path="/map/:locationName?" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <MapPage />
-          </Suspense>
+          <MapPage />
         </Route>
         <Route path="/notifications" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Notifications notifications={notifications} />
-          </Suspense>
+          <Notifications notifications={notifications} />
         </Route>
         <Route path="/quests/:questId" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <QuestsPage />
-          </Suspense>
+          <QuestsPage />
         </Route>
         <Route path="/quests" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <QuestsPage />
-          </Suspense>
+          <QuestsPage />
         </Route>
         <Route path="/tickets" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <TicketsPage />
-          </Suspense>
+          <TicketsPage />
         </Route>
         <Route path="/race-information" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Raceing />
-          </Suspense>
+          <Raceing />
         </Route>
         <Route path="/raffles-giveaways" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Raffles />
-          </Suspense>
+          <Raffles />
         </Route>
         <Route path="/schedule" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <SchedulePage />
-          </Suspense>
+          <SchedulePage />
         </Route>
         <Route path="/scavenger-hunt" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <ScavengerHunt />
-          </Suspense>
+          <ScavengerHunt />
         </Route>
         <Route path="/trick-comp" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <TrickCompPage />
-          </Suspense>
+          <TrickCompPage />
         </Route>
         <Route path="/team" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Team />
-          </Suspense>
+          <Team />
         </Route>
         <Route path="/sponsors" exact={true}>
-          <Suspense fallback={<LoadingComponent />}>
-            <Sponsors />
-          </Suspense>
+          <Sponsors />
         </Route>
         <Route path="/" exact={true}>
           <Redirect to="/home" />
         </Route>
         <Route>
-          <Suspense fallback={<LoadingComponent />}>
-            <NotFound />
-          </Suspense>
+          <NotFound />
         </Route>
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
@@ -257,9 +200,6 @@ const TabsLayout: React.FC = () => {
     </IonTabs>
   );
 };
-
-// Make TabsLayout lazy-loaded too
-const LazyTabsLayout = lazy(() => Promise.resolve({ default: TabsLayout }));
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -318,118 +258,65 @@ const App: React.FC = () => {
               <Route path="/email-verified" exact>
                 <EmailVerified />
               </Route>
-              {/* Routes with tabs - now wrapped with Suspense */}
-              <Route path="/stoke-bot" exact>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/racer-profile/:racerId" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/about" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/drip-schedule" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/app-check" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/emergency-services" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/food-trucks" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/home" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/login" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/map/:locationName?" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/notifications" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/quests/:questId" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/quests" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/tickets" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/race-information" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/raffles-giveaways" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/schedule" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/scavenger-hunt" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/trick-comp" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/team" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
-              <Route path="/sponsors" exact={true}>
-                <Suspense fallback={<LoadingComponent />}>
-                  <LazyTabsLayout />
-                </Suspense>
-              </Route>
+              <Route path="/stoke-bot" exact component={TabsLayout} />
+              <Route
+                path="/racer-profile/:racerId"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/about" exact={true} component={TabsLayout} />
+              <Route
+                path="/drip-schedule"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/app-check" exact={true} component={TabsLayout} />
+              <Route
+                path="/emergency-services"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/food-trucks" exact={true} component={TabsLayout} />
+              <Route path="/home" exact={true} component={TabsLayout} />
+              <Route path="/login" exact={true} component={TabsLayout} />
+              <Route
+                path="/map/:locationName?"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/notifications"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/quests/:questId"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/quests" exact={true} component={TabsLayout} />
+              <Route path="/tickets" exact={true} component={TabsLayout} />
+              <Route
+                path="/race-information"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route
+                path="/raffles-giveaways"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/schedule" exact={true} component={TabsLayout} />
+              <Route
+                path="/scavenger-hunt"
+                exact={true}
+                component={TabsLayout}
+              />
+              <Route path="/trick-comp" exact={true} component={TabsLayout} />
+              <Route path="/team" exact={true} component={TabsLayout} />
+              <Route path="/sponsors" exact={true} component={TabsLayout} />
               <Redirect exact from="/" to="/home" />
-              <Route>
-                <Suspense fallback={<LoadingComponent />}>
-                  <NotFound />
-                </Suspense>
-              </Route>
+              <Route component={NotFound} />
             </Switch>
           </IonRouterOutlet>
         </IonReactRouter>
