@@ -30,6 +30,8 @@ import useNotifications from './hooks/useNotifications';
 //Load page components
 import Home from './pages/Home';
 
+import LoadingSpinner from './components/LoadingSpinner';
+
 // Lazy loaded page components
 const About = lazy(() => import('./pages/About'));
 const DripSchedule = lazy(() => import('./pages/DripSchedule'));
@@ -85,9 +87,7 @@ setupIonicReact();
 const LoadingComponent = () => (
   <IonPage>
     <IonContent className="ion-padding ion-text-center">
-      <div style={{ marginTop: '50px' }}>
-        <IonLabel>Loading...</IonLabel>
-      </div>
+      <LoadingSpinner />
     </IonContent>
   </IonPage>
 );
@@ -119,7 +119,7 @@ const TabsLayout: React.FC = () => {
 
   return (
     <IonTabs>
-      <IonRouterOutlet>
+      <IonRouterOutlet animated={false}>
         <Route path="/stoke-bot" exact>
           <Suspense fallback={<LoadingComponent />}>
             <StokeBot />
@@ -312,7 +312,7 @@ const App: React.FC = () => {
           <AnalyticsTracker />
 
           {/* Main router outlet - contains both standalone and tabbed routes */}
-          <IonRouterOutlet>
+          <IonRouterOutlet animated={false}>
             <Switch>
               {/* Standalone routes without tabs */}
               <Route path="/email-verified" exact>
