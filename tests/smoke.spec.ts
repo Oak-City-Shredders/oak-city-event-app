@@ -5,13 +5,13 @@ test.use({
 });
 
 test('View All Racers', async ({ page }) => {
-  await page.goto('http://localhost:8100/home');
+  await page.goto('/home');
   await page.getByRole('button', { name: 'View All' }).click();
   await page.getByRole('link', { name: 'Purchase Ticket' }).click();
 });
 
 test('Test banner navigation', async ({ page }) => {
-  await page.goto('http://localhost:8100/home');
+  await page.goto('/home');
 
   //click on the notification bell
   await page.getByRole('banner').getByRole('link').first().click();
