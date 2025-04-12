@@ -443,13 +443,12 @@ const TooltipMarker = ({
       console.error('POI isImage but no bounds provided');
       return null;
     }
-    //console.log("ImageOverlay Rendered: ", poi.bounds);
 
     return (
       <ImageOverlay
         pane="shadowPane"
         interactive={true}
-        url={`/images/map-icons/${poi.icon}`}
+        url={poi.iconUrl ? poi.iconUrl : `/images/map-icons/${poi.icon}`}
         bounds={poi.bounds as LatLngBoundsExpression}
         eventHandlers={{ click: handleClick }}
       >
