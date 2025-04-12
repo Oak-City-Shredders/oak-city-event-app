@@ -10,6 +10,10 @@ import {
   IonCardTitle,
 } from '@ionic/react';
 import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+// Register the dayjs plugin for relative time
+dayjs.extend(relativeTime);
 
 const festivalStartDate = new Date('2025-04-24T08:00:00-04:00').getTime(); // 8:00 AM Eastern Daylight Time (EDT)
 const festivalEndDate = new Date('2025-04-27T15:00:00-04:00').getTime(); // 3:00 PM Eastern Daylight Time (EDT)
@@ -19,8 +23,8 @@ const festivalEndDate = new Date('2025-04-27T15:00:00-04:00').getTime(); // 3:00
 
 type EventStatus =
   | 'timeRemaining' // Time remaining until key event
-  | 'eventStarted' // Event ended over 15 minutes ago
-  | 'eventInProgress' // Event in progress
+  | 'eventStarted' // Event just started (within first 15 minutes)
+  | 'eventInProgress' // Event in progress (after first 15 minutes)
   | 'eventEnded'; // Event has ended
 
 interface CountdownProps {
@@ -37,20 +41,36 @@ interface CountdownProps {
 const getTimeLeft = (): CountdownProps => {
   const now = new Date().getTime();
 
-  if (now >= festivalEndDate)
+  // If event has ended
+  if (now >= festivalEndDate) {
     return {
       statusMessage: 'Shred Fest 5 has ended. See you next year! 🤙',
       timeLeft: null,
       status: 'eventEnded',
     };
+  }
 
-  const diff = festivalStartDate - now;
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const m = Math.floor((diff / (1000 * 60)) % 60);
-  const s = Math.floor((diff / 1000) % 60);
+  // For upcoming events, calculate time remaining
+  if (now < festivalStartDate) {
+    const diff = festivalStartDate - now;
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
 
-  if (now >= festivalStartDate && d == -1 && h >= -1 && m >= -2) {
+    return {
+      statusMessage: `Shred Fest 5 is in ${dayjs().to(
+        dayjs(festivalStartDate),
+        true
+      )}! 🎉`,
+      timeLeft: { d, h, m, s },
+      status: 'timeRemaining',
+    };
+  }
+
+  // If we're within the first 15 minutes of the event starting
+  const minutesSinceStart = (now - festivalStartDate) / (1000 * 60);
+  if (minutesSinceStart <= 15) {
     return {
       statusMessage: "Shred Fest 5 has started! 🛞🔥 Let's Go!",
       timeLeft: null,
@@ -58,20 +78,11 @@ const getTimeLeft = (): CountdownProps => {
     };
   }
 
-  if (now >= festivalStartDate)
-    return {
-      statusMessage: 'Event in progress! 🏁',
-      timeLeft: null,
-      status: 'eventInProgress',
-    };
-
+  // If the event is in progress (after first 15 minutes)
   return {
-    statusMessage: `Shred Fest 5 is in ${dayjs().to(
-      festivalStartDate,
-      true
-    )}! 🎉`,
-    timeLeft: { d, h, m, s },
-    status: 'timeRemaining',
+    statusMessage: 'Event in progress! 🏁',
+    timeLeft: null,
+    status: 'eventInProgress',
   };
 };
 
@@ -94,7 +105,7 @@ const CountdownTimer: React.FC = () => {
 
   return (
     <div>
-      {countdown.status == 'eventStarted' && isVisible && <Confetti />}
+      {countdown.status === 'eventStarted' && isVisible && <Confetti />}
       <IonCard className="count-down-card">
         <IonCardHeader onClick={onToggleView}>
           {isVisible && countdown.status !== 'eventStarted' && (
@@ -102,7 +113,7 @@ const CountdownTimer: React.FC = () => {
           )}
           <IonCardSubtitle>{countdown.statusMessage}</IonCardSubtitle>
         </IonCardHeader>
-        {isVisible && countdown.status == 'timeRemaining' && (
+        {isVisible && countdown.status === 'timeRemaining' && (
           <IonCardContent>
             <div className="ion-padding crazy-bg" onClick={onToggleView}>
               <div className="countdown-container">
