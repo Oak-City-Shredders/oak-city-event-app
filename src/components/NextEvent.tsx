@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   IonLabel,
   IonIcon,
@@ -10,15 +10,21 @@ import {
 } from '@ionic/react';
 import { timeOutline } from 'ionicons/icons';
 import dayjs from 'dayjs';
-import useGoogleCalendar from '../hooks/useGoogleCalendar'; // Assuming custom hook for Google Calendar
-
 import './NextEvent.css';
-interface NextEventProps {}
-const NextEvent: React.FC<NextEventProps> = ({}) => {
-  const router = useIonRouter();
-  const { loading, error, getUpcomingEvents } = useGoogleCalendar();
+import { GoogleCalendarEvent } from '../hooks/useGoogleCalendar';
 
-  const upcomingEvents = getUpcomingEvents();
+interface NextEventProps {
+  loading: boolean;
+  error: any;
+  upcomingEvents: GoogleCalendarEvent[];
+}
+
+const NextEvent: React.FC<NextEventProps> = ({
+  loading,
+  error,
+  upcomingEvents,
+}) => {
+  const router = useIonRouter();
 
   function getFormattedTime(date: Date): string {
     return new Intl.DateTimeFormat('default', {
@@ -29,7 +35,7 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
   }
 
   if (loading || error || upcomingEvents.length < 1) {
-    return <></>;
+    return null;
   }
 
   const nextEvent = upcomingEvents[0];
@@ -42,19 +48,17 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
   });
 
   return (
-    <IonCard className="next-event-card" onClick={undefined}>
+    <IonCard className="next-event-card">
       <IonCardHeader className="event-card-header">
         <IonCardSubtitle>
           <div className="event-header">
             <IonLabel>
-              {`Up Next in ${dayjs().to(
-                new Date(nextEvent.start.dateTime),
-                true
-              )}`}{' '}
+              {`Up Next in ${dayjs().to(eventStartDateTime, true)} `}
             </IonLabel>
           </div>
         </IonCardSubtitle>
       </IonCardHeader>
+
       <IonCardContent className="event-card-content">
         <div className="calendar-icon">
           <div className="calendar-icon-header">{month}</div>
@@ -65,6 +69,7 @@ const NextEvent: React.FC<NextEventProps> = ({}) => {
           </div>
           <div className="calendar-icon-footer">{dayOfWeek}</div>
         </div>
+
         <div className="events-container">
           {upcomingEvents.map((event, index) => {
             const eventStartDateTime = new Date(event.start.dateTime);

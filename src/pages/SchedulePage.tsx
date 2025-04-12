@@ -40,6 +40,7 @@ const SchedulePage: React.FC = () => {
       'floattrack',
       'lakeside stage',
       'stage',
+      'oak city tent',
     ];
 
     let query = '';
