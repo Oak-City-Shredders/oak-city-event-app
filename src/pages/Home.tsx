@@ -107,20 +107,15 @@ const Home: React.FC<HomeProps> = ({
   notificationPermission,
 }) => {
   const router = useIonRouter();
-  const { data, loading, error, refetch } =
+  const { data, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
-  const {
-    data: versionData,
-    loading: versionLoading,
-    error: versionError,
-    refetch: versionRefetch,
-  } = useFireStoreDB<FireDBVersion>('versions');
+  const { data: versionData, refetch: versionRefetch } =
+    useFireStoreDB<FireDBVersion>('versions');
 
   const platform = Capacitor.getPlatform();
   const minVersion = !versionData
     ? '0.0.0'
     : versionData.find((v) => v.platform === platform)?.minVersion || '0.0.0';
-  console.log('minVersion', minVersion);
 
   const [currentVersion, setCurrentVersion] = useState<string>('0.0.0');
   useEffect(() => {
@@ -128,7 +123,6 @@ const Home: React.FC<HomeProps> = ({
       try {
         const info = await App.getInfo();
         setCurrentVersion(info.version); // e.g., "1.0.0"
-        console.log('currentVersion', info.version);
 
         //setBuildNumber(info.build); // e.g., "42"
       } catch (error) {
@@ -139,15 +133,17 @@ const Home: React.FC<HomeProps> = ({
     platform !== 'web' && fetchAppInfo();
   }, []);
 
-  const [preferenceSettings, setPreferenceSettings] = usePreferenceSettings();
+  const [preferenceSettings] = usePreferenceSettings();
 
   const { refetch: refetchFoodTruck } = useFoodTruckData();
   const { refetch: refetchRacerSpotlight } = useRandomRacerId();
   //const { refetch: refetchCalendar } = useGoogleCalendar(5);
+
   const handleRefresh = useRefreshHandlers([
-    refetch,
+    refetch, //dynamic content
     refetchFoodTruck,
     refetchRacerSpotlight,
+    versionRefetch,
     //refetchCalendar,
   ]);
 

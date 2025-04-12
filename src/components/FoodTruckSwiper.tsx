@@ -5,14 +5,8 @@ import {
   IonButton,
   IonCardContent,
   IonText,
-  IonLabel,
 } from '@ionic/react';
-import {
-  chevronBack,
-  chevronForward,
-  fastFood,
-  fastFoodOutline,
-} from 'ionicons/icons';
+import { chevronBack, chevronForward, fastFood } from 'ionicons/icons';
 import {
   mapFoodTruckData,
   MappedFoodTruck,
@@ -41,6 +35,7 @@ const FoodTruckSwiper: React.FC = () => {
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
+  const [visibleSlides, setVisibleSlides] = useState<MappedFoodTruck[]>([]);
 
   // State to store the selected racer ID after the first query
   const [sortedFoodTrucks, setsortedFoodTrucks] = useState<MappedFoodTruck[]>(
@@ -50,7 +45,9 @@ const FoodTruckSwiper: React.FC = () => {
   // Select a random racer once data is available
   useEffect(() => {
     if (mappedFoodTrucks && mappedFoodTrucks.length > 0) {
-      setsortedFoodTrucks(customSort(mappedFoodTrucks));
+      const sorted = customSort(mappedFoodTrucks);
+      setsortedFoodTrucks(sorted);
+      setVisibleSlides(sorted.slice(0, 2)); // Only show first two initially
     }
   }, [mappedFoodTrucks]);
 
@@ -82,7 +79,15 @@ const FoodTruckSwiper: React.FC = () => {
 
   const handleSlideChange = (swiper: SwiperType) => {
     setIsBeginning(swiper.isBeginning);
-    setIsEnd(swiper.isEnd);
+    const nextIndex = swiper.activeIndex + 1;
+    setIsEnd(swiper.activeIndex >= sortedFoodTrucks.length - 1);
+    if (
+      swiper.activeIndex >= visibleSlides.length - 1 &&
+      sortedFoodTrucks[nextIndex]
+    ) {
+      // Load the next unseen slide
+      setVisibleSlides((prev) => [...prev, sortedFoodTrucks[nextIndex]]);
+    }
   };
 
   const handlePrev = () => {
@@ -122,7 +127,7 @@ const FoodTruckSwiper: React.FC = () => {
             onSlideChange={handleSlideChange}
             className={styles.swiper}
           >
-            {sortedFoodTrucks.map((truck, index) => (
+            {visibleSlides.map((truck, index) => (
               <SwiperSlide key={index}>
                 <div className={styles.slide}>
                   <img
