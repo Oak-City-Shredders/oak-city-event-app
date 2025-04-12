@@ -74,7 +74,7 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Add API Keys
+      - name: Add Environment Variables
         env:
           CALENDAR_API_KEY: ${{ secrets.CALENDAR_API_KEY }}
           CALENDAR_ID: ${{ secrets.CALENDAR_ID }}
@@ -96,6 +96,18 @@ jobs:
       # Build the React app
       - name: Build React app
         run: npm run build
+
+      - name: Install Playwright Browsers
+        run: npx playwright install
+
+      - name: Start Vite Preview Server
+        run: |
+          npm install -g wait-on
+          npm run preview &
+          npx wait-on http://localhost:4173
+
+      - name: Run Playwright Smoke Test
+        run: npx playwright test
 
       - name: Capacitor copy
         run: npx cap copy ios
