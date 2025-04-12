@@ -1,4 +1,13 @@
-import { IonContent, IonPage } from '@ionic/react';
+import {
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFooter,
+  IonIcon,
+  IonPage,
+  IonTitle,
+} from '@ionic/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import MyMap from '../components/Map';
@@ -13,6 +22,7 @@ import useFireStoreDB from '../hooks/useFireStoreDB';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { checkVibrate } from '../utils/vibrate';
+import { refresh } from 'ionicons/icons';
 
 interface RouteParams {
   locationName: string;
@@ -207,9 +217,8 @@ const MapPage: React.FC = () => {
     [poiFilters]
   );
 
-  const position = {
-    lat: 35.7211377702728,
-    lng: -78.453566696167,
+  const handleRefresh = async () => {
+    refetch();
   };
 
   return (
@@ -217,12 +226,15 @@ const MapPage: React.FC = () => {
       <IonPage>
         <IonHeader>
           <IonToolbar color={'primary'}>
-            <ChipToolbar
-              poiFilters={poiFilters}
-              loading={loading}
-              error={error}
-              handlePOIFilterClick={handlePOIFilterClick}
-            />
+            <IonButtons slot="start">
+              <IonBackButton></IonBackButton>
+            </IonButtons>
+            <IonTitle>Map</IonTitle>
+            <IonButtons slot="end">
+              <IonButton onClick={() => handleRefresh()}>
+                <IonIcon icon={refresh}></IonIcon>
+              </IonButton>
+            </IonButtons>
           </IonToolbar>
         </IonHeader>
         <IonContent style={{ height: '200px', width: '100vw' }}>
@@ -232,6 +244,16 @@ const MapPage: React.FC = () => {
             pointsOfInterest={pointsOfInterest}
           />
         </IonContent>
+        <IonFooter>
+          <IonToolbar color={'primary'}>
+            <ChipToolbar
+              poiFilters={poiFilters}
+              loading={loading}
+              error={error}
+              handlePOIFilterClick={handlePOIFilterClick}
+            />
+          </IonToolbar>
+        </IonFooter>
       </IonPage>
     </ErrorBoundary>
   );
