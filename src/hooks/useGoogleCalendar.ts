@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { fetchWithErrorHandling } from '../utils/fetchUtils';
+import { App } from '@capacitor/app';
 
 const API_KEY = import.meta.env.VITE_REACT_APP_CALENDAR_API_KEY;
 
@@ -102,7 +103,28 @@ function useGoogleCalendar(
 
   // Fetch data on initial render
   useEffect(() => {
+    let isMounted = true;
     fetchData();
+
+    let appResumedListener: { remove: () => void };
+    (async () => {
+      const appResumed = async () => {
+        console.log('App resumed (calendar)');
+
+        if (isMounted && !loading) {
+          console.log('App resumed - fetching fresh data (calendar)');
+          fetchData();
+        }
+      };
+      appResumedListener = await App.addListener('resume', appResumed);
+    })();
+
+    return () => {
+      isMounted = false;
+      if (appResumedListener) {
+        appResumedListener.remove();
+      }
+    };
   }, [fetchData]);
 
   return { data, loading, error, refetch: fetchData, getUpcomingEvents };

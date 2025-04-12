@@ -1,11 +1,4 @@
-import { FireDBFoodTruck } from '../utils/foodTruckUtils';
 import useFireStoreDB from './useFireStoreDB';
-
-export const useFoodTruckData = () => {
-  const { data, loading, error, refetch } =
-    useFireStoreDB<FireDBFoodTruck>('FoodTrucks');
-  return { foodTrucks: data, loading, error, refetch };
-};
 
 interface FireDBRacerSpotlight {
   name: string;

@@ -50,14 +50,13 @@ import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
 import FoodTruckSwiper from '../components/FoodTruckSwiper';
-import {
-  useFoodTruckData,
-  useRandomRacerId,
-} from '../hooks/useRefetchableData';
+import { useRandomRacerId } from '../hooks/useRefetchableData';
 import { PermissionState } from '@capacitor/core';
 import OutdatedVersionNotice from '../components/OutdatedVersionNotice';
 import { useEffect, useState } from 'react';
 import { App } from '@capacitor/app';
+import { FireDBFoodTruck } from '../utils/foodTruckUtils';
+import useGoogleCalendar from '../hooks/useGoogleCalendar';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -111,6 +110,13 @@ const Home: React.FC<HomeProps> = ({
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const { data: versionData, refetch: versionRefetch } =
     useFireStoreDB<FireDBVersion>('versions');
+  const {
+    loading: loadingCalendar,
+    error: errorCalendar,
+    refetch: refetchCalendar,
+    getUpcomingEvents,
+  } = useGoogleCalendar();
+  const upcomingEvents = getUpcomingEvents();
 
   const platform = Capacitor.getPlatform();
   const minVersion = !versionData
@@ -135,16 +141,18 @@ const Home: React.FC<HomeProps> = ({
 
   const [preferenceSettings] = usePreferenceSettings();
 
-  const { refetch: refetchFoodTruck } = useFoodTruckData();
-  const { refetch: refetchRacerSpotlight } = useRandomRacerId();
-  //const { refetch: refetchCalendar } = useGoogleCalendar(5);
+  const {
+    data: dataFoodTruck,
+    loading: loadingFoodTruck,
+    error: errorFoodTruck,
+    refetch: refetchFoodTruck,
+  } = useFireStoreDB<FireDBFoodTruck>('FoodTrucks');
 
   const handleRefresh = useRefreshHandlers([
     refetch, //dynamic content
     refetchFoodTruck,
-    refetchRacerSpotlight,
     versionRefetch,
-    //refetchCalendar,
+    refetchCalendar,
   ]);
 
   const dynamicContent: DynamicContentProps[] = !data
@@ -263,7 +271,11 @@ const Home: React.FC<HomeProps> = ({
                 </IonCol>
               )}
               <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
-                <NextEvent />
+                <NextEvent
+                  loading={loadingCalendar}
+                  error={errorCalendar}
+                  upcomingEvents={upcomingEvents}
+                />
               </IonCol>
 
               {preferenceSettings['countDown'].enabled && (
@@ -304,7 +316,11 @@ const Home: React.FC<HomeProps> = ({
                 </IonCard>
               </IonCol>
               <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
-                <FoodTruckSwiper />
+                <FoodTruckSwiper
+                  loading={loadingFoodTruck}
+                  error={errorFoodTruck}
+                  foodTrucks={dataFoodTruck}
+                />
               </IonCol>
             </IonRow>
           </IonGrid>
