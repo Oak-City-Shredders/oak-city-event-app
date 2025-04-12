@@ -23,6 +23,7 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
+  useIonRouter,
 } from '@ionic/react';
 import {
   personCircleOutline,
@@ -105,6 +106,7 @@ const Home: React.FC<HomeProps> = ({
   removeNotification,
   notificationPermission,
 }) => {
+  const router = useIonRouter();
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const {
@@ -287,7 +289,10 @@ const Home: React.FC<HomeProps> = ({
                 <IonCard
                   style={{ marginTop: 0, marginBottom: 0 }}
                   button
-                  onClick={() => (window.location.href = '/scavenger-hunt')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push('/scavenger-hunt');
+                  }}
                 >
                   <img src="/images/scavenger-hunt/fake-squirrels.webp" />
                   <IonCardHeader>
@@ -299,9 +304,7 @@ const Home: React.FC<HomeProps> = ({
                     different kind of prize generously provided by our amazing
                     sponsors. Some prizes are big, we're talking $150+ big!
                   </IonCardContent>
-                  <IonButton fill="clear" routerLink="/scavenger-hunt">
-                    Learn more
-                  </IonButton>
+                  <IonButton fill="clear">Learn more</IonButton>
                 </IonCard>
               </IonCol>
               <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
