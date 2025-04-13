@@ -42,7 +42,7 @@ import DynamicContent, {
 import CountdownTimer from '../components/CountdownTimer';
 import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { Capacitor } from '@capacitor/core';
-import TicketCounter from '../components/TicketCounter';
+import TicketCounter, { FireDBTicketsSold } from '../components/TicketCounter';
 import usePreferenceSettings from '../hooks/usePreferenceSettings';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useRefreshHandlers } from '../hooks/useRefreshHandler';
@@ -111,6 +111,12 @@ const Home: React.FC<HomeProps> = ({
   const { data: versionData, refetch: versionRefetch } =
     useFireStoreDB<FireDBVersion>('versions');
   const {
+    data: dataTicketCounter,
+    loading: loadingTicketCounter,
+    refetch: refetchTicketCounter,
+    error: errorTicketCounter,
+  } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
+  const {
     loading: loadingCalendar,
     error: errorCalendar,
     refetch: refetchCalendar,
@@ -153,6 +159,7 @@ const Home: React.FC<HomeProps> = ({
     refetchFoodTruck,
     versionRefetch,
     refetchCalendar,
+    refetchTicketCounter,
   ]);
 
   const dynamicContent: DynamicContentProps[] = !data
@@ -267,7 +274,11 @@ const Home: React.FC<HomeProps> = ({
 
               {preferenceSettings['ticketCounter'].enabled && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
-                  <TicketCounter />
+                  <TicketCounter
+                    error={errorTicketCounter}
+                    loading={loadingTicketCounter}
+                    data={dataTicketCounter}
+                  />
                 </IonCol>
               )}
               <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
