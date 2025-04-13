@@ -28,6 +28,7 @@
         "dompurify": "^3.2.5",
         "firebase": "^11.3.0",
         "firebase-admin": "^13.1.0",
+        "flagsmith": "^9.1.0",
         "ionicons": "^7.0.0",
         "leaflet": "^1.9.4",
         "motion": "^12.4.2",

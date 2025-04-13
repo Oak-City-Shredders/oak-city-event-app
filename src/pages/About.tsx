@@ -15,6 +15,7 @@ import {
 } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import AppInfo from '../components/AppInfo';
+import { useFlagsmith } from '../hooks/useFlagsmith';
 
 const CONTRIBUTORS = [
   {
@@ -37,6 +38,7 @@ const CONTRIBUTORS = [
 ];
 
 const About: React.FC = () => {
+  const { ready, isEnabled } = useFlagsmith();
   return (
     <IonPage>
       <PageHeader color="tertiary" title="About" />
@@ -94,35 +96,39 @@ const About: React.FC = () => {
                   </IonText>
                 </IonCardContent>
               </IonCard>
-              <IonCard style={{ margin: '16px 4px' }}>
-                <IonCardHeader>
-                  <IonCardTitle>Links</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonText>
-                    <p>
-                      Want to contribute? Find us on{' '}
-                      <a
-                        href="https://github.com/Oak-City-Shredders/oak-city-event-app"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        GitHub
-                      </a>
-                    </p>
-                    <p>
-                      Learn more about{' '}
-                      <a
-                        href="https://www.oakcityshredfest.com/oak-city-about"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Oak City Shredders
-                      </a>
-                    </p>
-                  </IonText>
-                </IonCardContent>
-              </IonCard>
+              {isEnabled('about_page_links') ? (
+                <IonCard style={{ margin: '16px 4px' }}>
+                  <IonCardHeader>
+                    <IonCardTitle>Links</IonCardTitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <IonText>
+                      <p>
+                        Want to contribute? Find us on{' '}
+                        <a
+                          href="https://github.com/Oak-City-Shredders/oak-city-event-app"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          GitHub
+                        </a>
+                      </p>
+                      <p>
+                        Learn more about{' '}
+                        <a
+                          href="https://www.oakcityshredfest.com/oak-city-about"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Oak City Shredders
+                        </a>
+                      </p>
+                    </IonText>
+                  </IonCardContent>
+                </IonCard>
+              ) : (
+                <></>
+              )}
 
               <IonCard style={{ margin: '16px 4px' }}>
                 <IonCardHeader>
