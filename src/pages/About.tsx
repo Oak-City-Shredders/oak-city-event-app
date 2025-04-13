@@ -32,7 +32,7 @@ const CONTRIBUTORS = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/project3-449305.firebasestorage.app/o/team%2Fdave-wolf.webp?alt=media&token=e96519fd-6146-4a7c-b3bf-f8962afc55cd',
     subtitle: 'Card Subtitle',
-    description: 'Treasurer of Oak City Onewheel and App developer',
+    description: 'Treasurer of Oak City Shredders and App developer',
   },
 ];
 
