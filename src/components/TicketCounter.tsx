@@ -1,16 +1,25 @@
 import { useEffect, useState } from 'react';
 import { IonIcon, IonSkeletonText, IonText, useIonRouter } from '@ionic/react';
-import useFireStoreDB from '../hooks/useFireStoreDB';
 import styles from './TicketCounter.module.css';
 import { useAuth } from '../context/AuthContext';
 import { ticket } from 'ionicons/icons';
 
-interface FireDBTicketsSold {
+export interface FireDBTicketsSold {
   Sold: string;
   id: string;
 }
 
-export default function TicketCounter() {
+interface TicketCounterProps {
+  data: FireDBTicketsSold[] | null;
+  loading: boolean;
+  error: any;
+}
+
+export default function TicketCounter({
+  data,
+  loading,
+  error,
+}: TicketCounterProps) {
   const [ticketCount, setTicketCount] = useState(0);
   const [ticketsSold, setTicketsSold] = useState(0);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -19,9 +28,8 @@ export default function TicketCounter() {
 
   const { user, loading: authLoading, error: authError } = useAuth();
   const router = useIonRouter();
-  const { data, loading, error } =
-    useFireStoreDB<FireDBTicketsSold>('TicketsSold');
 
+  // Handle errors
   useEffect(() => {
     if (error) {
       console.error('Firestore error:', error);
@@ -38,6 +46,7 @@ export default function TicketCounter() {
     }
   }, [error, authError]);
 
+  // Calculate total tickets sold
   useEffect(() => {
     if (!data || error) return;
 
@@ -48,6 +57,7 @@ export default function TicketCounter() {
     setTicketsSold(sold);
   }, [data, error]);
 
+  // Animate counter
   useEffect(() => {
     let count = 0;
     let speed = 150; // Initial speed (in ms)
