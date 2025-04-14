@@ -252,18 +252,17 @@ const ScavengerHunt: React.FC = () => {
                           🎁 Claiming Prizes
                         </h2>
                         <p>
-                          Bring all your squirrels to the awards ceremony to:
+                          Bring all your squirrels to the awards ceremony. The
+                          person with the most squirrels wins a trophy and the
+                          leather Onewheel generously provided by Solofalcon
+                          Leather!
                         </p>
-                        <div style={{ marginLeft: '16px' }}>
-                          <p>- Count your total haul. </p>
-                          <p>
-                            - Claim prizes for any green or gold squirrels you
-                            found.
-                          </p>
-                          <p>
-                            - See if you’ve got what it takes to win the trophy!
-                          </p>
-                        </div>
+
+                        <p style={{ marginTop: '8px' }}>
+                          All green and gold squirrel prizes can be claimed
+                          early at the oak city tent or the vendor at the StOak
+                          Park.
+                        </p>
                       </IonText>
                     </div>
                     <div>
