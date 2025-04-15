@@ -14,7 +14,6 @@ import {
 } from '@ionic/react';
 
 import {
-  calendar,
   flag,
   ticket,
   trophy,
@@ -25,6 +24,7 @@ import {
   fastFood,
   help,
   information,
+  discOutline,
 } from 'ionicons/icons';
 
 import styles from './HomePageMenu.module.css';
@@ -77,6 +77,11 @@ const HomePageMenu: React.FC = () => {
       label: 'Get Help',
       route: '/emergency-services',
       icon: help,
+    },
+    {
+      label: 'Ferngully Disc Golf',
+      route: '/ferngully-disc-golf',
+      icon: discOutline,
     },
     {
       label: 'About',
