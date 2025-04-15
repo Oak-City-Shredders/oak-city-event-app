@@ -1,6 +1,12 @@
 // React & React Router
 import { useEffect } from 'react';
-import { Redirect, Route, useLocation, Switch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  useLocation,
+  Switch,
+  useHistory,
+} from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
 import { IonContent, IonPage, useIonRouter } from '@ionic/react';
 
@@ -49,7 +55,7 @@ import NotFound from './components/NotFound';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
-import { App as CapacitorApp } from '@capacitor/app';
+import { App as CapacitorApp, URLOpenListenerEvent } from '@capacitor/app';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -201,36 +207,29 @@ const TabsLayout: React.FC = () => {
   );
 };
 
+const AppUrlListener: React.FC = () => {
+  const history = useHistory();
+
+  useEffect(() => {
+    CapacitorApp.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+      const url = new URL(event.url);
+      const pathname = url.pathname;
+
+      console.log('Deep link triggered with path:', pathname);
+
+      if (pathname) {
+        history.push(pathname);
+      }
+    });
+  }, []);
+
+  return null;
+};
+
 const App: React.FC = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
-
-  const router = useIonRouter();
-  useEffect(() => {
-    CapacitorApp.addListener('appUrlOpen', (event) => {
-      const url = new URL(event.url);
-      const pathname = url.pathname;
-      if (pathname === '/tickets') {
-        router.push('/tickets');
-      }
-      console.log('deep link2: ', url);
-      console.log('deep link host name: ', url.host);
-      if (url.host === 'quests') {
-        const questId = url.pathname.split('/')[1]; // Get questId (2)
-        const key = url.searchParams.get('key'); // Get key (abc)
-        console.log('found a quest');
-        console.log('history.push ', `/quests/${questId}?key=${key}`);
-        router.push(`/quests/${questId}`);
-        console.log('pushed');
-      }
-    });
-
-    return () => {
-      CapacitorApp.removeAllListeners();
-      console.log('App cleanup - all listeners removed');
-    };
-  }, [router]);
 
   // Create an EmailVerified component
   const EmailVerified = () => (
@@ -249,6 +248,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <IonApp>
         <IonReactRouter>
+          <AppUrlListener />
           <AnalyticsTracker />
 
           {/* Main router outlet - contains both standalone and tabbed routes */}
