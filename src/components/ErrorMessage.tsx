@@ -8,7 +8,7 @@ interface ErrorMessageProps {
 const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
   return (
     <>
-      <IonImg src="public/images/falling-squirrel-error.webp" />
+      <IonImg src="/images/falling-squirrel-error.webp" />
       <IonText
         style={{
           fontSize: '1.5em',
