@@ -47,6 +47,7 @@ import Team from './pages/Team';
 import Sponsors from './pages/Sponsors';
 import NotFound from './components/NotFound';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
+import DiscGolfScorecard from './pages/DiscGolfScorecard';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp } from '@capacitor/app';
@@ -174,6 +175,9 @@ const TabsLayout: React.FC = () => {
         </Route>
         <Route path="/" exact={true}>
           <Redirect to="/home" />
+        </Route>
+        <Route path="/ferngully-disc-golf" exact={true}>
+          <DiscGolfScorecard />
         </Route>
         <Route>
           <NotFound />
@@ -315,6 +319,11 @@ const App: React.FC = () => {
               <Route path="/trick-comp" exact={true} component={TabsLayout} />
               <Route path="/team" exact={true} component={TabsLayout} />
               <Route path="/sponsors" exact={true} component={TabsLayout} />
+              <Route
+                path="/ferngully-disc-golf"
+                exact={true}
+                component={TabsLayout}
+              />
               <Redirect exact from="/" to="/home" />
               <Route component={NotFound} />
             </Switch>
