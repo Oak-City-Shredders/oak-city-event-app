@@ -80,8 +80,8 @@ const DiscGolfScorecard: React.FC = () => {
           <IonTitle>Ferngully Disc Golf</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <IonGrid>
+      <IonContent>
+        <IonGrid style={{ margin: '8px' }}>
           <IonRow>
             <IonCol
               className="header-align"
@@ -101,7 +101,7 @@ const DiscGolfScorecard: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-              size="1"
+              size="2"
             >
               Par
             </IonCol>
@@ -119,7 +119,7 @@ const DiscGolfScorecard: React.FC = () => {
               <IonCol className="fixed-width border" size="1">
                 {hole + 1}
               </IonCol>
-              <IonCol className="fixed-width border" size="1">
+              <IonCol className="fixed-width border" size="2">
                 {SCORECARD_PARS[hole]}
               </IonCol>
               {players.map((player) => (
@@ -157,7 +157,7 @@ const DiscGolfScorecard: React.FC = () => {
             <IonCol className="fixed-width border" size="1">
               T
             </IonCol>
-            <IonCol className="fixed-width border" size="1">
+            <IonCol className="fixed-width border" size="2">
               {SCORECARD_PARS.reduce((a, b) => a + b, 0)}
             </IonCol>
             {players.map((player) => {
