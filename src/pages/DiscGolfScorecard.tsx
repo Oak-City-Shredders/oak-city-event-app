@@ -54,10 +54,12 @@ const DiscGolfScorecard: React.FC = () => {
   };
 
   const clearScore = () => {
-    if (selectedCell) {
-      const { player, hole } = selectedCell;
-      updateScore(player, hole, null);
-    }
+    const clearedScores = Object.keys(scores).reduce((acc, player) => {
+      acc[player] = Array(9).fill(null);
+      return acc;
+    }, {} as Record<string, (number | null)[]>);
+    setScores(clearedScores);
+    setSelectedCell(null);
   };
 
   const updatePlayerName = (index: number, newName: string) => {
@@ -187,7 +189,11 @@ const DiscGolfScorecard: React.FC = () => {
           <IonButton style={{ width: '50px' }} onClick={decrementScore}>
             -
           </IonButton>
-          <IonButton onClick={clearScore}>Clear</IonButton>
+        </IonRow>
+        <IonRow className="ion-justify-content-center bottom-row">
+          <IonButton expand="block" color="danger" onClick={clearScore}>
+            Clear Scorecard
+          </IonButton>
         </IonRow>
       </IonContent>
 
@@ -203,6 +209,12 @@ const DiscGolfScorecard: React.FC = () => {
           .border {
             border: 1px solid var(--ion-color-primary);
             text-align: center;
+          }
+
+          .bottom-row {
+            position: absolute;
+            bottom: 25px;
+            width: 100%;
           }
         `}
       </style>
