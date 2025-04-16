@@ -11,6 +11,7 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/react';
+import PageHeader from '../components/PageHeader';
 
 const SCORECARD_PARS = [3, 3, 3, 3, 3, 3, 3, 3, 3];
 
@@ -77,11 +78,7 @@ const DiscGolfScorecard: React.FC = () => {
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Ferngully Disc Golf</IonTitle>
-        </IonToolbar>
-      </IonHeader>
+      <PageHeader title="Ferngully Disc Golf" />
       <IonContent>
         <IonGrid style={{ margin: '8px' }}>
           <IonRow>
