@@ -31,7 +31,6 @@ import {
 import divisions from '../data/RacingDivisions.json';
 import useNotificationPermissions from '../hooks/useNotifcationPermissions';
 import { chevronDown, chevronForward } from 'ionicons/icons';
-import NotificationToggle from '../components/NotificationToggle';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useIonRouter } from '@ionic/react';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
@@ -67,8 +66,6 @@ export interface FireDBRacer {
   id: string;
   Accomplishments: string;
 }
-
-const RACING_TOPIC = 'racing';
 
 const Raceing: React.FC = () => {
   const { notificationPermission } = useNotificationPermissions();
@@ -220,8 +217,6 @@ const Raceing: React.FC = () => {
             </IonButton>
           </IonCardContent>
         </IonCard>
-
-        <NotificationToggle topic={RACING_TOPIC} />
 
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />

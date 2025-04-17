@@ -41,6 +41,7 @@ import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import { checkVibrate } from '../utils/vibrate';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { App } from '@capacitor/app';
+import NotificationsCard from '../components/NotificationsCard';
 
 const Login: React.FC = () => {
   const { user, loading, error: authError, refreshAuth } = useAuth();
@@ -273,6 +274,7 @@ const Login: React.FC = () => {
                   </IonCardContent>
                 </IonCard>
                 <PreferencesCard />
+                <NotificationsCard />
                 <IonCard>
                   <IonCardHeader onClick={() => onToggleAdvanced()}>
                     <IonCardSubtitle>Advanced</IonCardSubtitle>
@@ -414,6 +416,7 @@ const Login: React.FC = () => {
                 </IonCardContent>
               </IonCard>
               <PreferencesCard />
+              <NotificationsCard />
             </div>
           </div>
         </div>
