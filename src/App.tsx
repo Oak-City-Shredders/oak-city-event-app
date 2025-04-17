@@ -27,7 +27,7 @@ import {
 } from '@ionic/react';
 
 // Ionicons
-import { calendar, chatbox, home, map } from 'ionicons/icons';
+import { calendar, chatbox, home, map, flag } from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
@@ -194,13 +194,17 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={home} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="map" href="/map">
-          <IonIcon aria-hidden="true" icon={map} />
-          <IonLabel>Map</IonLabel>
+        <IonTabButton tab="race-information" href="/race-information">
+          <IonIcon aria-hidden="true" icon={flag} />
+          <IonLabel>Racing</IonLabel>
         </IonTabButton>
         <IonTabButton tab="schedule" href="/schedule">
           <IonIcon aria-hidden="true" icon={calendar} />
           <IonLabel>Schedule</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="map" href="/map">
+          <IonIcon aria-hidden="true" icon={map} />
+          <IonLabel>Map</IonLabel>
         </IonTabButton>
         <IonTabButton tab="stoke-bot" href="/stoke-bot">
           <IonIcon aria-hidden="true" icon={chatbox} />
