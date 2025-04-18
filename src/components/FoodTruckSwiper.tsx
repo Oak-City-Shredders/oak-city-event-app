@@ -37,7 +37,7 @@ const FoodTruckSwiper: React.FC<FoodTruckSwiperProps> = ({
     if (loading || error || !foodTrucks || foodTrucks.length < 1) {
       return [];
     }
-    return mapFoodTruckData(foodTrucks);
+    return mapFoodTruckData(foodTrucks).filter((truck) => truck.title);
   }, [foodTrucks, loading, error]);
 
   const [isBeginning, setIsBeginning] = useState(true);
