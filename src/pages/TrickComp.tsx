@@ -8,9 +8,7 @@ import {
   IonCardTitle,
   IonCardSubtitle,
 } from '@ionic/react';
-import UnderConstruction from '../components/UnderConstruction';
 import PageHeader from '../components/PageHeader';
-import NotificationToggle from '../components/NotificationToggle';
 
 const TrickCompPage: React.FC = () => {
   return (
@@ -64,7 +62,6 @@ const TrickCompPage: React.FC = () => {
                 can’t wait to see you there!
               </IonText>
             </div>
-            <NotificationToggle topic="trickComp" />
           </IonCardContent>
         </IonCard>
       </IonContent>

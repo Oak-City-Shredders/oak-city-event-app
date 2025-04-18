@@ -19,7 +19,6 @@ import { groupEventsByDays, getFormattedDate } from '../utils/calenderUtils';
 import { getErrorMessage } from '../utils/errorUtils';
 import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
-import NotificationToggle from '../components/NotificationToggle';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import './SchedulePage.css';
 
@@ -68,7 +67,6 @@ const SchedulePage: React.FC = () => {
     <IonPage>
       <PageHeader title="Schedule" />
       <IonContent>
-        <NotificationToggle topic="schedule" />
         <IonItem>
           <IonLabel class="ion-text-wrap">
             This schedule is subject to change. Refresh (or swipe down) for the

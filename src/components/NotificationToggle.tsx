@@ -1,17 +1,6 @@
 import { useState, useEffect } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
-import {
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonToggle,
-  IonItem,
-  IonLabel,
-  IonIcon,
-  IonCard,
-} from '@ionic/react';
-import useNotificationPermissions from '../hooks/useNotifcationPermissions';
-import { notificationsOffOutline } from 'ionicons/icons';
+import { IonToggle, IonItem, IonLabel } from '@ionic/react';
 import {
   NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY,
   NotificationSetting,
@@ -39,7 +28,6 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
     return;
   }
 
-  const { notificationPermission } = useNotificationPermissions();
   const [notificationsError, setNotificationsError] = useState('');
 
   const toggleNotification = async () => {
@@ -75,35 +63,16 @@ const NotificationToggle: React.FC<{ topic: string }> = ({ topic }) => {
 
   return (
     <>
-      {notificationPermission === 'prompt' ? (
-        ''
-      ) : notificationPermission === 'denied' ? (
-        <IonCard>
-          <IonCardContent>
-            <IonIcon icon={notificationsOffOutline} /> Go to your device's
-            system settings and enable notifications for this app so that you
-            can receive updates.
-          </IonCardContent>
-        </IonCard>
-      ) : (
-        <IonCard>
-          <IonCardHeader>
-            <IonCardSubtitle>Enable Notifications?</IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonToggle
-              checked={notificationSettings[topic].enabled}
-              onIonChange={() => toggleNotification()}
-            >
-              {notificationSettings[topic].name} notifications
-            </IonToggle>
-            {notificationsError && (
-              <IonItem>
-                <IonLabel color={'danger'}>{notificationsError}</IonLabel>
-              </IonItem>
-            )}
-          </IonCardContent>
-        </IonCard>
+      <IonToggle
+        checked={notificationSettings[topic].enabled}
+        onIonChange={() => toggleNotification()}
+      >
+        {notificationSettings[topic].name}
+      </IonToggle>
+      {notificationsError && (
+        <IonItem>
+          <IonLabel color={'danger'}>{notificationsError}</IonLabel>
+        </IonItem>
       )}
     </>
   );
