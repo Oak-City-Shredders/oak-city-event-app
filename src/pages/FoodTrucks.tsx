@@ -23,7 +23,7 @@ const FoodTrucks: React.FC = () => {
 
   const layout = useMemo(() => {
     if (!data) return [];
-    return mapFoodTruckData(data);
+    return mapFoodTruckData(data).filter((truck) => truck.title);
   }, [data]);
 
   const handleRefresh = useRefreshHandler(refetch);
