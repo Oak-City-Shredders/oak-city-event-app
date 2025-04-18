@@ -51,7 +51,11 @@ const DynamicContent: React.FC<DynamicContentProps> = ({
         {title && <IonCardTitle>{title}</IonCardTitle>}
         {subtitle && <IonCardSubtitle>{subtitle}</IonCardSubtitle>}
       </IonCardHeader>
-      <IonCardContent style={{ paddingBottom: '0px' }}>
+      <IonCardContent
+        style={{
+          paddingBottom: buttonName ? '0px' : '16px',
+        }}
+      >
         {shortDescription && (
           <IonText onClick={onToggleView}>
             {datePosted && `${dayjs().to(datePosted)} - `}
