@@ -31,7 +31,9 @@ function useGoogleCalendar(
   calendarId: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || ''
 ): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // Start with true for initial load
+  const [initialFetchComplete, setInitialFetchComplete] =
+    useState<boolean>(false); // Track if we've fetched at least once
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -46,13 +48,17 @@ function useGoogleCalendar(
       calendarId
     )}/events?key=${API_KEY}&maxResults=${maxResults}&singleEvents=true&orderBy=startTime&timeMin=${minDate.toISOString()}&timeMax=${maxDate.toISOString()}`;
 
-    setLoading(true);
+    // Only set loading to true if we haven't completed an initial fetch
+    if (!initialFetchComplete) {
+      setLoading(true);
+    }
     setError(null);
 
     try {
       const response = await fetchWithErrorHandling(url);
       const result = await response.json();
       setData(result.items || []);
+      setInitialFetchComplete(true); // Mark that we've completed at least one fetch
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error);
@@ -62,7 +68,7 @@ function useGoogleCalendar(
     } finally {
       setLoading(false);
     }
-  }, [calendarId, maxResults]);
+  }, [calendarId, maxResults, initialFetchComplete]);
 
   // Get upcoming events from the already fetched data
   const getUpcomingEvents = useCallback(() => {
@@ -111,8 +117,9 @@ function useGoogleCalendar(
       const appResumed = async () => {
         console.log('App resumed (calendar)');
 
-        if (isMounted && !loading) {
+        if (isMounted) {
           console.log('App resumed - fetching fresh data (calendar)');
+          // We'll fetch data here but won't set loading to true since initialFetchComplete will be true
           fetchData();
         }
       };
