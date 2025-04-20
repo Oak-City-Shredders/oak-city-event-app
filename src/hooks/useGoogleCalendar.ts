@@ -21,6 +21,7 @@ export interface GoogleCalendarEvent {
 interface UseGoogleCalendarReturn {
   data: GoogleCalendarEvent[];
   loading: boolean;
+  syncing: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
   getUpcomingEvents: () => GoogleCalendarEvent[];
@@ -32,6 +33,7 @@ function useGoogleCalendar(
 ): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Start with true for initial load
+  const [syncing, setSyncing] = useState<boolean>(false); // For background refreshes
   const [initialFetchComplete, setInitialFetchComplete] =
     useState<boolean>(false); // Track if we've fetched at least once
   const [error, setError] = useState<Error | null>(null);
@@ -48,16 +50,21 @@ function useGoogleCalendar(
       calendarId
     )}/events?key=${API_KEY}&maxResults=${maxResults}&singleEvents=true&orderBy=startTime&timeMin=${minDate.toISOString()}&timeMax=${maxDate.toISOString()}`;
 
-    // Only set loading to true if we haven't completed an initial fetch
+    // Set the appropriate loading state based on whether this is initial or refresh
     if (!initialFetchComplete) {
-      setLoading(true);
+      setLoading(true); // Show "Loading" for initial fetch
+    } else {
+      setSyncing(true); // Show "Syncing" for subsequent fetches
     }
     setError(null);
 
     try {
       const response = await fetchWithErrorHandling(url);
       const result = await response.json();
-      setData(result.items || []);
+      if (JSON.stringify(result.items) !== JSON.stringify(data)) {
+        console.log('replace!');
+        setData(result.items || []);
+      }
       setInitialFetchComplete(true); // Mark that we've completed at least one fetch
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -67,6 +74,7 @@ function useGoogleCalendar(
       }
     } finally {
       setLoading(false);
+      setSyncing(false);
     }
   }, [calendarId, maxResults, initialFetchComplete]);
 
@@ -134,7 +142,14 @@ function useGoogleCalendar(
     };
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData, getUpcomingEvents };
+  return {
+    data,
+    loading,
+    syncing,
+    error,
+    refetch: fetchData,
+    getUpcomingEvents,
+  };
 }
 
 export default useGoogleCalendar;
