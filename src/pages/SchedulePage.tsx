@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import {
   IonIcon,
   IonAccordion,
@@ -21,13 +21,35 @@ import { useIonRouter } from '@ionic/react';
 import PageHeader from '../components/PageHeader';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import './SchedulePage.css';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const SchedulePage: React.FC = () => {
   const router = useIonRouter();
-  const { data: calendarData, loading, error, refetch } = useGoogleCalendar();
+  const {
+    data: calendarData,
+    loading,
+    syncing,
+    error,
+    refetch,
+  } = useGoogleCalendar();
+  const scrollRef = useRef<HTMLIonContentElement>(null);
+  const [accordionValues, setAccordionValues] = useState<string[]>([]);
+
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
   }, [calendarData]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [calendarData]);
+
+  useEffect(() => {
+    if (accordionValues.length === 0 && Object.keys(groupedEvents).length > 0) {
+      setAccordionValues([Object.keys(groupedEvents)[0]]);
+    }
+  }, [groupedEvents]);
 
   const navigateToMap = (eventLocation: string) => {
     const normalizedLocation = eventLocation.trim().toLowerCase();
@@ -62,11 +84,13 @@ const SchedulePage: React.FC = () => {
   const firstKey =
     Object.keys(groupedEvents).length > 0 ? Object.keys(groupedEvents)[0] : '';
   const handleRefresh = useRefreshHandler(refetch);
-
+  const pageHeader = `Schedule ${
+    syncing ? 'Syncing...' : loading ? 'Loading...' : ''
+  }`;
   return (
     <IonPage>
-      <PageHeader title="Schedule" />
-      <IonContent>
+      <PageHeader title={pageHeader} />
+      <IonContent ref={scrollRef}>
         <IonItem>
           <IonLabel class="ion-text-wrap">
             This schedule is subject to change. Refresh (or swipe down) for the
@@ -77,7 +101,9 @@ const SchedulePage: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         {loading ? (
-          <p>Loading events...</p>
+          <div>
+            <LoadingSpinner />
+          </div>
         ) : error ? (
           <IonText>
             Error loading calendar data, please check back later.
@@ -86,7 +112,11 @@ const SchedulePage: React.FC = () => {
         ) : !calendarData || calendarData.length === 0 ? (
           <IonText>There are currently no events available.</IonText>
         ) : (
-          <IonAccordionGroup multiple={true} value={firstKey}>
+          <IonAccordionGroup
+            multiple={true}
+            value={accordionValues}
+            onIonChange={(e) => setAccordionValues(e.detail.value)}
+          >
             {Object.keys(groupedEvents).map((day) => (
               <IonAccordion key={day} value={day}>
                 <IonItem slot="header" color="light">

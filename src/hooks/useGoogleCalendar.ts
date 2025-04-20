@@ -21,6 +21,7 @@ export interface GoogleCalendarEvent {
 interface UseGoogleCalendarReturn {
   data: GoogleCalendarEvent[];
   loading: boolean;
+  syncing: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
   getUpcomingEvents: () => GoogleCalendarEvent[];
@@ -31,7 +32,10 @@ function useGoogleCalendar(
   calendarId: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || ''
 ): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true); // Start with true for initial load
+  const [syncing, setSyncing] = useState<boolean>(false); // For background refreshes
+  const [initialFetchComplete, setInitialFetchComplete] =
+    useState<boolean>(false); // Track if we've fetched at least once
   const [error, setError] = useState<Error | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -46,13 +50,22 @@ function useGoogleCalendar(
       calendarId
     )}/events?key=${API_KEY}&maxResults=${maxResults}&singleEvents=true&orderBy=startTime&timeMin=${minDate.toISOString()}&timeMax=${maxDate.toISOString()}`;
 
-    setLoading(true);
+    // Set the appropriate loading state based on whether this is initial or refresh
+    if (!initialFetchComplete) {
+      setLoading(true); // Show "Loading" for initial fetch
+    } else {
+      setSyncing(true); // Show "Syncing" for subsequent fetches
+    }
     setError(null);
 
     try {
       const response = await fetchWithErrorHandling(url);
       const result = await response.json();
-      setData(result.items || []);
+      if (JSON.stringify(result.items) !== JSON.stringify(data)) {
+        console.log('replace!');
+        setData(result.items || []);
+      }
+      setInitialFetchComplete(true); // Mark that we've completed at least one fetch
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error);
@@ -61,8 +74,9 @@ function useGoogleCalendar(
       }
     } finally {
       setLoading(false);
+      setSyncing(false);
     }
-  }, [calendarId, maxResults]);
+  }, [calendarId, maxResults, initialFetchComplete]);
 
   // Get upcoming events from the already fetched data
   const getUpcomingEvents = useCallback(() => {
@@ -111,8 +125,9 @@ function useGoogleCalendar(
       const appResumed = async () => {
         console.log('App resumed (calendar)');
 
-        if (isMounted && !loading) {
+        if (isMounted) {
           console.log('App resumed - fetching fresh data (calendar)');
+          // We'll fetch data here but won't set loading to true since initialFetchComplete will be true
           fetchData();
         }
       };
@@ -127,7 +142,14 @@ function useGoogleCalendar(
     };
   }, [fetchData]);
 
-  return { data, loading, error, refetch: fetchData, getUpcomingEvents };
+  return {
+    data,
+    loading,
+    syncing,
+    error,
+    refetch: fetchData,
+    getUpcomingEvents,
+  };
 }
 
 export default useGoogleCalendar;
