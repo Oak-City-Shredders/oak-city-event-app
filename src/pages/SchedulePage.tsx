@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect } from 'react';
+import React, { useMemo, useRef, useEffect, useState } from 'react';
 import {
   IonIcon,
   IonAccordion,
@@ -33,6 +33,7 @@ const SchedulePage: React.FC = () => {
     refetch,
   } = useGoogleCalendar();
   const scrollRef = useRef<HTMLIonContentElement>(null);
+  const [accordionValues, setAccordionValues] = useState<string[]>([]);
 
   const groupedEvents = useMemo(() => {
     return groupEventsByDays(calendarData);
@@ -43,6 +44,12 @@ const SchedulePage: React.FC = () => {
       scrollRef.current.scrollTop = 0;
     }
   }, [calendarData]);
+
+  useEffect(() => {
+    if (accordionValues.length === 0 && Object.keys(groupedEvents).length > 0) {
+      setAccordionValues([Object.keys(groupedEvents)[0]]);
+    }
+  }, [groupedEvents]);
 
   const navigateToMap = (eventLocation: string) => {
     const normalizedLocation = eventLocation.trim().toLowerCase();
@@ -105,7 +112,11 @@ const SchedulePage: React.FC = () => {
         ) : !calendarData || calendarData.length === 0 ? (
           <IonText>There are currently no events available.</IonText>
         ) : (
-          <IonAccordionGroup multiple={true} value={firstKey}>
+          <IonAccordionGroup
+            multiple={true}
+            value={accordionValues}
+            onIonChange={(e) => setAccordionValues(e.detail.value)}
+          >
             {Object.keys(groupedEvents).map((day) => (
               <IonAccordion key={day} value={day}>
                 <IonItem slot="header" color="light">
