@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonPage,
   IonHeader,
@@ -16,22 +16,44 @@ import PageHeader from '../components/PageHeader';
 const SCORECARD_PARS = [3, 3, 3, 3, 3, 3, 3, 3, 3];
 
 const DiscGolfScorecard: React.FC = () => {
-  const [players, setPlayers] = useState<string[]>([
-    'Player 1',
-    'Player 2',
-    'Player 3',
-    'Player 4',
-  ]);
-  const [scores, setScores] = useState<Record<string, (number | null)[]>>({
-    'Player 1': Array(9).fill(null),
-    'Player 2': Array(9).fill(null),
-    'Player 3': Array(9).fill(null),
-    'Player 4': Array(9).fill(null),
+  // Initialize state from localStorage or use default values
+  const [players, setPlayers] = useState<string[]>(() => {
+    const savedPlayers = localStorage.getItem('discGolfPlayers');
+    return savedPlayers
+      ? JSON.parse(savedPlayers)
+      : ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
   });
+
+  const [scores, setScores] = useState<Record<string, (number | null)[]>>(
+    () => {
+      const savedScores = localStorage.getItem('discGolfScores');
+      if (savedScores) {
+        return JSON.parse(savedScores);
+      } else {
+        // Default scores if nothing in localStorage
+        return {
+          'Player 1': Array(9).fill(null),
+          'Player 2': Array(9).fill(null),
+          'Player 3': Array(9).fill(null),
+          'Player 4': Array(9).fill(null),
+        };
+      }
+    }
+  );
+
   const [selectedCell, setSelectedCell] = useState<{
     player: string;
     hole: number;
   } | null>(null);
+
+  // Save players and scores to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('discGolfPlayers', JSON.stringify(players));
+  }, [players]);
+
+  useEffect(() => {
+    localStorage.setItem('discGolfScores', JSON.stringify(scores));
+  }, [scores]);
 
   const updateScore = (player: string, hole: number, score: number | null) => {
     setScores({
@@ -55,12 +77,23 @@ const DiscGolfScorecard: React.FC = () => {
   };
 
   const clearScore = () => {
-    const clearedScores = Object.keys(scores).reduce((acc, player) => {
+    // Reset to default players first
+    const defaultPlayers = ['Player 1', 'Player 2', 'Player 3', 'Player 4'];
+
+    // Create cleared scores using the default player names
+    const clearedScores = defaultPlayers.reduce((acc, player) => {
       acc[player] = Array(9).fill(null);
       return acc;
     }, {} as Record<string, (number | null)[]>);
+
+    // Set both states (order matters - scores must be updated first)
     setScores(clearedScores);
+    setPlayers(defaultPlayers);
     setSelectedCell(null);
+
+    // Clear the localStorage items
+    localStorage.removeItem('discGolfScores');
+    localStorage.removeItem('discGolfPlayers');
   };
 
   const updatePlayerName = (index: number, newName: string) => {
