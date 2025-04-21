@@ -25,7 +25,7 @@ import { checkVibrate } from '../utils/vibrate';
 import { refresh } from 'ionicons/icons';
 
 interface RouteParams {
-  locationName: string;
+  locationName?: string;
 }
 
 interface ChipToolbarProps {
@@ -133,7 +133,6 @@ interface FireDBMapItems {
 }
 
 const MapPage: React.FC = () => {
-  console.log('MapPage');
   const { locationName } = useParams<RouteParams>();
   const [poiFilters, setPOIFilters] = useState([] as POIFilter[]);
 
@@ -145,7 +144,6 @@ const MapPage: React.FC = () => {
   );
   const pointsOfInterest = useMemo(() => {
     if (!data) return [];
-    console.log('pointsOfInterest');
     return data.slice(1).map((item) => ({
       id: Number(item.id),
       lat: Number(item.Lat),
