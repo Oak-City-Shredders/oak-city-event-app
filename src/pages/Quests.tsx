@@ -68,7 +68,8 @@ const QuestsPage: React.FC = () => {
           return localQuest
             ? { ...spreadSheetQuest, completed: localQuest.completed }
             : spreadSheetQuest;
-        });
+        })
+        .sort((a, b) => a.id - b.id);
 
   // Function to extract the query parameters
   const getQueryParams = (ref: string) => {
@@ -177,8 +178,26 @@ const QuestsPage: React.FC = () => {
             }}
           />
           <IonCardContent>
-            <IonCardHeader>
-              <IonCardTitle>Side Quests</IonCardTitle>
+            <IonCardHeader style={{ padding: '0 12px 16px 12px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <IonCardTitle>Side Quests</IonCardTitle>
+                <div>
+                  <IonText color="medium">
+                    {
+                      sheetQuestsUpdatedWithLocal.filter(
+                        (quest) => quest.completed
+                      ).length
+                    }{' '}
+                    of {sheetQuestsUpdatedWithLocal.length}
+                  </IonText>
+                </div>
+              </div>
             </IonCardHeader>
             {loading ? (
               <IonSpinner name="dots" />
