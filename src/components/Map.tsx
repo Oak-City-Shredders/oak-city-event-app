@@ -594,7 +594,10 @@ const MyMapContainer: React.FC<MyMapProps> = ({
   poiFilters,
 }) => {
   console.log('MyMapContainer Rendered: ', centerOn);
-  const centeredOnPOI = pointsOfInterest.find((p) => p.name === centerOn);
+
+  const centeredOnPOI = pointsOfInterest.find(
+    (p) => p.name.toLowerCase() === centerOn?.toLowerCase()
+  );
 
   console.log(`centered on '${JSON.stringify(centeredOnPOI)}' `);
 
