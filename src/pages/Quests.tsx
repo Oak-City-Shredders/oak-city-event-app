@@ -30,6 +30,7 @@ import './Quests.css';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import { logEvent } from '../utils/analytics';
 import { checkVibrate } from '../utils/vibrate';
+import ReactConfetti from 'react-confetti';
 
 // Add your sound file in the public folder or use a URL to the sound
 interface FireDBQuest {
@@ -168,6 +169,9 @@ const QuestsPage: React.FC = () => {
           <IonRefresherContent />
         </IonRefresher>
         <IonCard>
+          {sheetQuestsUpdatedWithLocal.every((quest) => quest.completed) && (
+            <ReactConfetti />
+          )}
           <img
             src="/images/quests-small.webp"
             alt="Quests"
