@@ -85,7 +85,7 @@ const SchedulePage: React.FC = () => {
     Object.keys(groupedEvents).length > 0 ? Object.keys(groupedEvents)[0] : '';
   const handleRefresh = useRefreshHandler(refetch);
   const pageHeader = `Schedule ${
-    syncing ? 'Syncing...' : loading ? 'Loading...' : ''
+    syncing ? 'Syncing...' : loading ? 'Loading...' : error ? ' ⚠️' : ''
   }`;
   return (
     <IonPage>
@@ -93,8 +93,9 @@ const SchedulePage: React.FC = () => {
       <IonContent ref={scrollRef}>
         <IonItem>
           <IonLabel class="ion-text-wrap">
-            This schedule is subject to change. Refresh (or swipe down) for the
-            latest changes.
+            {error
+              ? 'An error occurred while updating the data. The schedule might be outdated.'
+              : 'This schedule is subject to change. Refresh (or swipe down) for the latest changes.'}
           </IonLabel>
         </IonItem>
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
@@ -104,7 +105,7 @@ const SchedulePage: React.FC = () => {
           <div>
             <LoadingSpinner />
           </div>
-        ) : error ? (
+        ) : error && !calendarData ? (
           <IonText>
             Error loading calendar data, please check back later.
             {getErrorMessage(error)}
