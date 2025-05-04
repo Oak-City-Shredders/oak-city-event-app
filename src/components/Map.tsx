@@ -43,7 +43,7 @@ import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { checkVibrate } from '../utils/vibrate';
 
 const mapRoadAndTrailImageUrl = '/images/map/2024map-roads.webp'; // replace with new map when available
-const mapGraphicsUrl = '/images/map/2024map-graphics.webp'; // replace with new map when available
+const mapGraphicsUrl = '/images/map/2024map-graphics-cleaned.webp'; // replace with new map when available
 const mapBackgroundUrl = '/images/map/background.webp'; // replace with new map when available
 // Explicitly define the marker icon
 const customIcon = new Icon({
