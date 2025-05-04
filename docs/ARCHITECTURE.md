@@ -1,6 +1,6 @@
-# Oak City Shred Fest App – Technical Overview
+# Evynture App – Technical Overview
 
-The **Oak City Shred Fest App** is a cross-platform mobile application built to support the premier PEV (Personal Electric Vehicle) racing and lifestyle festival: **Oak City Shred Fest**. The app improves event logistics, enhances attendee engagement, and fosters community interaction throughout the multi-day event.
+The **Evynture App** is a cross-platform mobile application built to support the premier PEV (Personal Electric Vehicle) racing and lifestyle festival: **Evynture**. The app improves event logistics, enhances attendee engagement, and fosters community interaction throughout the multi-day event.
 
 ---
 
@@ -107,6 +107,6 @@ The **Oak City Shred Fest App** is a cross-platform mobile application built to 
 
 ---
 
-For more information about Oak City Shred Fest, visit: [www.oakcityshredfest.com](https://www.oakcityshredfest.com)
+For more information about Evynture, visit: [www.oakcityshredfest.com](https://www.oakcityshredfest.com)
 
 ---

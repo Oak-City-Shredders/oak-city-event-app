@@ -1,6 +1,6 @@
-# 🤝 Contributing to the Oak City Shred Fest App
+# 🤝 Contributing to the Evynture App
 
-Thank you for your interest in contributing to the Oak City Shred Fest App! Whether you're fixing bugs, improving documentation, or adding new features, your help is appreciated.
+Thank you for your interest in contributing to the Evynture App! Whether you're fixing bugs, improving documentation, or adding new features, your help is appreciated.
 
 ---
 

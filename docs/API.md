@@ -1,6 +1,6 @@
-# 🔌 Oak City Shred Fest App – API Reference
+# 🔌 Evynture App – API Reference
 
-This document provides an overview of the backend services, data schema, and integrations used in the Oak City Shred Fest App. It includes Firestore collections, callable functions, and external API integrations.
+This document provides an overview of the backend services, data schema, and integrations used in the Evynture App. It includes Firestore collections, callable functions, and external API integrations.
 
 ---
 

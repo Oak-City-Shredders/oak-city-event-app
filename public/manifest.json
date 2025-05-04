@@ -1,47 +1,41 @@
 {
-  "short_name": "OCSF Events",
-  "name": "Oak City Onewheel Events",
+  "short_name": "Evynture",
+  "name": "Evynture - Your Ultimate Event Companion",
   "icons": [
     {
-      "src": "/icons/icon-48.webp",
+      "src": "/icons/icon-40.png",
       "type": "image/png",
-      "sizes": "48x48",
+      "sizes": "40x40",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-72.webp",
+      "src": "/icons/icon-80.png",
       "type": "image/png",
-      "sizes": "72x72",
+      "sizes": "80x80",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-96.webp",
+      "src": "/icons/icon-87.png",
       "type": "image/png",
-      "sizes": "96x96",
+      "sizes": "87x87",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-128.webp",
+      "src": "/icons/icon-120.png",
       "type": "image/png",
-      "sizes": "128x128",
+      "sizes": "120x120",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-192.webp",
+      "src": "/icons/icon-180.png",
       "type": "image/png",
-      "sizes": "192x192",
+      "sizes": "180x180",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-256.webp",
+      "src": "/icons/icon-1024.png",
       "type": "image/png",
-      "sizes": "256x256",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icons/icon-512.webp",
-      "type": "image/png",
-      "sizes": "512x512",
+      "sizes": "1024x1024",
       "purpose": "any maskable"
     }
   ],
