@@ -18,7 +18,7 @@ const Events: React.FC = () => {
 
   const handleEventSelect = (id: string) => {
     setEventId(id);
-    history.push('/home'); // or replace with your actual homepage route
+    history.push('/home');
   };
 
   return (
@@ -37,7 +37,6 @@ const Events: React.FC = () => {
             alt="Casual Camp Out Logo"
             src="images/casual-campout/casual-campout-banner.webp"
           />
-
           <IonCardHeader>
             <IonCardTitle>Casual Camp Out</IonCardTitle>
           </IonCardHeader>

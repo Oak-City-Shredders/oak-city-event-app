@@ -8,7 +8,6 @@ import {
   IonItem,
   IonLabel,
   IonCard,
-  IonCardContent,
   IonIcon,
   IonCardSubtitle,
 } from '@ionic/react';

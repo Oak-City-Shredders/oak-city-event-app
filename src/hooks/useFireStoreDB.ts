@@ -104,7 +104,7 @@ function useFireStoreDB<T>(
           setData(items);
           cache.current = { data: items, timestamp: now }; // Update cache with timestamp
         }
-        console.log('Fetch complete');
+
         setError(null);
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));

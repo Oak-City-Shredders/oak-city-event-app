@@ -82,10 +82,8 @@ export const CurrentEventProvider: React.FC<{ children: React.ReactNode }> = ({
           (doc) => ({ id: doc.id, ...doc.data } as FireDBEventInfo)
         );
         setData(items);
-        console.log('Fetched data:', items);
         cache.current = { data: items, timestamp: now }; // Update cache with timestamp
 
-        console.log('Fetch complete');
         setError(null);
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
