@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.oakcityshredfest.app',
-  appName: 'Oak City Shred Fest',
+  appName: 'Event App',
   webDir: 'build',
   server: {
     iosScheme: 'https',

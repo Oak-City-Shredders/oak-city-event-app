@@ -8,7 +8,7 @@ import {
   useHistory,
 } from 'react-router-dom';
 import { IonReactRouter } from '@ionic/react-router';
-import { IonContent, IonPage, useIonRouter } from '@ionic/react';
+import { IonContent, IonPage } from '@ionic/react';
 
 // Capacitor
 import { SplashScreen } from '@capacitor/splash-screen';
@@ -31,6 +31,10 @@ import { calendar, chatbox, home, map, flag } from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
+import {
+  CurrentEventProvider,
+  FireDBEventInfo,
+} from './context/CurrentEventContext';
 import useNotifications from './hooks/useNotifications';
 
 // Pages
@@ -54,6 +58,7 @@ import Sponsors from './pages/Sponsors';
 import NotFound from './components/NotFound';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 import DiscGolfScorecard from './pages/DiscGolfScorecard';
+import Events from './pages/Events';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp, URLOpenListenerEvent } from '@capacitor/app';
@@ -81,6 +86,7 @@ import StokeBot from './pages/StokeBot';
 
 import './theme/variables.css';
 import '@ionic/react/css/palettes/dark.system.css';
+import useFireStoreDB from './hooks/useFireStoreDB';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 
@@ -105,11 +111,16 @@ const AnalyticsTracker = () => {
 const TabsLayout: React.FC = () => {
   const { notifications, removeNotification, notificationPermission } =
     useNotifications();
+  const {
+    data: dataEventInfo,
+    loading: loadingEventInfo,
+    refetch: refetchEventInfo,
+    error: errorEventInfo,
+  } = useFireStoreDB<FireDBEventInfo>('EventInfo');
 
-  const location = useLocation();
-
-  // List of routes that should show the tab bar
-  const showTabs = ['/home', '/schedule', '/map'].includes(location.pathname);
+  const eventInfo = !dataEventInfo
+    ? {}
+    : Object.fromEntries(dataEventInfo.map(({ id, value }) => [id, value]));
 
   return (
     <IonTabs>
@@ -180,7 +191,7 @@ const TabsLayout: React.FC = () => {
           <Sponsors />
         </Route>
         <Route path="/" exact={true}>
-          <Redirect to="/home" />
+          <Redirect to="/events" />
         </Route>
         <Route path="/ferngully-disc-golf" exact={true}>
           <DiscGolfScorecard />
@@ -194,10 +205,13 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={home} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="race-information" href="/race-information">
-          <IonIcon aria-hidden="true" icon={flag} />
-          <IonLabel>Racing</IonLabel>
-        </IonTabButton>
+        {eventInfo.racingEnabled && (
+          <IonTabButton tab="race-information" href="/race-information">
+            <IonIcon aria-hidden="true" icon={flag} />
+            <IonLabel>Racing</IonLabel>
+          </IonTabButton>
+        )}
+
         <IonTabButton tab="schedule" href="/schedule">
           <IonIcon aria-hidden="true" icon={calendar} />
           <IonLabel>Schedule</IonLabel>
@@ -206,10 +220,12 @@ const TabsLayout: React.FC = () => {
           <IonIcon aria-hidden="true" icon={map} />
           <IonLabel>Map</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="stoke-bot" href="/stoke-bot">
-          <IonIcon aria-hidden="true" icon={chatbox} />
-          <IonLabel>StokeBot</IonLabel>
-        </IonTabButton>
+        {eventInfo.stokeBotEnabled && (
+          <IonTabButton tab="stoke-bot" href="/stoke-bot">
+            <IonIcon aria-hidden="true" icon={chatbox} />
+            <IonLabel>StokeBot</IonLabel>
+          </IonTabButton>
+        )}
       </IonTabBar>
     </IonTabs>
   );
@@ -254,86 +270,95 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-      <IonApp>
-        <IonReactRouter>
-          <AppUrlListener />
-          <AnalyticsTracker />
+      <CurrentEventProvider>
+        <IonApp>
+          <IonReactRouter>
+            <AppUrlListener />
+            <AnalyticsTracker />
 
-          {/* Main router outlet - contains both standalone and tabbed routes */}
-          <IonRouterOutlet>
-            <Switch>
-              {/* Standalone routes without tabs */}
-              <Route path="/email-verified" exact>
-                <EmailVerified />
-              </Route>
-              <Route path="/stoke-bot" exact component={TabsLayout} />
-              <Route
-                path="/racer-profile/:racerId"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/about" exact={true} component={TabsLayout} />
-              <Route
-                path="/drip-schedule"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/app-check" exact={true} component={TabsLayout} />
-              <Route
-                path="/emergency-services"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/food-trucks" exact={true} component={TabsLayout} />
-              <Route path="/home" exact={true} component={TabsLayout} />
-              <Route path="/login" exact={true} component={TabsLayout} />
-              <Route
-                path="/map/:locationName?"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route
-                path="/notifications"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route
-                path="/quests/:questId"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/quests" exact={true} component={TabsLayout} />
-              <Route path="/tickets" exact={true} component={TabsLayout} />
-              <Route
-                path="/race-information"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route
-                path="/raffles-giveaways"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/schedule" exact={true} component={TabsLayout} />
-              <Route
-                path="/scavenger-hunt"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Route path="/trick-comp" exact={true} component={TabsLayout} />
-              <Route path="/team" exact={true} component={TabsLayout} />
-              <Route path="/sponsors" exact={true} component={TabsLayout} />
-              <Route
-                path="/ferngully-disc-golf"
-                exact={true}
-                component={TabsLayout}
-              />
-              <Redirect exact from="/" to="/home" />
-              <Route component={NotFound} />
-            </Switch>
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </IonApp>
+            {/* Main router outlet - contains both standalone and tabbed routes */}
+            <IonRouterOutlet>
+              <Switch>
+                {/* Standalone routes without tabs */}
+                <Route path="/events" exact>
+                  <Events />
+                </Route>
+                <Route path="/email-verified" exact>
+                  <EmailVerified />
+                </Route>
+                <Route path="/stoke-bot" exact component={TabsLayout} />
+                <Route
+                  path="/racer-profile/:racerId"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/about" exact={true} component={TabsLayout} />
+                <Route
+                  path="/drip-schedule"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/app-check" exact={true} component={TabsLayout} />
+                <Route
+                  path="/emergency-services"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route
+                  path="/food-trucks"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/home" exact={true} component={TabsLayout} />
+                <Route path="/login" exact={true} component={TabsLayout} />
+                <Route
+                  path="/map/:locationName?"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route
+                  path="/notifications"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route
+                  path="/quests/:questId"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/quests" exact={true} component={TabsLayout} />
+                <Route path="/tickets" exact={true} component={TabsLayout} />
+                <Route
+                  path="/race-information"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route
+                  path="/raffles-giveaways"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/schedule" exact={true} component={TabsLayout} />
+                <Route
+                  path="/scavenger-hunt"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Route path="/trick-comp" exact={true} component={TabsLayout} />
+                <Route path="/team" exact={true} component={TabsLayout} />
+                <Route path="/sponsors" exact={true} component={TabsLayout} />
+                <Route
+                  path="/ferngully-disc-golf"
+                  exact={true}
+                  component={TabsLayout}
+                />
+                <Redirect exact from="/" to="/events" />
+                <Route component={NotFound} />
+              </Switch>
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </IonApp>
+      </CurrentEventProvider>
     </AuthProvider>
   );
 };

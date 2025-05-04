@@ -50,13 +50,13 @@ import NextEvent from '../components/NextEvent';
 import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
 import FoodTruckSwiper from '../components/FoodTruckSwiper';
-import { useRandomRacerId } from '../hooks/useRefetchableData';
 import { PermissionState } from '@capacitor/core';
 import OutdatedVersionNotice from '../components/OutdatedVersionNotice';
 import { useEffect, useState } from 'react';
 import { App } from '@capacitor/app';
 import { FireDBFoodTruck } from '../utils/foodTruckUtils';
 import useGoogleCalendar from '../hooks/useGoogleCalendar';
+import { FireDBEventInfo } from '../context/CurrentEventContext';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -105,6 +105,12 @@ const Home: React.FC<HomeProps> = ({
   removeNotification,
   notificationPermission,
 }) => {
+  const {
+    data: dataEventInfo,
+    loading: loadingEventInfo,
+    refetch: refetchEventInfo,
+    error: errorEventInfo,
+  } = useFireStoreDB<FireDBEventInfo>('EventInfo');
   const router = useIonRouter();
   const { data, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
@@ -116,6 +122,7 @@ const Home: React.FC<HomeProps> = ({
     refetch: refetchTicketCounter,
     error: errorTicketCounter,
   } = useFireStoreDB<FireDBTicketsSold>('TicketsSold');
+
   const {
     loading: loadingCalendar,
     error: errorCalendar,
@@ -128,6 +135,12 @@ const Home: React.FC<HomeProps> = ({
   const minVersion = !versionData
     ? '0.0.0'
     : versionData.find((v) => v.platform === platform)?.minVersion || '0.0.0';
+
+  const eventInfo = !dataEventInfo
+    ? {}
+    : Object.fromEntries(dataEventInfo.map(({ id, value }) => [id, value]));
+
+  const eventTitle = eventInfo.title || '';
 
   const [currentVersion, setCurrentVersion] = useState<string>('0.0.0');
   useEffect(() => {
@@ -199,7 +212,7 @@ const Home: React.FC<HomeProps> = ({
       <IonPage id="main-content">
         <IonHeader translucent={true}>
           <IonToolbar color={'primary'}>
-            <IonTitle>Oak City Shred Fest 5</IonTitle>
+            <IonTitle>{loadingEventInfo ? `` : eventTitle}</IonTitle>
             <IonButtons slot="end">
               <IonButton routerLink="/notifications">
                 <IonIcon
@@ -228,8 +241,8 @@ const Home: React.FC<HomeProps> = ({
             <IonToolbar>
               <IonImg
                 className="shred-fest-logo"
-                src="/images/shred-fest-logo-horizontal3.webp"
-                alt="Oak City Shred Fest 5"
+                src={eventInfo.titleImage}
+                alt={eventTitle}
               />
             </IonToolbar>
           </IonHeader>
@@ -272,15 +285,16 @@ const Home: React.FC<HomeProps> = ({
                 </IonCol>
               )}
 
-              {preferenceSettings['ticketCounter'].enabled && (
-                <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
-                  <TicketCounter
-                    error={errorTicketCounter}
-                    loading={loadingTicketCounter}
-                    data={dataTicketCounter}
-                  />
-                </IonCol>
-              )}
+              {preferenceSettings['ticketCounter'].enabled &&
+                eventInfo.ticketsSoldEnabled && (
+                  <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
+                    <TicketCounter
+                      error={errorTicketCounter}
+                      loading={loadingTicketCounter}
+                      data={dataTicketCounter}
+                    />
+                  </IonCol>
+                )}
               <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
                 <NextEvent
                   loading={loadingCalendar}
@@ -300,39 +314,45 @@ const Home: React.FC<HomeProps> = ({
                     <StokeMeter />
                   </IonCol>
                 )}
+              {eventInfo.featuredCompetitorEnabled && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={6}>
+                  <RacerSpotlight />
+                </IonCol>
+              )}
+              {eventInfo.scavengerHuntEnabled && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
+                  <IonCard
+                    style={{ marginTop: 0, marginBottom: 0 }}
+                    button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push('/scavenger-hunt');
+                    }}
+                  >
+                    <img src="/images/scavenger-hunt/fake-squirrels.webp" />
+                    <IonCardHeader>
+                      <IonCardTitle>Squirrel Scavenger Hunt</IonCardTitle>
+                    </IonCardHeader>
 
-              <IonCol size={colSize} sizeLg={colSizeLg} key={6}>
-                <RacerSpotlight />
-              </IonCol>
-              <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
-                <IonCard
-                  style={{ marginTop: 0, marginBottom: 0 }}
-                  button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push('/scavenger-hunt');
-                  }}
-                >
-                  <img src="/images/scavenger-hunt/fake-squirrels.webp" />
-                  <IonCardHeader>
-                    <IonCardTitle>Squirrel Scavenger Hunt</IonCardTitle>
-                  </IonCardHeader>
-
-                  <IonCardContent style={{ paddingBottom: '0px' }}>
-                    Find purple, green, and gold squirrels. Each color unlocks a
-                    different kind of prize generously provided by our amazing
-                    sponsors. Some prizes are big, we're talking $150+ big!
-                  </IonCardContent>
-                  <IonButton fill="clear">Learn more</IonButton>
-                </IonCard>
-              </IonCol>
-              <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
-                <FoodTruckSwiper
-                  loading={loadingFoodTruck}
-                  error={errorFoodTruck}
-                  foodTrucks={dataFoodTruck}
-                />
-              </IonCol>
+                    <IonCardContent style={{ paddingBottom: '0px' }}>
+                      Find purple, green, and gold squirrels. Each color unlocks
+                      a different kind of prize generously provided by our
+                      amazing sponsors. Some prizes are big, we're talking $150+
+                      big!
+                    </IonCardContent>
+                    <IonButton fill="clear">Learn more</IonButton>
+                  </IonCard>
+                </IonCol>
+              )}
+              {eventInfo.foodTrucksEnabled && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
+                  <FoodTruckSwiper
+                    loading={loadingFoodTruck}
+                    error={errorFoodTruck}
+                    foodTrucks={dataFoodTruck}
+                  />
+                </IonCol>
+              )}
             </IonRow>
           </IonGrid>
           <IonGrid>
