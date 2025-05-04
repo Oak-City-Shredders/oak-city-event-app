@@ -48,7 +48,7 @@ function useGoogleCalendar(
 
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
       calendarId
-    )}/events?key=${API_KEY}&maxResults=${maxResults}&singleEvents=true&orderBy=startTime`;
+    )}/events?key=${API_KEY}&maxResults=${maxResults}&singleEvents=true&orderBy=startTime&timeMin=${minDate.toISOString()}&timeMax=${maxDate.toISOString()}`;
 
     // Set the appropriate loading state based on whether this is initial or refresh
     if (!initialFetchComplete) {
