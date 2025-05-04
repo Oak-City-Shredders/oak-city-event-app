@@ -3,39 +3,45 @@
   "name": "Evynture - Your Ultimate Event Companion",
   "icons": [
     {
-      "src": "/icons/icon-40.png",
+      "src": "../icons/icon-48.webp",
       "type": "image/png",
-      "sizes": "40x40",
+      "sizes": "48x48",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-80.png",
+      "src": "../icons/icon-72.webp",
       "type": "image/png",
-      "sizes": "80x80",
+      "sizes": "72x72",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-87.png",
+      "src": "../icons/icon-96.webp",
       "type": "image/png",
-      "sizes": "87x87",
+      "sizes": "96x96",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-120.png",
+      "src": "../icons/icon-128.webp",
       "type": "image/png",
-      "sizes": "120x120",
+      "sizes": "128x128",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-180.png",
+      "src": "../icons/icon-192.webp",
       "type": "image/png",
-      "sizes": "180x180",
+      "sizes": "192x192",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-1024.png",
+      "src": "../icons/icon-256.webp",
       "type": "image/png",
-      "sizes": "1024x1024",
+      "sizes": "256x256",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "../icons/icon-512.webp",
+      "type": "image/png",
+      "sizes": "512x512",
       "purpose": "any maskable"
     }
   ],
