@@ -1,6 +1,6 @@
-# 🚀 Oak City Shred Fest App – Deployment Guide
+# 🚀 Evynture App – Deployment Guide
 
-This guide provides instructions for deploying the Oak City Shred Fest app to Web, iOS, and Android platforms. It also includes setup steps for local development and links to CI/CD workflows.
+This guide provides instructions for deploying the Evynture app to Web, iOS, and Android platforms. It also includes setup steps for local development and links to CI/CD workflows.
 
 ---
 

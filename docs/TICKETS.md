@@ -1,6 +1,6 @@
 # 📦 SquareSpace Orders Sheet – Internal Documentation
 
-This spreadsheet system helps track **guest ticket entries** and **automatically fetched Squarespace orders** for Oak City Shred Fest 5.
+This spreadsheet system helps track **guest ticket entries** and **automatically fetched Squarespace orders** for Evynture 5.
 
 **Spreadsheet Link:** [SquareSpace Orders Sheet](https://docs.google.com/spreadsheets/d/1DHRi60WlDzO552H4BOdkJOqeyq-oaFaCiQhsSsSjX5s/edit?usp=sharing) (Access limited to authorized editors)
 
