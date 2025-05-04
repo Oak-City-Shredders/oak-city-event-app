@@ -1,6 +1,6 @@
-# Oak City Shred Fest App
+# Evynture App
 
-Official mobile + web app for the Oak City Shred Fest — a multi-day PEV racing and culture festival hosted by Oak City Shredders. This app helps attendees explore the event, view live schedules, play the squirrel scavenger hunt, and more.
+Official mobile + web app for the Evynture — a multi-day PEV racing and culture festival hosted by Oak City Shredders. This app helps attendees explore the event, view live schedules, play the squirrel scavenger hunt, and more.
 
 ---
 
