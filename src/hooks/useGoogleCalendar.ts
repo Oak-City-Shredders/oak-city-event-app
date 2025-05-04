@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { fetchWithErrorHandling } from '../utils/fetchUtils';
 import { App } from '@capacitor/app';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 const API_KEY = import.meta.env.VITE_REACT_APP_CALENDAR_API_KEY;
 
@@ -27,10 +28,7 @@ interface UseGoogleCalendarReturn {
   getUpcomingEvents: () => GoogleCalendarEvent[];
 }
 
-function useGoogleCalendar(
-  maxResults: number = 500,
-  calendarId: string = import.meta.env.VITE_REACT_APP_CALENDAR_ID || ''
-): UseGoogleCalendarReturn {
+function useGoogleCalendar(maxResults: number = 500): UseGoogleCalendarReturn {
   const [data, setData] = useState<GoogleCalendarEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // Start with true for initial load
   const [syncing, setSyncing] = useState<boolean>(false); // For background refreshes
@@ -38,13 +36,21 @@ function useGoogleCalendar(
     useState<boolean>(false); // Track if we've fetched at least once
   const [error, setError] = useState<Error | null>(null);
 
+  const { eventInfo } = useCurrentEvent();
+  const calendarId = useMemo(() => {
+    if (eventInfo && eventInfo.calendarId) {
+      return eventInfo.calendarId;
+    }
+    return null;
+  }, [eventInfo]);
+
   const fetchData = useCallback(async () => {
     if (!calendarId) return;
 
     const now = new Date();
-    const cutoffDate = new Date('2025-04-22T08:00:00-04:00');
+    const cutoffDate = new Date(eventInfo.startDate);
     const minDate = now < cutoffDate ? now : cutoffDate;
-    const maxDate = new Date('2025-04-28T08:00:00-04:00');
+    const maxDate = new Date(eventInfo.endDate);
 
     const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
       calendarId
