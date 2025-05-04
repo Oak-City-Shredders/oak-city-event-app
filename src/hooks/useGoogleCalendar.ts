@@ -68,7 +68,6 @@ function useGoogleCalendar(maxResults: number = 500): UseGoogleCalendarReturn {
       const response = await fetchWithErrorHandling(url);
       const result = await response.json();
       if (JSON.stringify(result.items) !== JSON.stringify(data)) {
-        console.log('replace!');
         setData(result.items || []);
       }
       setInitialFetchComplete(true); // Mark that we've completed at least one fetch

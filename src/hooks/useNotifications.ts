@@ -9,6 +9,7 @@ import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { updateTopicSubscription } from '../utils/notificationUtils';
 import { PermissionState } from '@capacitor/core';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 export const PUSH_NOTIFICATION_TOKEN_LOCAL_STORAGE_KEY =
   'push_notification_token';
@@ -41,6 +42,12 @@ const useNotifications = (): UseNotificationsReturn => {
   const [notificationPermission, setNotificationPermission] =
     useState<PermissionState>('prompt');
 
+  const [registrationToken, setRegistrationToken] = useState<string | null>(
+    null
+  );
+
+  const { eventId } = useCurrentEvent();
+
   const removeNotification = (notification: PushNotificationSchema) => {
     setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
   };
@@ -67,6 +74,39 @@ const useNotifications = (): UseNotificationsReturn => {
       console.error('Error fetching delivered notifications', error);
     }
   };
+
+  useEffect(() => {
+    if (!Capacitor.isPluginAvailable('PushNotifications')) return;
+
+    // Subscribe to the event topic
+    if (eventId && registrationToken) {
+      try {
+        const settingsRaw = localStorage.getItem(
+          NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY
+        );
+        const notificationSettings = settingsRaw ? JSON.parse(settingsRaw) : {};
+
+        const isAlreadySubscribed = notificationSettings[eventId]?.enabled;
+
+        if (!isAlreadySubscribed) {
+          updateTopicSubscription(eventId, registrationToken, true)
+            .then(() => {
+              notificationSettings[eventId] = { enabled: true };
+              localStorage.setItem(
+                NOTIFICATION_SETTINGS_LOCAL_STORAGE_KEY,
+                JSON.stringify(notificationSettings)
+              );
+              console.log(`Subscribed to topic: ${eventId}`);
+            })
+            .catch((err) => {
+              console.error(`Failed to subscribe to topic ${eventId}`, err);
+            });
+        }
+      } catch (err) {
+        console.error('Failed to subscribe to topic', err);
+      }
+    }
+  }, [registrationToken, eventId]);
 
   useEffect(() => {
     if (!Capacitor.isPluginAvailable('PushNotifications')) return;
@@ -155,6 +195,7 @@ const useNotifications = (): UseNotificationsReturn => {
           JSON.stringify(localNotificationSettings)
         );
       }
+      setRegistrationToken(token.value);
     });
 
     PushNotifications.addListener('registrationError', (error: any) => {
