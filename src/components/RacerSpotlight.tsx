@@ -12,7 +12,7 @@ import {
   IonThumbnail,
   IonSkeletonText,
 } from '@ionic/react';
-import { trophy, people, star } from 'ionicons/icons';
+import { people, star } from 'ionicons/icons';
 
 import './RacerSpotlight.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';

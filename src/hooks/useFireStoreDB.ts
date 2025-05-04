@@ -4,6 +4,7 @@ import {
   FirebaseFirestore,
   QueryFilterConstraint,
 } from '@capacitor-firebase/firestore';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 type WhereCondition = {
   field: string;
@@ -40,12 +41,14 @@ function useFireStoreDB<T>(
     data: null,
     timestamp: null,
   }); // Cache with timestamp
+  const { eventId } = useCurrentEvent();
 
   const STALE_TIME = 60 * 1000; // 5 minutes in milliseconds
 
   const fetchData = useCallback(
     async (forceFetch = false) => {
       console.log('Fetching data');
+      console.log('Event ID:', eventId);
       const now = Date.now();
       const isStale = cache.current.timestamp
         ? now - cache.current.timestamp > STALE_TIME
@@ -60,13 +63,15 @@ function useFireStoreDB<T>(
       if (dependencies?.some((item) => !item)) {
         return;
       }
-
+      const collectionIdPath = `${
+        eventId ? `events/${eventId}/` : ''
+      }${collectionId}`;
       setLoading(true);
       setError(null);
       try {
         if (docId) {
           const { snapshot } = await FirebaseFirestore.getDocument({
-            reference: `${collectionId}/${docId}`,
+            reference: `${collectionIdPath}/${docId}`,
           });
           if (snapshot.data) {
             const result = [{ id: docId, ...snapshot.data } as T];
@@ -87,11 +92,11 @@ function useFireStoreDB<T>(
           const { snapshots } =
             queryConstraints.length > 0
               ? await FirebaseFirestore.getCollection({
-                  reference: collectionId,
+                  reference: collectionIdPath,
                   compositeFilter: { type: 'and', queryConstraints },
                 })
               : await FirebaseFirestore.getCollection({
-                  reference: collectionId,
+                  reference: collectionIdPath,
                 });
           const items = snapshots.map(
             (doc) => ({ id: doc.id, ...doc.data } as T)
