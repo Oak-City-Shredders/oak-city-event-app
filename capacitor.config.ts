@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.oakcityshredfest.app',
-  appName: 'Event App',
+  appName: 'Evynture',
   webDir: 'build',
   server: {
     iosScheme: 'https',
