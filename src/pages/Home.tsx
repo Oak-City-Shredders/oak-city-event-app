@@ -56,7 +56,7 @@ import { useEffect, useState } from 'react';
 import { App } from '@capacitor/app';
 import { FireDBFoodTruck } from '../utils/foodTruckUtils';
 import useGoogleCalendar from '../hooks/useGoogleCalendar';
-import { FireDBEventInfo } from '../context/CurrentEventContext';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 const iconMap = {
   race: flagOutline, // Racing related
@@ -105,12 +105,6 @@ const Home: React.FC<HomeProps> = ({
   removeNotification,
   notificationPermission,
 }) => {
-  const {
-    data: dataEventInfo,
-    loading: loadingEventInfo,
-    refetch: refetchEventInfo,
-    error: errorEventInfo,
-  } = useFireStoreDB<FireDBEventInfo>('EventInfo');
   const router = useIonRouter();
   const { data, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
@@ -136,10 +130,7 @@ const Home: React.FC<HomeProps> = ({
     ? '0.0.0'
     : versionData.find((v) => v.platform === platform)?.minVersion || '0.0.0';
 
-  const eventInfo = !dataEventInfo
-    ? {}
-    : Object.fromEntries(dataEventInfo.map(({ id, value }) => [id, value]));
-
+  const { eventInfo, loadingEventInfo } = useCurrentEvent();
   const eventTitle = eventInfo.title || '';
 
   const [currentVersion, setCurrentVersion] = useState<string>('0.0.0');

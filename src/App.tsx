@@ -33,7 +33,7 @@ import { calendar, chatbox, home, map, flag } from 'ionicons/icons';
 import { AuthProvider } from './context/AuthContext';
 import {
   CurrentEventProvider,
-  FireDBEventInfo,
+  useCurrentEvent,
 } from './context/CurrentEventContext';
 import useNotifications from './hooks/useNotifications';
 
@@ -111,17 +111,7 @@ const AnalyticsTracker = () => {
 const TabsLayout: React.FC = () => {
   const { notifications, removeNotification, notificationPermission } =
     useNotifications();
-  const {
-    data: dataEventInfo,
-    loading: loadingEventInfo,
-    refetch: refetchEventInfo,
-    error: errorEventInfo,
-  } = useFireStoreDB<FireDBEventInfo>('EventInfo');
-
-  const eventInfo = !dataEventInfo
-    ? {}
-    : Object.fromEntries(dataEventInfo.map(({ id, value }) => [id, value]));
-
+  const { eventInfo } = useCurrentEvent();
   return (
     <IonTabs>
       <IonRouterOutlet>

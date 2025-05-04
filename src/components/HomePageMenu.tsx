@@ -30,20 +30,11 @@ import {
 
 import styles from './HomePageMenu.module.css';
 import useFireStoreDB from '../hooks/useFireStoreDB';
-import { FireDBEventInfo } from '../context/CurrentEventContext';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 const HomePageMenu: React.FC = () => {
   const router = useIonRouter();
-  const {
-    data: dataEventInfo,
-    loading: loadingEventInfo,
-    refetch: refetchEventInfo,
-    error: errorEventInfo,
-  } = useFireStoreDB<FireDBEventInfo>('EventInfo');
-
-  const eventInfo = !dataEventInfo
-    ? {}
-    : Object.fromEntries(dataEventInfo.map(({ id, value }) => [id, value]));
+  const { eventInfo } = useCurrentEvent();
 
   type MenuItem = { label: string; route: string; icon: string };
   const menuItems = [
