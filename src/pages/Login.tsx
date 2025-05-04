@@ -42,6 +42,7 @@ import { checkVibrate } from '../utils/vibrate';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { App } from '@capacitor/app';
 import NotificationsCard from '../components/NotificationsCard';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 const Login: React.FC = () => {
   const { user, loading, error: authError, refreshAuth } = useAuth();
@@ -50,6 +51,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>('');
   const [isAdvancedVisible, setIsAdvancedVisible] = useState(false);
+  const { eventInfo } = useCurrentEvent();
 
   useEffect(() => {
     // Fetch delivered notifications when app is resumed
@@ -273,8 +275,12 @@ const Login: React.FC = () => {
                     </IonButton>
                   </IonCardContent>
                 </IonCard>
-                <PreferencesCard />
-                <NotificationsCard />
+                {eventInfo.ticketsSoldEnabled && (
+                  <>
+                    <PreferencesCard />
+                    <NotificationsCard />
+                  </>
+                )}
                 <IonCard>
                   <IonCardHeader onClick={() => onToggleAdvanced()}>
                     <IonCardSubtitle>Advanced</IonCardSubtitle>
@@ -415,8 +421,12 @@ const Login: React.FC = () => {
                   )}
                 </IonCardContent>
               </IonCard>
-              <PreferencesCard />
-              <NotificationsCard />
+              {eventInfo.ticketsSoldEnabled && (
+                <>
+                  <PreferencesCard />
+                  <NotificationsCard />
+                </>
+              )}
             </div>
           </div>
         </div>
