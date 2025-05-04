@@ -34,7 +34,7 @@ const Events: React.FC = () => {
           onClick={() => handleEventSelect('9jDzcywCjsrsbZ1q1OBk')}
         >
           <img
-            alt="Silhouette of mountains"
+            alt="Casual Camp Out Logo"
             src="images/casual-campout/casual-campout-banner.webp"
           />
 
@@ -45,7 +45,7 @@ const Events: React.FC = () => {
 
         <IonCard button onClick={() => handleEventSelect('')}>
           <img
-            alt="Silhouette of mountains"
+            alt="Shred Fest Logo"
             src="images/shred-fest-logo.webp"
             style={{ padding: '8px', background: '#4B1067' }}
           />
