@@ -10,7 +10,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import MyMap from '../components/Map';
+import MyMap, { MapLayer } from '../components/Map';
 import { LatLngBoundsExpression } from 'leaflet';
 import { POIFilter } from '../components/Map';
 import { useEffect, useMemo, useState, useCallback } from 'react';
@@ -138,13 +138,23 @@ const MapPage: React.FC = () => {
 
   const { data, loading, error, refetch } =
     useFireStoreDB<FireDBMapItems>('MapData');
+  const {
+    data: dataMapLayers,
+    loading: loadingMapLayers,
+    error: errorMapLayers,
+    refetch: refetchMapLayers,
+  } = useFireStoreDB<MapLayer>('MapLayers');
+
+  const mapLayers = dataMapLayers ?? [];
+  console.log('mapLayers', mapLayers);
+
   const [localPOIFilters, setLocalPOIFilters] = useLocalStorage<POIFilter[]>(
     'poi-filters-v1',
     []
   );
   const pointsOfInterest = useMemo(() => {
     if (!data) return [];
-    return data.slice(1).map((item) => ({
+    return data.map((item) => ({
       id: Number(item.id),
       lat: Number(item.Lat),
       lng: Number(item.Lng),
@@ -183,7 +193,7 @@ const MapPage: React.FC = () => {
       isVisible: true,
       iconUrl: item.iconUrl,
     }));
-  }, [data]); // ✅ Only recomputes when `data` changes
+  }, [data]);
 
   useEffect(() => {
     const poiFilters = [
@@ -195,7 +205,7 @@ const MapPage: React.FC = () => {
       isVisible: localPOIFilters.find((f) => f.type === t)?.isVisible ?? false,
     }));
     setPOIFilters(poiFilters);
-  }, [pointsOfInterest]); // ✅ Only runs when `pointsOfInterest` changes
+  }, [pointsOfInterest]);
 
   const handlePOIFilterClick = useCallback(
     async (poiFilter: POIFilter) => {
@@ -240,6 +250,7 @@ const MapPage: React.FC = () => {
             centerOn={locationName}
             poiFilters={poiFilters}
             pointsOfInterest={pointsOfInterest}
+            mapLayers={mapLayers}
           />
         </IonContent>
         <IonFooter>
