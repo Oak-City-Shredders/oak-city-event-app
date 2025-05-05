@@ -536,6 +536,7 @@ interface MyMapProps {
   centerOn?: string;
   pointsOfInterest: PointOfInterest[];
   poiFilters: POIFilter[];
+  mapLayers?: MapLayer[];
 }
 
 export interface POIFilter {
@@ -543,14 +544,21 @@ export interface POIFilter {
   isVisible: boolean;
 }
 
-const SetView = ({ center }: { center: LatLng }) => {
-  console.log('SetView');
+export interface MapLayer {
+  id: string;
+  name: string;
+  imageUrl: string;
+}
+
+const SetView = ({ center, zoom }: { center: LatLng; zoom: number }) => {
+  console.log(`SetView ${center.lat}, ${center.lng} ${zoom}`);
   const [lastPosition, setLastPosition] = useState({
     lat: center.lat,
     lng: center.lng,
   } as LatLngExpression);
-  const [lastZoom, setLastZoom] = useState(17);
+  const [lastZoom, setLastZoom] = useState(zoom);
   const map = useMap();
+
   useEffect(() => {
     map.attributionControl.setPrefix(false);
     map.setView(lastPosition, lastZoom);
@@ -558,7 +566,7 @@ const SetView = ({ center }: { center: LatLng }) => {
       console.log('ready');
       setLastPosition([center.lat, center.lng] as LatLngExpression);
     });
-  }, [map, center]);
+  }, [map, center, zoom]);
 
   const mapEvent = useMapEvents({
     click(e) {
@@ -592,6 +600,7 @@ const MyMapContainer: React.FC<MyMapProps> = ({
   centerOn,
   pointsOfInterest,
   poiFilters,
+  mapLayers,
 }) => {
   console.log('MyMapContainer Rendered: ', centerOn);
 
@@ -609,7 +618,10 @@ const MyMapContainer: React.FC<MyMapProps> = ({
 
   return (
     <>
-      <SetView center={{ lat: initialLat, lng: initialLng } as LatLng} />
+      <SetView
+        zoom={centeredOnPOI ? 20 : 17}
+        center={{ lat: initialLat, lng: initialLng } as LatLng}
+      />
       <LocationTracker />
 
       {/*
@@ -647,17 +659,37 @@ const MyMapContainer: React.FC<MyMapProps> = ({
             })}
           </LayerGroup>
         </LayersControl.Overlay>
+        {mapLayers && mapLayers.length && mapLayers.length > 0 ? (
+          mapLayers
+            .filter((layer) => layer.imageUrl)
+            .map((layer) => {
+              return (
+                <LayersControl.Overlay
+                  key={layer.name}
+                  checked
+                  name={layer.name}
+                >
+                  <ImageOverlay
+                    url={layer.imageUrl}
+                    bounds={bounds}
+                  ></ImageOverlay>
+                </LayersControl.Overlay>
+              );
+            })
+        ) : (
+          <>
+            <LayersControl.Overlay key={3} checked name="Roads and Trails">
+              <ImageOverlay
+                url={mapRoadAndTrailImageUrl}
+                bounds={bounds}
+              ></ImageOverlay>
+            </LayersControl.Overlay>
 
-        <LayersControl.Overlay key={3} checked name="Roads and Trails">
-          <ImageOverlay
-            url={mapRoadAndTrailImageUrl}
-            bounds={bounds}
-          ></ImageOverlay>
-        </LayersControl.Overlay>
-
-        <LayersControl.Overlay key={4} checked name="Graphics">
-          <ImageOverlay url={mapGraphicsUrl} bounds={bounds}></ImageOverlay>
-        </LayersControl.Overlay>
+            <LayersControl.Overlay key={4} checked name="Graphics">
+              <ImageOverlay url={mapGraphicsUrl} bounds={bounds}></ImageOverlay>
+            </LayersControl.Overlay>
+          </>
+        )}
 
         <LayersControl.Overlay key={5} checked name="Satellite">
           <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
@@ -679,6 +711,7 @@ const MyMap: React.FC<MyMapProps> = ({
   centerOn,
   pointsOfInterest,
   poiFilters,
+  mapLayers,
 }) => {
   const maxBounds: LatLngBoundsExpression = [
     [35.72376469229937, -78.4452795982361], // top-right corner
@@ -732,6 +765,7 @@ const MyMap: React.FC<MyMapProps> = ({
         pointsOfInterest={pointsOfInterest}
         poiFilters={poiFilters}
         centerOn={centerOn}
+        mapLayers={mapLayers}
       />
       <LongPressHandler />
       {/* 
