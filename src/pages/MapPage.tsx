@@ -112,7 +112,7 @@ const ChipToolbar: React.FC<ChipToolbarProps> = ({
   );
 };
 
-interface FireDBMapItems {
+export interface FireDBMapItems {
   Description: string;
   Icon: string;
   'Icon Anchor': string;
