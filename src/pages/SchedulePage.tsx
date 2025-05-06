@@ -22,6 +22,8 @@ import PageHeader from '../components/PageHeader';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import './SchedulePage.css';
 import LoadingSpinner from '../components/LoadingSpinner';
+import useFireStoreDB from '../hooks/useFireStoreDB';
+import { FireDBMapItems } from './MapPage';
 
 const SchedulePage: React.FC = () => {
   const router = useIonRouter();
@@ -32,6 +34,12 @@ const SchedulePage: React.FC = () => {
     error,
     refetch,
   } = useGoogleCalendar();
+  const {
+    data: dataMapData,
+    loading: loadingMapData,
+    error: errorMapData,
+    refetch: refetchMapData,
+  } = useFireStoreDB<FireDBMapItems>('MapData');
   const scrollRef = useRef<HTMLIonContentElement>(null);
   const [accordionValues, setAccordionValues] = useState<string[]>([]);
 
@@ -51,18 +59,12 @@ const SchedulePage: React.FC = () => {
     }
   }, [groupedEvents]);
 
+  const internalLocations = useMemo(() => {
+    return (dataMapData || []).map((d) => d.Name?.trim().toLowerCase());
+  }, [dataMapData]);
+
   const navigateToMap = (eventLocation: string) => {
     const normalizedLocation = eventLocation.trim().toLowerCase();
-
-    const internalLocations = [
-      'front gate',
-      'stoak park',
-      'qualifier',
-      'floattrack',
-      'lakeside stage',
-      'stage',
-      'oak city tent',
-    ];
 
     let query = '';
 
