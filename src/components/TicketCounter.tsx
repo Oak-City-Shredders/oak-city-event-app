@@ -3,6 +3,7 @@ import { IonIcon, IonSkeletonText, IonText, useIonRouter } from '@ionic/react';
 import styles from './TicketCounter.module.css';
 import { useAuth } from '../context/AuthContext';
 import { ticket } from 'ionicons/icons';
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 export interface FireDBTicketsSold {
   Sold: string;
@@ -27,6 +28,7 @@ export default function TicketCounter({
   const [showDetails, setShowDetails] = useState(false);
 
   const { user, loading: authLoading, error: authError } = useAuth();
+  const { eventInfo } = useCurrentEvent();
   const router = useIonRouter();
 
   // Handle errors
@@ -110,15 +112,23 @@ export default function TicketCounter({
       ) : (
         <>
           <IonText color="dark">
-            <h2>{ticketCount} Tickets Sold!</h2>
+            <div className={styles.ticketCountText}>
+              {ticketCount} Tickets Sold!
+            </div>
           </IonText>
-          {!user && (
-            <p className={styles.subtitle}>Sign in to view your tickets</p>
+
+          {eventInfo.ticketsEnabled && (
+            <>
+              {!user && (
+                <p className={styles.subtitle}>Sign in to view your tickets</p>
+              )}
+
+              <button onClick={handleViewTickets} className={styles.viewButton}>
+                <IonIcon icon={ticket} />
+                {user ? 'View My Tickets' : 'Sign In'}
+              </button>
+            </>
           )}
-          <button onClick={handleViewTickets} className={styles.viewButton}>
-            <IonIcon icon={ticket} />
-            {user ? 'View My Tickets' : 'Sign In'}
-          </button>
         </>
       )}
     </div>
