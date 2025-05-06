@@ -106,6 +106,7 @@ const Home: React.FC<HomeProps> = ({
   notificationPermission,
 }) => {
   const router = useIonRouter();
+  const [showCountdown, setShowCountdown] = useState(true);
   const { data, refetch } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const { data: versionData, refetch: versionRefetch } =
@@ -294,9 +295,9 @@ const Home: React.FC<HomeProps> = ({
                 />
               </IonCol>
 
-              {preferenceSettings['countDown'].enabled && (
+              {showCountdown && preferenceSettings['countDown'].enabled && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={4}>
-                  <CountdownTimer />
+                  <CountdownTimer onFinish={() => setShowCountdown(false)} />
                 </IonCol>
               )}
               {new Date() <= new Date(shredFestStartDate) &&

@@ -10,16 +10,11 @@ import {
   IonCardTitle,
 } from '@ionic/react';
 import dayjs from 'dayjs';
-
-const festivalStartDate = new Date('2025-04-24T08:00:00-04:00').getTime(); // 8:00 AM Eastern Daylight Time (EDT)
-const festivalEndDate = new Date('2025-04-27T15:00:00-04:00').getTime(); // 3:00 PM Eastern Daylight Time (EDT)
-
-//const festivalStartDate = new Date("2025-02-17T00:40:40").getTime();
-//const festivalEndDate = new Date("2025-02-17T01:45:00").getTime();
+import { useCurrentEvent } from '../context/CurrentEventContext';
 
 type EventStatus =
-  | 'timeRemaining' // Time remaining until key event
-  | 'eventStarted' // Event ended over 15 minutes ago
+  | 'timeRemaining' // there is time remaining until key event
+  | 'eventStarted' // Event started less than 1 minute ago
   | 'eventInProgress' // Event in progress
   | 'eventEnded'; // Event has ended
 
@@ -34,55 +29,73 @@ interface CountdownProps {
   status: EventStatus;
 }
 
-const getTimeLeft = (): CountdownProps => {
-  const now = new Date().getTime();
+interface CountdownTimerProps {
+  onFinish: () => void;
+}
 
-  if (now >= festivalEndDate)
+const CountdownTimer: React.FC<CountdownTimerProps> = ({ onFinish }) => {
+  const { eventInfo, loadingEventInfo } = useCurrentEvent();
+
+  if (loadingEventInfo || !eventInfo.startDate || !eventInfo.endDate)
+    return null;
+  const festivalStartDate = new Date(eventInfo.startDate).getTime();
+  const festivalEndDate = new Date(eventInfo.endDate).getTime();
+
+  const getTimeLeft = (): CountdownProps => {
+    const now = new Date().getTime();
+
+    if (now >= festivalEndDate)
+      return {
+        statusMessage: `${eventInfo.title} has ended. See you next year!`,
+        timeLeft: null,
+        status: 'eventEnded',
+      };
+
+    const diff = festivalStartDate - now;
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    if (now >= festivalStartDate && d == -1 && h >= -1 && m >= -2) {
+      return {
+        statusMessage: `${eventInfo.title} has started!`,
+        timeLeft: null,
+        status: 'eventStarted',
+      };
+    }
+
+    if (now >= festivalStartDate)
+      return {
+        statusMessage: 'Event in progress! ',
+        timeLeft: null,
+        status: 'eventInProgress',
+      };
+
     return {
-      statusMessage: 'Shred Fest 5 has ended. See you next year! 🤙',
-      timeLeft: null,
-      status: 'eventEnded',
+      statusMessage: `${eventInfo.title} is in ${dayjs().to(
+        festivalStartDate,
+        true
+      )}! 🎉`,
+      timeLeft: { d, h, m, s },
+      status: 'timeRemaining',
     };
-
-  const diff = festivalStartDate - now;
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const m = Math.floor((diff / (1000 * 60)) % 60);
-  const s = Math.floor((diff / 1000) % 60);
-
-  if (now >= festivalStartDate && d == -1 && h >= -1 && m >= -2) {
-    return {
-      statusMessage: "Shred Fest 5 has started! 🛞🔥 Let's Go!",
-      timeLeft: null,
-      status: 'eventStarted',
-    };
-  }
-
-  if (now >= festivalStartDate)
-    return {
-      statusMessage: 'Event in progress! 🏁',
-      timeLeft: null,
-      status: 'eventInProgress',
-    };
-
-  return {
-    statusMessage: `Shred Fest 5 is in ${dayjs().to(
-      festivalStartDate,
-      true
-    )}! 🎉`,
-    timeLeft: { d, h, m, s },
-    status: 'timeRemaining',
   };
-};
 
-const CountdownTimer: React.FC = () => {
   const [countdown, setCountdown] = useState(getTimeLeft());
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCountdown(getTimeLeft());
+      const nextCountdown = getTimeLeft();
+      setCountdown(nextCountdown);
+
+      // Notify parent to hide when finished
+      if (['eventEnded', 'eventInProgress'].includes(nextCountdown.status)) {
+        onFinish();
+      }
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
