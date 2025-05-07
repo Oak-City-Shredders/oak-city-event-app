@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { FirebaseFirestore } from '@capacitor-firebase/firestore';
 import { App } from '@capacitor/app';
+import { LOCAL_STORAGE__CURRENT_EVENT_ID_KEY } from '../constants/localStorageKeys';
 
 export interface FireDBEventInfo {
   value: string;
@@ -23,8 +24,6 @@ interface CurrentEventContextType {
   refetchEventInfo: () => void;
 }
 
-const LOCAL_STORAGE_KEY = 'currentEventId';
-
 const CurrentEventContext = createContext<CurrentEventContextType | undefined>(
   undefined
 );
@@ -33,12 +32,12 @@ export const CurrentEventProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [eventId, setEventIdState] = useState<string | null>(() => {
-    return localStorage.getItem(LOCAL_STORAGE_KEY);
+    return localStorage.getItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY);
   });
 
   const setEventId = (id: string) => {
     setEventIdState(id);
-    localStorage.setItem(LOCAL_STORAGE_KEY, id);
+    localStorage.setItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY, id);
   };
 
   const [data, setData] = useState<FireDBEventInfo[] | null>(null);

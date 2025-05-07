@@ -42,7 +42,7 @@ const sponsorshipTiers = {
   },
 };
 
-const Team: React.FC = () => {
+const Sponsors: React.FC = () => {
   const { sponsors, loading, error, refetch } = useSponsors();
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank', 'noopener,noreferrer');
@@ -152,4 +152,4 @@ const Team: React.FC = () => {
   );
 };
 
-export default Team;
+export default Sponsors;

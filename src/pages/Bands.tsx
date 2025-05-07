@@ -31,7 +31,7 @@ const Bands: React.FC = () => {
         {loading ? (
           <LoadingSpinner />
         ) : error ? (
-          <ErrorMessage message="Error loading the scavenger hunt" />
+          <ErrorMessage message="Error loading the bands" />
         ) : (
           <>
             {bands.map((band) => (
