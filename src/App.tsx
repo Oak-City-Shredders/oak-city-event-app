@@ -27,7 +27,14 @@ import {
 } from '@ionic/react';
 
 // Ionicons
-import { calendar, chatbox, home, map, flag } from 'ionicons/icons';
+import {
+  calendar,
+  chatbox,
+  home,
+  map,
+  flag,
+  musicalNotes,
+} from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
@@ -59,6 +66,7 @@ import NotFound from './components/NotFound';
 import FireBaseAppCheckPage from './pages/FireBaseAppCheckPage';
 import DiscGolfScorecard from './pages/DiscGolfScorecard';
 import Events from './pages/Events';
+import Bands from './pages/Bands';
 
 import { firebaseApp } from './firebase'; // Import Firebase setup
 import { App as CapacitorApp, URLOpenListenerEvent } from '@capacitor/app';
@@ -162,6 +170,9 @@ const TabsLayout: React.FC = () => {
         <Route path="/race-information" exact={true}>
           <Raceing />
         </Route>
+        <Route path="/bands" exact={true}>
+          <Bands />
+        </Route>
         <Route path="/raffles-giveaways" exact={true}>
           <Raffles />
         </Route>
@@ -199,6 +210,13 @@ const TabsLayout: React.FC = () => {
           <IonTabButton tab="race-information" href="/race-information">
             <IonIcon aria-hidden="true" icon={flag} />
             <IonLabel>Racing</IonLabel>
+          </IonTabButton>
+        )}
+
+        {eventInfo.bandsEnabled && (
+          <IonTabButton tab="bands" href="/bands">
+            <IonIcon aria-hidden="true" icon={musicalNotes} />
+            <IonLabel>Bands</IonLabel>
           </IonTabButton>
         )}
 
@@ -323,6 +341,7 @@ const App: React.FC = () => {
                   exact={true}
                   component={TabsLayout}
                 />
+                <Route path="/bands" exact={true} component={TabsLayout} />
                 <Route
                   path="/raffles-giveaways"
                   exact={true}
