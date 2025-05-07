@@ -27,7 +27,14 @@ import {
 } from '@ionic/react';
 
 // Ionicons
-import { calendar, chatbox, home, map, flag } from 'ionicons/icons';
+import {
+  calendar,
+  chatbox,
+  home,
+  map,
+  flag,
+  musicalNotes,
+} from 'ionicons/icons';
 
 // Context & Hooks
 import { AuthProvider } from './context/AuthContext';
@@ -208,7 +215,7 @@ const TabsLayout: React.FC = () => {
 
         {eventInfo.bandsEnabled && (
           <IonTabButton tab="bands" href="/bands">
-            <IonIcon aria-hidden="true" icon={flag} />
+            <IonIcon aria-hidden="true" icon={musicalNotes} />
             <IonLabel>Bands</IonLabel>
           </IonTabButton>
         )}
