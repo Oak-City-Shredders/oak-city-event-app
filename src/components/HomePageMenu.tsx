@@ -95,7 +95,7 @@ const HomePageMenu: React.FC = () => {
     },
     {
       label: 'View Other Events',
-      route: '/',
+      route: '/events',
       icon: exit,
     },
   ].filter(Boolean) as MenuItem[]; // Remove any `false` entries

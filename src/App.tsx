@@ -95,6 +95,7 @@ import StokeBot from './pages/StokeBot';
 import './theme/variables.css';
 import '@ionic/react/css/palettes/dark.system.css';
 import useFireStoreDB from './hooks/useFireStoreDB';
+import { LOCAL_STORAGE__CURRENT_EVENT_ID_KEY } from './constants/localStorageKeys';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');
 
@@ -259,6 +260,9 @@ const AppUrlListener: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const cachedEventId = localStorage.getItem(
+    LOCAL_STORAGE__CURRENT_EVENT_ID_KEY
+  );
   useEffect(() => {
     SplashScreen.hide();
   }, []);
@@ -361,7 +365,17 @@ const App: React.FC = () => {
                   exact={true}
                   component={TabsLayout}
                 />
-                <Redirect exact from="/" to="/events" />
+                <Route
+                  exact
+                  path="/"
+                  render={() =>
+                    cachedEventId ? (
+                      <Redirect to="/home" />
+                    ) : (
+                      <Redirect to="/events" />
+                    )
+                  }
+                />
                 <Route component={NotFound} />
               </Switch>
             </IonRouterOutlet>
