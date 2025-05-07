@@ -19,7 +19,6 @@ import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const Bands: React.FC = () => {
   const { bands, loading, error, refetch } = useBands();
-  console.log('Bands:', bands);
   const handleRefresh = useRefreshHandler(refetch);
 
   return (
