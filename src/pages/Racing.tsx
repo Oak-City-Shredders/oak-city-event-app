@@ -76,7 +76,7 @@ const Raceing: React.FC = () => {
     loading,
     error,
     refetch,
-  } = useFireStoreDB<FireDBRacer>('Sheet1');
+  } = useFireStoreDB<FireDBRacer>('Racers');
 
   const memorizedGroupedDivisions: Division[] = useMemo(() => {
     if (!sheetsData) return [];

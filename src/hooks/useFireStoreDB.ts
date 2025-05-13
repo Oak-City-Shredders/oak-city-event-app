@@ -28,33 +28,69 @@ interface FireStoreDBHook<T> {
   refetch: () => Promise<void>;
 }
 
+interface FireStoreDBOptions {
+  collectionId: string;
+  docId?: string;
+  where?: WhereCondition[];
+  dependencies?: boolean[];
+  disableEventPrefix?: boolean;
+}
+
+// Overload 1: Old-style positional arguments
 function useFireStoreDB<T>(
   collectionId: string,
   docId?: string,
   where?: WhereCondition[],
   dependencies?: boolean[]
+): FireStoreDBHook<T>;
+
+// Overload 2: New-style config object
+function useFireStoreDB<T>(options: FireStoreDBOptions): FireStoreDBHook<T>;
+
+// Implementation
+function useFireStoreDB<T>(
+  arg1: string | FireStoreDBOptions,
+  arg2?: string,
+  arg3?: WhereCondition[],
+  arg4?: boolean[]
 ): FireStoreDBHook<T> {
+  // Normalize to config object
+  const config: FireStoreDBOptions =
+    typeof arg1 === 'string'
+      ? {
+          collectionId: arg1,
+          docId: arg2,
+          where: arg3,
+          dependencies: arg4,
+        }
+      : arg1;
+
+  const {
+    collectionId,
+    docId,
+    where,
+    dependencies,
+    disableEventPrefix = false,
+  } = config;
+
+  const { eventId } = useCurrentEvent();
   const [data, setData] = useState<T[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
   const cache = useRef<{ data: T[] | null; timestamp: number | null }>({
     data: null,
     timestamp: null,
-  }); // Cache with timestamp
-  const { eventId } = useCurrentEvent();
+  });
 
-  const STALE_TIME = 60 * 1000; // 5 minutes in milliseconds
+  const STALE_TIME = 60 * 1000; // 1 minute
 
   const fetchData = useCallback(
     async (forceFetch = false) => {
-      console.log('Fetching data');
-      console.log('Event ID:', eventId);
       const now = Date.now();
       const isStale = cache.current.timestamp
         ? now - cache.current.timestamp > STALE_TIME
         : true;
 
-      // Skip fetch if data is fresh and not forced
       if (cache.current.data && !forceFetch && !isStale) {
         setData(cache.current.data);
         return;
@@ -63,11 +99,16 @@ function useFireStoreDB<T>(
       if (dependencies?.some((item) => !item)) {
         return;
       }
-      const collectionIdPath = `${
-        eventId ? `events/${eventId}/` : ''
-      }${collectionId}`;
+
+      const collectionIdPath = disableEventPrefix
+        ? collectionId
+        : eventId
+        ? `events/${eventId}/${collectionId}`
+        : collectionId;
+
       setLoading(true);
       setError(null);
+
       try {
         if (docId) {
           const { snapshot } = await FirebaseFirestore.getDocument({
@@ -76,7 +117,7 @@ function useFireStoreDB<T>(
           if (snapshot.data) {
             const result = [{ id: docId, ...snapshot.data } as T];
             setData(result);
-            cache.current = { data: result, timestamp: now }; // Update cache with timestamp
+            cache.current = { data: result, timestamp: now };
           }
         } else {
           const queryConstraints =
@@ -89,6 +130,7 @@ function useFireStoreDB<T>(
                   value: condition.value,
                 } as QueryFilterConstraint)
             ) || [];
+
           const { snapshots } =
             queryConstraints.length > 0
               ? await FirebaseFirestore.getCollection({
@@ -98,23 +140,21 @@ function useFireStoreDB<T>(
               : await FirebaseFirestore.getCollection({
                   reference: collectionIdPath,
                 });
+
           const items = snapshots.map(
             (doc) => ({ id: doc.id, ...doc.data } as T)
           );
           setData(items);
-          cache.current = { data: items, timestamp: now }; // Update cache with timestamp
+          cache.current = { data: items, timestamp: now };
         }
-
-        setError(null);
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
         setError(err);
-        console.log(error);
       } finally {
         setLoading(false);
       }
     },
-    [collectionId, docId, where]
+    [collectionId, docId, where, dependencies, eventId, disableEventPrefix]
   );
 
   useEffect(() => {
@@ -129,21 +169,18 @@ function useFireStoreDB<T>(
     if ((!cache.current.data || isStale) && isMounted && !loading && !error) {
       fetchData();
     } else if (cache.current.data) {
-      setData(cache.current.data); // Use fresh cached data
+      setData(cache.current.data);
     }
 
-    // Fetch on app resume if data is stale
-    let appResumedListener: { remove: () => void }; // Type for the listener handle
+    let appResumedListener: { remove: () => void };
     (async () => {
       const appResumed = async () => {
-        console.log('App resumed');
         const currentTime = Date.now();
         const isDataStale = cache.current.timestamp
           ? currentTime - cache.current.timestamp > STALE_TIME
           : true;
 
         if (isMounted && !loading && (!cache.current.data || isDataStale)) {
-          console.log('App resumed - fetching fresh data due to staleness');
           fetchData();
         } else if (cache.current.data) {
           console.log('App resumed - using cached data');

@@ -33,7 +33,7 @@ interface RouteParams {
 const RacerProfile: React.FC = () => {
   const { racerId } = useParams<RouteParams>();
   const { data, loading, error, refetch } = useFireStoreDB<FireDBRacer>(
-    'Sheet1',
+    'Racers',
     racerId
   );
 

@@ -29,7 +29,7 @@ const RacerSpotlight: React.FC<RacerSpotlightProps> = ({}) => {
   } = useRandomRacerId();
 
   const { data, error, loading } = useFireStoreDB<FireDBRacer>(
-    'Sheet1',
+    'Racers',
     racerId || '',
     [],
     [!!racerId]
