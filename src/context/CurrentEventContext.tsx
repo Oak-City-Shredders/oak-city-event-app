@@ -32,7 +32,10 @@ export const CurrentEventProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [eventId, setEventIdState] = useState<string | null>(() => {
-    return localStorage.getItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY);
+    return (
+      localStorage.getItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY) ||
+      'ppXCuTLNIamQnZkwn5VC'
+    );
   });
 
   const setEventId = (id: string) => {

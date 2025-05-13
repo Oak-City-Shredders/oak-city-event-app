@@ -36,12 +36,18 @@ interface CountdownTimerProps {
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ onFinish }) => {
   const { eventInfo, loadingEventInfo } = useCurrentEvent();
 
-  if (loadingEventInfo || !eventInfo.startDate || !eventInfo.endDate)
-    return null;
   const festivalStartDate = new Date(eventInfo.startDate).getTime();
   const festivalEndDate = new Date(eventInfo.endDate).getTime();
 
   const getTimeLeft = (): CountdownProps => {
+    if (loadingEventInfo || !eventInfo.startDate || !eventInfo.endDate) {
+      return {
+        statusMessage: 'Loading event information...',
+        timeLeft: null,
+        status: 'eventEnded',
+      };
+    }
+
     const now = new Date().getTime();
 
     if (now >= festivalEndDate)
@@ -97,7 +103,10 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ onFinish }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [eventInfo]);
+
+  if (loadingEventInfo || !eventInfo.startDate || !eventInfo.endDate)
+    return null;
 
   const onToggleView = () => {
     setIsVisible((prev) => !prev);
