@@ -10,7 +10,7 @@ import {
 } from '@ionic/react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import MyMap, { MapLayer } from '../components/Map';
+import MyMap from '../components/Map';
 import { LatLngBoundsExpression } from 'leaflet';
 import { POIFilter } from '../components/Map';
 import { useEffect, useMemo, useState, useCallback } from 'react';
@@ -132,6 +132,17 @@ export interface FireDBMapItems {
   iconUrl: string;
 }
 
+export interface MapLayer {
+  id: string;
+  name: string;
+  imageUrl: string;
+  type: string;
+  order: string;
+  leftBottomPosition: string;
+  rightTopPosition: string;
+  bounds: LatLngBoundsExpression;
+}
+
 const MapPage: React.FC = () => {
   const { locationName } = useParams<RouteParams>();
   const [poiFilters, setPOIFilters] = useState([] as POIFilter[]);
@@ -143,10 +154,33 @@ const MapPage: React.FC = () => {
     loading: loadingMapLayers,
     error: errorMapLayers,
     refetch: refetchMapLayers,
-  } = useFireStoreDB<MapLayer>('MapLayers');
+  } = useFireStoreDB<MapLayer>('MapLayersV2');
 
-  const mapLayers = dataMapLayers ?? [];
-  console.log('mapLayers', mapLayers);
+  const mapLayers: MapLayer[] = (dataMapLayers ?? [])
+    .filter(
+      (layer) => layer.type && layer.imageUrl && !isNaN(Number(layer.order))
+    )
+    .sort((a, b) => {
+      const orderA = Number(a.order);
+      const orderB = Number(b.order);
+
+      if (isNaN(orderA)) return 1; // Push invalid to end
+      if (isNaN(orderB)) return -1;
+      return orderA - orderB;
+    })
+    .map((layer) => ({
+      ...layer,
+      bounds: [
+        [
+          Number(layer.leftBottomPosition.split(',')[0]),
+          Number(layer.leftBottomPosition.split(',')[1]),
+        ],
+        [
+          Number(layer.rightTopPosition.split(',')[0]),
+          Number(layer.rightTopPosition.split(',')[1]),
+        ],
+      ] as LatLngBoundsExpression,
+    }));
 
   const [localPOIFilters, setLocalPOIFilters] = useLocalStorage<POIFilter[]>(
     'poi-filters-v1',
