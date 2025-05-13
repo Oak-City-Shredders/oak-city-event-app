@@ -1,10 +1,9 @@
 import React, {
   createContext,
-  useCallback,
   useContext,
+  useReducer,
+  useCallback,
   useEffect,
-  useRef,
-  useState,
 } from 'react';
 import { FirebaseFirestore } from '@capacitor-firebase/firestore';
 import { App } from '@capacitor/app';
@@ -28,140 +27,129 @@ const CurrentEventContext = createContext<CurrentEventContextType | undefined>(
   undefined
 );
 
+type State = {
+  data: FireDBEventInfo[] | null;
+  loading: boolean;
+  error: Error | null;
+  timestamp: number | null;
+};
+
+type Action =
+  | { type: 'FETCH_START' }
+  | { type: 'FETCH_SUCCESS'; payload: FireDBEventInfo[]; timestamp: number }
+  | { type: 'FETCH_ERROR'; payload: Error };
+
+const initialState: State = {
+  data: null,
+  loading: false,
+  error: null,
+  timestamp: null,
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'FETCH_START': {
+      console.log('Fetching data...');
+      return { ...state, loading: true, error: null };
+    }
+    case 'FETCH_SUCCESS':
+      return {
+        data: action.payload,
+        loading: false,
+        error: null,
+        timestamp: action.timestamp,
+      };
+    case 'FETCH_ERROR':
+      return { ...state, loading: false, error: action.payload };
+    default:
+      return state;
+  }
+}
+
 export const CurrentEventProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [eventId, setEventIdState] = useState<string | null>(() => {
+  const [eventId, setEventIdState] = React.useState<string | null>(() => {
     return (
       localStorage.getItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY) ||
       'ppXCuTLNIamQnZkwn5VC'
     );
   });
 
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   const setEventId = (id: string) => {
     setEventIdState(id);
     localStorage.setItem(LOCAL_STORAGE__CURRENT_EVENT_ID_KEY, id);
   };
 
-  const [data, setData] = useState<FireDBEventInfo[] | null>(null);
-  const [loadingEventInfo, setLoading] = useState<boolean>(false);
-  const [errorEventInfo, setError] = useState<Error | null>(null);
-  const cache = useRef<{
-    data: FireDBEventInfo[] | null;
-    timestamp: number | null;
-  }>({
-    data: null,
-    timestamp: null,
-  }); // Cache with timestamp
-
-  const STALE_TIME = 60 * 1000; // 5 minutes in milliseconds
+  const STALE_TIME = 60 * 1000;
 
   const fetchData = useCallback(
     async (forceFetch = false) => {
-      console.log('Fetching Current Event data');
-      console.log('Event ID:', eventId);
       const now = Date.now();
-      const isStale = cache.current.timestamp
-        ? now - cache.current.timestamp > STALE_TIME
+      const isStale = state.timestamp
+        ? now - state.timestamp > STALE_TIME
         : true;
 
-      // Skip fetch if data is fresh and not forced
-      if (cache.current.data && !forceFetch && !isStale) {
-        setData(cache.current.data);
+      if (state.data && !forceFetch && !isStale) {
+        console.log('Using cached data');
         return;
       }
 
-      const collectionIdPath = `${
-        eventId ? `events/${eventId}/` : ''
-      }EventInfo`;
-      setLoading(true);
-      setError(null);
+      dispatch({ type: 'FETCH_START' });
       try {
+        const collectionIdPath = `${
+          eventId ? `events/${eventId}/` : ''
+        }EventInfo`;
         const { snapshots } = await FirebaseFirestore.getCollection({
           reference: collectionIdPath,
         });
         const items = snapshots.map(
           (doc) => ({ id: doc.id, ...doc.data } as FireDBEventInfo)
         );
-        setData(items);
-        cache.current = { data: items, timestamp: now }; // Update cache with timestamp
-
-        setError(null);
+        dispatch({ type: 'FETCH_SUCCESS', payload: items, timestamp: now });
       } catch (error) {
         const err = error instanceof Error ? error : new Error(String(error));
-        setError(err);
-        console.log(error);
-      } finally {
-        setLoading(false);
+        dispatch({ type: 'FETCH_ERROR', payload: err });
       }
     },
-    [eventId]
+    [eventId, state.data, state.timestamp]
   );
 
-  // Fetch new data whenever eventId changes
   useEffect(() => {
-    fetchData(true); // force fetch on eventId change
+    fetchData(true);
   }, [eventId]);
 
   useEffect(() => {
-    let isMounted = true;
+    const appResumed = async () => {
+      const now = Date.now();
+      const isStale = state.timestamp
+        ? now - state.timestamp > STALE_TIME
+        : true;
 
-    // Check staleness on mount
-    const now = Date.now();
-    const isStale = cache.current.timestamp
-      ? now - cache.current.timestamp > STALE_TIME
-      : true;
-
-    if (
-      (!cache.current.data || isStale) &&
-      isMounted &&
-      !loadingEventInfo &&
-      !errorEventInfo
-    ) {
-      fetchData();
-    } else if (cache.current.data) {
-      setData(cache.current.data); // Use fresh cached data
-    }
-
-    // Fetch on app resume if data is stale
-    let appResumedListener: { remove: () => void }; // Type for the listener handle
-    (async () => {
-      const appResumed = async () => {
-        console.log('App resumed');
-        const currentTime = Date.now();
-        const isDataStale = cache.current.timestamp
-          ? currentTime - cache.current.timestamp > STALE_TIME
-          : true;
-
-        if (
-          isMounted &&
-          !loadingEventInfo &&
-          (!cache.current.data || isDataStale)
-        ) {
-          console.log('App resumed - fetching fresh data due to staleness');
-          fetchData();
-        } else if (cache.current.data) {
-          console.log('App resumed - using cached data');
-          setData(cache.current.data);
-        }
-      };
-      appResumedListener = await App.addListener('resume', appResumed);
-    })();
-
-    return () => {
-      isMounted = false;
-      if (appResumedListener) {
-        appResumedListener.remove();
+      if (!state.data || isStale) {
+        console.log('App resumed - fetching fresh data');
+        fetchData();
       }
     };
-  }, [fetchData, loadingEventInfo, errorEventInfo]);
 
-  // Refetch forces a new fetch, ignoring cache
+    const addListener = async () => {
+      const listener = await App.addListener('resume', appResumed);
+      return () => listener.remove();
+    };
+
+    const cleanupPromise = addListener();
+    return () => {
+      cleanupPromise.then((cleanup) => cleanup());
+    };
+  }, [fetchData, state.data, state.timestamp]);
+
   const refetchEventInfo = useCallback(() => fetchData(true), [fetchData]);
 
-  const eventInfo = !data
+  const eventInfo = !state.data
     ? {}
-    : Object.fromEntries(data.map(({ id, value }) => [id, value]));
+    : Object.fromEntries(state.data.map(({ id, value }) => [id, value]));
 
   return (
     <CurrentEventContext.Provider
@@ -169,8 +157,8 @@ export const CurrentEventProvider: React.FC<{ children: React.ReactNode }> = ({
         eventId,
         setEventId,
         eventInfo,
-        loadingEventInfo,
-        errorEventInfo,
+        loadingEventInfo: state.loading,
+        errorEventInfo: state.error,
         refetchEventInfo,
       }}
     >

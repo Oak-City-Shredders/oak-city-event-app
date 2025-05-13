@@ -14,22 +14,18 @@ import {
   useMapEvents,
   ImageOverlay,
   Tooltip,
-  CircleMarker,
-  SVGOverlay,
   LayersControl,
   LayerGroup,
 } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
 import {
-  LatLngBounds,
   LatLngExpression,
   LatLngBoundsExpression,
   LatLng,
   Icon,
   ImageOverlay as LeafletImageOverlay,
   PointExpression,
-  map,
   divIcon,
   Point,
 } from 'leaflet';
@@ -38,13 +34,12 @@ import { Capacitor } from '@capacitor/core';
 import { IonIcon } from '@ionic/react';
 import { arrowDown, arrowUp } from 'ionicons/icons';
 import { renderToString } from 'react-dom/server';
-import { Rectangle } from 'react-leaflet';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { checkVibrate } from '../utils/vibrate';
+import { MapLayer } from '../pages/MapPage';
+import { useCurrentEvent } from '../context/CurrentEventContext';
+import { getValidatedBounds } from '../utils/mapUtils';
 
-const mapRoadAndTrailImageUrl = '/images/map/2024map-roads.webp'; // replace with new map when available
-const mapGraphicsUrl = '/images/map/2024map-graphics-cleaned.webp'; // replace with new map when available
-const mapBackgroundUrl = '/images/map/background.webp'; // replace with new map when available
 // Explicitly define the marker icon
 const customIcon = new Icon({
   iconUrl: '/images/icon-48.webp', // Path to marker icon
@@ -100,7 +95,6 @@ const LocationTracker: React.FC = () => {
             return;
           }
           if (pos) {
-            console.log('Position updated:', pos);
             setPosition({
               lat: pos.coords.latitude,
               lng: pos.coords.longitude,
@@ -152,18 +146,6 @@ const LocationTracker: React.FC = () => {
   );
 };
 
-// Define the bounds for the image
-const imageBounds: LatLngBoundsExpression = [
-  [35.713897, -78.456665], // bottom-left corner
-  [35.721622, -78.449455], // top-right corner
-];
-
-interface ImageOverlayWithOpacityProps {
-  bottomLeftPosition: LatLng;
-  topRightPosition: LatLng;
-  imageUrl: string;
-}
-
 const ImageOverlayWithOpacity = ({
   imageUrl,
   bottomLeftPosition,
@@ -205,73 +187,6 @@ const ImageOverlayWithOpacity = ({
     </>
   );
 };
-
-const LocationMarker: React.FC = () => {
-  const [position, setPosition] = useState<LatLngExpression | null>(null);
-  const [initialPosition, setInitialPosition] = useState<LatLngExpression>([
-    0, 0,
-  ]);
-  const [selectedPosition, setSelectedPosition] = useState<LatLngExpression>([
-    0, 0,
-  ]);
-
-  const map = useMap();
-  console.log(`map zoom: ${map.getZoom()}`);
-
-  const mapEvent = useMapEvents({
-    click(e) {
-      console.log('click', e.latlng);
-      console.log(e);
-      setSelectedPosition([e.latlng.lat, e.latlng.lng] as LatLngExpression);
-    },
-    locationfound(e) {
-      setSelectedPosition(e.latlng);
-      mapEvent.flyTo(e.latlng, mapEvent.getZoom());
-    },
-  });
-
-  /* return position === null ? null : (
-         <Marker position={position}>
-             <Popup>You are here</Popup>
-         </Marker>
-     );*/
-
-  return position ? (
-    <Marker key={12} position={selectedPosition} interactive={false} />
-  ) : null;
-};
-
-const initialLeftBottomPosition = {
-  lat: 35.713547074031176,
-  lng: -78.45827221870424,
-};
-
-const initialTopRightPosition = {
-  lat: 35.722144594714386,
-  lng: -78.44730734825136,
-};
-
-// Define the bounds for the image and max bounds
-const bounds: LatLngBoundsExpression = [
-  [initialLeftBottomPosition.lat, initialLeftBottomPosition.lng], // top-right corner
-  [initialTopRightPosition.lat, initialTopRightPosition.lng], // bottom-left corner,
-];
-
-const bgLeftBottomPosition = {
-  lat: 35.613547074031176,
-  lng: -78.46827221870424,
-};
-
-const bgTopRightPosition = {
-  lat: 35.752144594714386,
-  lng: -78.43730734825136,
-};
-
-// Define the bounds for the image and max bounds
-const bgBounds: LatLngBoundsExpression = [
-  [bgLeftBottomPosition.lat, bgLeftBottomPosition.lng], // top-right corner
-  [bgTopRightPosition.lat, bgTopRightPosition.lng], // bottom-left corner,
-];
 
 const ResizableImageLayer = ({
   initialBottomLeftPosition,
@@ -536,18 +451,12 @@ interface MyMapProps {
   centerOn?: string;
   pointsOfInterest: PointOfInterest[];
   poiFilters: POIFilter[];
-  mapLayers?: MapLayer[];
+  mapLayers: MapLayer[];
 }
 
 export interface POIFilter {
   type: string;
   isVisible: boolean;
-}
-
-export interface MapLayer {
-  id: string;
-  name: string;
-  imageUrl: string;
 }
 
 const SetView = ({ center, zoom }: { center: LatLng; zoom: number }) => {
@@ -563,7 +472,6 @@ const SetView = ({ center, zoom }: { center: LatLng; zoom: number }) => {
     map.attributionControl.setPrefix(false);
     map.setView(lastPosition, lastZoom);
     map.whenReady(() => {
-      console.log('ready');
       setLastPosition([center.lat, center.lng] as LatLngExpression);
     });
   }, [map, center, zoom]);
@@ -602,19 +510,28 @@ const MyMapContainer: React.FC<MyMapProps> = ({
   poiFilters,
   mapLayers,
 }) => {
-  console.log('MyMapContainer Rendered: ', centerOn);
-
   const centeredOnPOI = pointsOfInterest.find(
     (p) => p.name.toLowerCase() === centerOn?.toLowerCase()
   );
 
-  console.log(`centered on '${JSON.stringify(centeredOnPOI)}' `);
+  const { eventInfo, loadingEventInfo } = useCurrentEvent();
 
-  const initialLat = centeredOnPOI ? centeredOnPOI.lat : 35.717140528123075;
-  const initialLng = centeredOnPOI ? centeredOnPOI.lng : -78.45191998873842;
+  if (
+    loadingEventInfo ||
+    !eventInfo ||
+    !eventInfo.initialLatitude ||
+    !eventInfo.initialLongitude
+  ) {
+    console.log('EventInfo not ready. Loading event information...');
+    return <div>Loading event information...</div>;
+  }
 
-  console.log('initialLat', initialLat);
-  console.log('initialLng', initialLng);
+  const initialLat = centeredOnPOI
+    ? centeredOnPOI.lat
+    : eventInfo.initialLatitude;
+  const initialLng = centeredOnPOI
+    ? centeredOnPOI.lng
+    : eventInfo.initialLongitude;
 
   return (
     <>
@@ -625,25 +542,16 @@ const MyMapContainer: React.FC<MyMapProps> = ({
       <LocationTracker />
 
       {/*
-
-           <ChangeView coords={startPos as LatLngExpression} />
-           
-                        <LocationMarker />
-                        <DraggableMarker initialPosition={position as LatLng} />
-
-                        <ResizableImageLayer
+          <ResizableImageLayer
                 initialBottomLeftPosition={{ lat: 35.715181, lng: -78.452050 } as LatLng}
                 initialTopRightPosition={{ lat: 35.71556914275607, lng: -78.45107048749925 } as LatLng}
                 imageUrl={"/images/map-icons/yurt.png"} />
-
-                     */}
+      */}
 
       <LayersControl position="topright">
         <LayersControl.Overlay key={1} checked name="Points of Interest">
           <LayerGroup>
             {pointsOfInterest.map((poi, index) => {
-              //const filter = poiFilters.find(poiFilter => poiFilter.type === poi.type && poiFilter.isVisible);
-              //return filter ? ( // Explicit return statement
               return (
                 <TooltipMarker
                   key={index}
@@ -654,54 +562,47 @@ const MyMapContainer: React.FC<MyMapProps> = ({
                   )}
                 />
               );
-              // )
-              //: null; // Return `null` for items that shouldn't render
             })}
           </LayerGroup>
         </LayersControl.Overlay>
-        {mapLayers && mapLayers.length && mapLayers.length > 0 ? (
-          mapLayers
-            .filter((layer) => layer.imageUrl)
-            .map((layer) => {
-              return (
-                <LayersControl.Overlay
-                  key={layer.name}
-                  checked
-                  name={layer.name}
-                >
-                  <ImageOverlay
-                    url={layer.imageUrl}
-                    bounds={bounds}
-                  ></ImageOverlay>
-                </LayersControl.Overlay>
-              );
-            })
-        ) : (
-          <>
-            <LayersControl.Overlay key={3} checked name="Roads and Trails">
-              <ImageOverlay
-                url={mapRoadAndTrailImageUrl}
-                bounds={bounds}
-              ></ImageOverlay>
-            </LayersControl.Overlay>
-
-            <LayersControl.Overlay key={4} checked name="Graphics">
-              <ImageOverlay url={mapGraphicsUrl} bounds={bounds}></ImageOverlay>
-            </LayersControl.Overlay>
-          </>
-        )}
+        {mapLayers
+          .filter(
+            (layer) => layer.imageUrl && layer.type === 'before-tile-layer'
+          )
+          .map((layer) => {
+            return (
+              <LayersControl.Overlay key={layer.name} checked name={layer.name}>
+                <ImageOverlay
+                  url={layer.imageUrl}
+                  bounds={layer.bounds}
+                ></ImageOverlay>
+              </LayersControl.Overlay>
+            );
+          })}
 
         <LayersControl.Overlay key={5} checked name="Satellite">
-          <TileLayer url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}" />
+          <TileLayer
+            maxZoom={22}
+            maxNativeZoom={19}
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
         </LayersControl.Overlay>
 
-        <LayersControl.Overlay key={6} checked name="Background">
-          <ImageOverlay
-            pane="tilePane"
-            url={mapBackgroundUrl}
-            bounds={bgBounds}
-          ></ImageOverlay>
-        </LayersControl.Overlay>
+        {mapLayers
+          .filter(
+            (layer) => layer.imageUrl && layer.type === 'after-tile-layer'
+          )
+          .map((layer) => {
+            return (
+              <LayersControl.Overlay key={layer.name} checked name={layer.name}>
+                <ImageOverlay
+                  pane="tilePane"
+                  url={layer.imageUrl}
+                  bounds={layer.bounds}
+                ></ImageOverlay>
+              </LayersControl.Overlay>
+            );
+          })}
       </LayersControl>
     </>
   );
@@ -713,45 +614,22 @@ const MyMap: React.FC<MyMapProps> = ({
   poiFilters,
   mapLayers,
 }) => {
-  const maxBounds: LatLngBoundsExpression = [
-    [35.72376469229937, -78.4452795982361], // top-right corner
-    [35.712057439695535, -78.46047163009645], // bottom-left corner,
-  ];
+  const { eventInfo, loadingEventInfo } = useCurrentEvent();
 
-  const GoogleFormURL =
-    'https://docs.google.com/forms/d/e/1FAIpQLScBCIPfAtLoJyPb3rFQPGkf3Vh3TVm5AbqfK-GIn34ziceJMw/viewform?usp=pp_url';
+  if (loadingEventInfo || Object.keys(eventInfo).length === 0) {
+    console.log('EventInfo not ready. Loading event information...');
+    return <div>Loading event information...</div>;
+  }
 
-  const [longPressCoords, setLongPressCoords] = useState<{
-    lat: number;
-    lng: number;
-  } | null>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const maxBounds = getValidatedBounds(
+    eventInfo.bottomLeftLatLng,
+    eventInfo.topRightLatLng
+  );
 
-  // Custom Map Event Handler for Long Press
-  const LongPressHandler = () => {
-    const map = useMapEvents({
-      mousedown: (e) => {
-        console.log('mouse down');
-        timerRef.current = setTimeout(() => {
-          setLongPressCoords(e.latlng);
-          handleLongPress(e.latlng.lat, e.latlng.lng);
-        }, 800); // Long press threshold (800ms)
-      },
-      mouseup: () => clearTimeout(timerRef.current!),
-    });
-
-    return null;
-  };
-  // Handle Long Press Action
-  const handleLongPress = (lat: number, lng: number) => {
-    const isConfirmed = window.confirm(
-      `Submit location?\nLatitude: ${lat}\nLongitude: ${lng}`
-    );
-    if (isConfirmed) {
-      const formURL = `${GoogleFormURL}&entry.1980346688=${lat}&entry.610497468=${lng}`;
-      window.open(formURL, '_blank', 'noopener,noreferrer');
-    }
-  };
+  if (!maxBounds) {
+    console.error('EventInfo bounds not valid.');
+    return <div>Event map information not configured.</div>;
+  }
 
   return (
     <MapContainer
@@ -759,7 +637,7 @@ const MyMap: React.FC<MyMapProps> = ({
       maxBounds={maxBounds}
       style={{ height: '100%', width: '100vw' }}
       minZoom={16}
-      maxZoom={20}
+      maxZoom={22}
     >
       <MyMapContainer
         pointsOfInterest={pointsOfInterest}
@@ -767,22 +645,6 @@ const MyMap: React.FC<MyMapProps> = ({
         centerOn={centerOn}
         mapLayers={mapLayers}
       />
-      <LongPressHandler />
-      {/* 
-            <Rectangle bounds={maxBounds} pathOptions={{ color: 'black' }}></Rectangle>
-            */}
-      {/*
-                    35.715181°N 78.452050°W
-                    35.715339°N 78.452316°W
-                    //35.715427, -78.452182
-                    
-                    // 35.71534156730891, -78.4513668715954
-                    //35.71556914275607, -78.45107048749925
-                    {/* 
-                    <TileLayer
-                        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-                    />
-                    */}
     </MapContainer>
   );
 };
