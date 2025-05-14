@@ -21,11 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint via Reviewdog
-        uses: reviewdog/action-eslint@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
-          eslint_flags: './src/**/*.{ts,tsx}'
-          fail_level: none
-          filter_mode: nofilter # ✅ Check the full codebase (can be adjusted to just the changed code)
+      - name: Run ESLint and report with Reviewdog
+        run: |
+          npx eslint './src/**/*.{ts,tsx}' -f checkstyle || true | \
+          npx reviewdog -f=checkstyle -name=eslint -reporter=github-pr-review -fail-level=none -level=warning || true
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
