@@ -2,7 +2,7 @@ name: ESLint with Reviewdog
 
 on:
   pull_request:
-    branches: [main] # or whatever your default branch is
+    branches: [main]
 
 jobs:
   eslint:
