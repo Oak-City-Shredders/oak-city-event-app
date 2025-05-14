@@ -44,6 +44,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           eslint_flags: './src/**/*.{ts,tsx}'
-          fail_on_error: false # ✅ Ensure workflow doesn't fail on ESLint errors
+          fail_level: none # ✅ Ensure workflow doesn't fail on ESLint errors
           level: warning
           filter_mode: nofilter
