@@ -43,9 +43,3 @@ Add any relevant UI screenshots, screen recordings, or logs.
 ## 📝 Notes
 
 Include anything reviewers should be aware of (weird edge cases, future improvements, etc.).
-
----
-
-## 🔍 Reviewers
-
-Tag specific people you'd like to review this PR.

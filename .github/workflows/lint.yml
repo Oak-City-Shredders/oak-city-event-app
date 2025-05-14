@@ -27,5 +27,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           eslint_flags: './src/**/*.{ts,tsx}'
-          fail_level: warning
+          level: warning
           filter_mode: nofilter # ✅ Check the full codebase (can be adjusted to just the changed code)
