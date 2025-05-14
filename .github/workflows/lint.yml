@@ -1,4 +1,4 @@
-name: ESLint with Reviewdog
+name: ESLint via Reviewdog
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   eslint:
-    name: Run ESLint
+    name: Run ESLint with Reviewdog
     runs-on: ubuntu-latest
 
     steps:
@@ -21,15 +21,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run ESLint and report with Reviewdog
-        run: |
-          curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b ./bin
-          ./bin/reviewdog -version
-
-          # Save ESLint output to file
-          npx eslint './src/**/*.{ts,tsx}' -f checkstyle > eslint-report.xml || true
-
-          # Pipe the completed XML to reviewdog
-          ./bin/reviewdog -f=checkstyle -name=eslint -reporter=github-pr-review -fail-level=none -level=warning < eslint-report.xml || true
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run ESLint via Reviewdog
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review # Or use `github-check` for a summary-style check
+          eslint_flags: 'src --ext .ts,.tsx'
+          fail_level: none # ✅ Never fail the job
+          level: warning # ✅ Comment level shown in PR
+          filter_mode: nofilter # ✅ Run across entire codebase
