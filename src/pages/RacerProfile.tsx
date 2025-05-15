@@ -14,10 +14,8 @@ import PageHeader from '../components/PageHeader';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { FireDBRacer } from './Racing';
 import {
-  RefresherEventDetail,
   IonRefresher,
   IonRefresherContent,
-  IonLoading,
   IonText,
 } from '@ionic/react';
 import { getErrorMessage } from '../utils/errorUtils';

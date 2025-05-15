@@ -15,7 +15,6 @@ import {
 } from '@ionic/react';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 import { mapFoodTruckData, FireDBFoodTruck } from '../utils/foodTruckUtils'; // Updated import
-import styles from './FoodTruckSwiper.module.css';
 
 const FoodTrucks: React.FC = () => {
   const { data, loading, error, refetch } =

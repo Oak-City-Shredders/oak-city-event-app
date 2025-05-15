@@ -12,7 +12,6 @@ import {
   IonContent,
   IonList,
   IonItem,
-  IonLabel,
   IonCardHeader,
   IonCardTitle,
   IonText,
