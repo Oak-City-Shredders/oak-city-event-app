@@ -1,49 +1,28 @@
-name: ESLint with Reviewdog
+name: Lint with ESLint and Reviewdog
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  eslint:
-    name: Run ESLint
+  lint:
+    name: Run ESLint via reviewdog
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write # ✅ This is critical for commenting on PRs
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 # ✅ Get full git history for proper diff comparison
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'npm' # ✅ Enable caching for faster runs
+          node-version: '18'
 
       - name: Install dependencies
         run: npm ci
 
-      # ✅ Added a debug step to check if ESLint is properly installed
-      - name: Verify ESLint installation
+      - name: Run ESLint with Reviewdog
         run: |
-          npx eslint --version
-          ls -la node_modules/.bin/
-
-      # ✅ Run ESLint directly first to see any errors in the logs
-      - name: Run ESLint directly
-        continue-on-error: true
-        run: npx eslint './src/**/*.{ts,tsx}' --format stylish
-
-      - name: Run ESLint via Reviewdog
-        uses: reviewdog/action-eslint@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
-          eslint_flags: './src/**/*.{ts,tsx}'
-          fail_level: none # ✅ Ensure workflow doesn't fail on ESLint errors
-          level: warning
-          filter_mode: nofilter
+          npx eslint . -f unix \
+            | npx reviewdog -f=eslint -name="eslint" -reporter=github-pr-review -level=warning
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
