@@ -94,7 +94,6 @@ import StokeBot from './pages/StokeBot';
 
 import './theme/variables.css';
 import '@ionic/react/css/palettes/dark.system.css';
-import useFireStoreDB from './hooks/useFireStoreDB';
 import { LOCAL_STORAGE__CURRENT_EVENT_ID_KEY } from './constants/localStorageKeys';
 
 console.log('Firebase initialized:', firebaseApp ? 'Web' : 'Native');

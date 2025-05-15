@@ -7,7 +7,6 @@ import {
 } from '@capacitor-firebase/app-check';
 import {
   IonPage,
-  IonHeader,
   IonContent,
   IonButton,
   IonItem,

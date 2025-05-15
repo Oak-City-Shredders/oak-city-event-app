@@ -16,7 +16,6 @@ import {
 import PageHeader from '../components/PageHeader';
 import { useRef, useEffect } from 'react';
 import {
-  RefresherEventDetail,
   IonRefresher,
   IonRefresherContent,
 } from '@ionic/react';

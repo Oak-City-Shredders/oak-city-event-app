@@ -12,18 +12,17 @@ import {
   IonItem,
   IonRefresher,
   IonRefresherContent,
-  RefresherEventDetail,
   IonIcon,
   IonLabel,
 } from '@ionic/react';
-import { qrCodeOutline, refresh } from 'ionicons/icons';
+import { qrCodeOutline } from 'ionicons/icons';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { getErrorMessage } from '../utils/errorUtils';
 import PageHeader from '../components/PageHeader';
 import useFireStoreDB from '../hooks/useFireStoreDB';
 import { CapacitorBarcodeScanner } from '@capacitor/barcode-scanner';
 import { useParams } from 'react-router';
-import QuestItem, { Quest } from '../components/QuestItem';
+import { Quest } from '../components/QuestItem';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 import './Quests.css';

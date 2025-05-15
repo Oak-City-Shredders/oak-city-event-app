@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { IonToggle, IonItem, IonLabel } from '@ionic/react';
 import {
