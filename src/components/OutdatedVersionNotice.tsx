@@ -6,11 +6,13 @@ import styles from './OutdatedVersionNotice.module.css';
 interface OutdatedVersionNoticeProps {
   currentVersion: string;
   minVersion: string;
-  loading: boolean;
-  error?: string;
 }
 
-const isVersionOutdated = (current: string, minimum: string): boolean => {
+export const isVersionOutdated = (
+  current: string,
+  minimum: string
+): boolean => {
+  if (current === '0.0.0' || minimum === '0.0.0') return false;
   const normalize = (v: string) => v.split('.').map(Number);
   const [cMajor, cMinor, cPatch] = normalize(current);
   const [mMajor, mMinor, mPatch] = normalize(minimum);
@@ -24,15 +26,8 @@ const isVersionOutdated = (current: string, minimum: string): boolean => {
 const OutdatedVersionNotice: React.FC<OutdatedVersionNoticeProps> = ({
   currentVersion,
   minVersion,
-  loading,
-  error,
 }) => {
-  if (loading || error || currentVersion === '0.0.0' || minVersion === '0.0.0')
-    return null;
-
-  const outdated = isVersionOutdated(currentVersion, minVersion);
-
-  return outdated ? (
+  return (
     <IonCard color="warning" className="ion-margin">
       <IonCardContent className={styles.warningContent}>
         <IonIcon icon={warningOutline} className={styles.icon} />
@@ -44,7 +39,7 @@ const OutdatedVersionNotice: React.FC<OutdatedVersionNoticeProps> = ({
         </IonText>
       </IonCardContent>
     </IonCard>
-  ) : null;
+  );
 };
 
 export default OutdatedVersionNotice;

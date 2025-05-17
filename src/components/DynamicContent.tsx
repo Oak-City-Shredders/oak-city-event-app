@@ -12,13 +12,16 @@ import {
 import { useState } from 'react';
 import { chevronDown, chevronForward } from 'ionicons/icons';
 import dayjs from 'dayjs';
+import { h } from 'ionicons/dist/types/stencil-public-runtime';
 
 export interface DynamicContentProps {
+  id: string;
+  contentType: string;
   enabled: boolean;
   imageLink: string;
   title: string;
   subtitle: string;
-  datePosted: string;
+  datePosted: Date;
   shortDescription: string;
   detailedImageLink: string;
   detailedDescription: string;
@@ -45,7 +48,7 @@ const DynamicContent: React.FC<DynamicContentProps> = ({
   };
 
   return (
-    <IonCard style={{ marginTop: '0', marginBottom: '16px' }}>
+    <IonCard style={{ marginTop: '0', marginBottom: '0px', height: '100%' }}>
       {imageLink && <IonImg src={imageLink} onClick={onToggleView} />}
       <IonCardHeader onClick={onToggleView}>
         {title && <IonCardTitle>{title}</IonCardTitle>}

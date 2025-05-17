@@ -51,7 +51,9 @@ import HomePageMenu from '../components/HomePageMenu';
 import RacerSpotlight from '../components/RacerSpotlight';
 import FoodTruckSwiper from '../components/FoodTruckSwiper';
 import { PermissionState } from '@capacitor/core';
-import OutdatedVersionNotice from '../components/OutdatedVersionNotice';
+import OutdatedVersionNotice, {
+  isVersionOutdated,
+} from '../components/OutdatedVersionNotice';
 import { useEffect, useState } from 'react';
 import { App } from '@capacitor/app';
 import { FireDBFoodTruck } from '../utils/foodTruckUtils';
@@ -80,6 +82,9 @@ interface HomeProps {
 }
 
 interface FireDBDynamicContent {
+  contentType: string;
+  insertBefore?: string;
+  positionPriority?: number;
   'Button Link': string;
   'Button Name': string;
   'Date Posted': string;
@@ -100,6 +105,39 @@ interface FireDBVersion {
   platform: string;
 }
 
+function reorderContent<
+  T extends {
+    id: string;
+    insertBefore?: string;
+    positionPriority?: number;
+    datePosted: Date;
+  }
+>(items: T[]): T[] {
+  const sorted = [...items].sort(
+    (a, b) =>
+      new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime()
+  );
+
+  const overrides = sorted
+    .filter((item) => item.insertBefore)
+    .sort(
+      (a, b) => (a.positionPriority ?? 1000) - (b.positionPriority ?? 1000)
+    );
+
+  for (const override of overrides) {
+    const currentIndex = sorted.findIndex((i) => i.id === override.id);
+    const targetIndex = sorted.findIndex((i) => i.id === override.insertBefore);
+
+    if (currentIndex === -1 || targetIndex === -1) continue;
+
+    const [moved] = sorted.splice(currentIndex, 1);
+    const newIndex = currentIndex < targetIndex ? targetIndex - 1 : targetIndex;
+    sorted.splice(newIndex, 0, moved);
+  }
+
+  return sorted;
+}
+
 const Home: React.FC<HomeProps> = ({
   notifications,
   removeNotification,
@@ -107,7 +145,7 @@ const Home: React.FC<HomeProps> = ({
 }) => {
   const router = useIonRouter();
   const [showCountdown, setShowCountdown] = useState(true);
-  const { data, refetch } =
+  const { data, refetch: refetchDynamicContent } =
     useFireStoreDB<FireDBDynamicContent>('DynamicContent');
   const { data: versionData, refetch: versionRefetch } =
     useFireStoreDB<FireDBVersion>('versions');
@@ -139,9 +177,7 @@ const Home: React.FC<HomeProps> = ({
     const fetchAppInfo = async () => {
       try {
         const info = await App.getInfo();
-        setCurrentVersion(info.version); // e.g., "1.0.0"
-
-        //setBuildNumber(info.build); // e.g., "42"
+        setCurrentVersion(info.version);
       } catch (error) {
         console.error('Error fetching app info:', error);
       }
@@ -160,7 +196,7 @@ const Home: React.FC<HomeProps> = ({
   } = useFireStoreDB<FireDBFoodTruck>('FoodTrucks');
 
   const handleRefresh = useRefreshHandlers([
-    refetch, //dynamic content
+    refetchDynamicContent,
     refetchFoodTruck,
     versionRefetch,
     refetchCalendar,
@@ -169,23 +205,26 @@ const Home: React.FC<HomeProps> = ({
 
   const dynamicContent: DynamicContentProps[] = !data
     ? []
-    : data
-        .map((dc) => ({
-          enabled: dc.Enabled === 'Yes',
-          imageLink: dc['Image Link'],
-          title: dc.Title,
-          subtitle: dc.Subtitle,
-          datePosted: dc['Date Posted'],
-          shortDescription: dc['Short Description'],
-          detailedImageLink: dc['Detailed Image link'],
-          detailedDescription: dc['Detailed Description'],
-          buttonName: dc['Button Name'],
-          buttonLink: dc['Button Link'],
-        }))
-        .sort(
-          (a, b) =>
-            new Date(b.datePosted).getTime() - new Date(a.datePosted).getTime()
-        );
+    : reorderContent(
+        data
+          .map((dc) => ({
+            id: dc.id,
+            contentType: dc.contentType ?? 'DYNAMIC',
+            enabled: dc.Enabled === 'Yes',
+            imageLink: dc['Image Link'],
+            title: dc.Title,
+            subtitle: dc.Subtitle,
+            datePosted: new Date(dc['Date Posted']),
+            shortDescription: dc['Short Description'],
+            detailedImageLink: dc['Detailed Image link'],
+            detailedDescription: dc['Detailed Description'],
+            buttonName: dc['Button Name'],
+            buttonLink: dc['Button Link'],
+            insertBefore: dc.insertBefore,
+            positionPriority: dc.positionPriority,
+          }))
+          .filter((dc) => dc.enabled)
+      );
 
   // Set text color to dark (for light backgrounds)
   const setStatusBarBackground = async () => {
@@ -194,7 +233,7 @@ const Home: React.FC<HomeProps> = ({
   };
 
   const colSize = '12';
-  const colSizeLg = '6';
+  const colSizeLg = '4';
 
   setStatusBarBackground();
 
@@ -243,13 +282,15 @@ const Home: React.FC<HomeProps> = ({
           </IonRefresher>
           <IonGrid>
             <IonRow>
-              <IonCol size={colSize} sizeLg={colSizeLg} key={100}>
-                <OutdatedVersionNotice
-                  currentVersion={currentVersion}
-                  minVersion={minVersion}
-                  loading={false}
-                />
-              </IonCol>
+              {isVersionOutdated(currentVersion, minVersion) && (
+                <IonCol size={colSize} sizeLg={colSizeLg} key={100}>
+                  <OutdatedVersionNotice
+                    currentVersion={currentVersion}
+                    minVersion={minVersion}
+                  />
+                </IonCol>
+              )}
+
               {notifications.length > 0 && (
                 <IonCol size={colSize} sizeLg={colSizeLg} key={1}>
                   <IonCard className="ion-padding">
@@ -276,87 +317,84 @@ const Home: React.FC<HomeProps> = ({
                   </IonCard>
                 </IonCol>
               )}
-
-              {preferenceSettings['ticketCounter'].enabled &&
-                eventInfo.ticketsSoldEnabled && (
-                  <IonCol size={colSize} sizeLg={colSizeLg} key={3}>
-                    <TicketCounter
-                      error={errorTicketCounter}
-                      loading={loadingTicketCounter}
-                      data={dataTicketCounter}
-                    />
-                  </IonCol>
-                )}
-              <IonCol size={colSize} sizeLg={colSizeLg} key={2}>
-                <NextEvent
-                  loading={loadingCalendar}
-                  error={errorCalendar}
-                  upcomingEvents={upcomingEvents}
-                />
-              </IonCol>
-
-              {showCountdown && preferenceSettings['countDown'].enabled && (
-                <IonCol size={colSize} sizeLg={colSizeLg} key={4}>
-                  <CountdownTimer onFinish={() => setShowCountdown(false)} />
-                </IonCol>
-              )}
-              {new Date() <= new Date(shredFestStartDate) &&
-                preferenceSettings['stokeMeter'].enabled && (
-                  <IonCol size={colSize} sizeLg={colSizeLg} key={5}>
-                    <StokeMeter />
-                  </IonCol>
-                )}
-              {eventInfo.featuredCompetitorEnabled && (
-                <IonCol size={colSize} sizeLg={colSizeLg} key={6}>
-                  <RacerSpotlight />
-                </IonCol>
-              )}
-              {eventInfo.scavengerHuntEnabled && (
-                <IonCol size={colSize} sizeLg={colSizeLg} key={7}>
-                  <IonCard
-                    style={{ marginTop: 0, marginBottom: 0 }}
-                    button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push('/scavenger-hunt');
-                    }}
-                  >
-                    <img src="/images/scavenger-hunt/fake-squirrels.webp" />
-                    <IonCardHeader>
-                      <IonCardTitle>Squirrel Scavenger Hunt</IonCardTitle>
-                    </IonCardHeader>
-
-                    <IonCardContent style={{ paddingBottom: '0px' }}>
-                      Find purple, green, and gold squirrels. Each color unlocks
-                      a different kind of prize generously provided by our
-                      amazing sponsors. Some prizes are big, we're talking $150+
-                      big!
-                    </IonCardContent>
-                    <IonButton fill="clear">Learn more</IonButton>
-                  </IonCard>
-                </IonCol>
-              )}
-              {eventInfo.foodTrucksEnabled && (
-                <IonCol size={colSize} sizeLg={colSizeLg} key={8}>
-                  <FoodTruckSwiper
-                    loading={loadingFoodTruck}
-                    error={errorFoodTruck}
-                    foodTrucks={dataFoodTruck}
-                  />
-                </IonCol>
-              )}
-            </IonRow>
-          </IonGrid>
-          <IonGrid>
-            <IonRow>
-              {dynamicContent.map(
-                (d, index) =>
-                  d.enabled && (
-                    <IonCol size={colSize} sizeLg={'4'} key={index}>
-                      <DynamicContent {...d} />
-                    </IonCol>
-                  )
-              )}
+              {dynamicContent.map((d, index) => {
+                switch (d.contentType) {
+                  case 'DYNAMIC':
+                    return (
+                      <IonCol size={colSize} sizeLg={'4'} key={index}>
+                        <DynamicContent {...d} />
+                      </IonCol>
+                    );
+                  case 'NEXT_EVENT':
+                    return (
+                      !loadingCalendar &&
+                      !errorCalendar &&
+                      upcomingEvents.length >= 1 && (
+                        <IonCol size={colSize} sizeLg={colSizeLg} key={index}>
+                          <NextEvent
+                            loading={loadingCalendar}
+                            error={errorCalendar}
+                            upcomingEvents={upcomingEvents}
+                          />
+                        </IonCol>
+                      )
+                    );
+                  case 'FOOD_TRUCK_SWIPER':
+                    return (
+                      eventInfo.foodTrucksEnabled && (
+                        <IonCol size={colSize} sizeLg={'4'} key={index}>
+                          <FoodTruckSwiper
+                            loading={loadingFoodTruck}
+                            error={errorFoodTruck}
+                            foodTrucks={dataFoodTruck}
+                          />
+                        </IonCol>
+                      )
+                    );
+                  case 'FEATURED_COMPETITOR':
+                    return (
+                      eventInfo.featuredCompetitorEnabled && (
+                        <IonCol size={colSize} sizeLg={'4'} key={index}>
+                          <RacerSpotlight />
+                        </IonCol>
+                      )
+                    );
+                  case 'STOKE_METER':
+                    return (
+                      preferenceSettings['stokeMeter'].enabled && (
+                        <IonCol size={colSize} sizeLg={colSizeLg} key={index}>
+                          <StokeMeter />
+                        </IonCol>
+                      )
+                    );
+                  case 'TICKET_COUNTER':
+                    return (
+                      preferenceSettings['ticketCounter'].enabled &&
+                      eventInfo.ticketsSoldEnabled && (
+                        <IonCol size={colSize} sizeLg={colSizeLg} key={index}>
+                          <TicketCounter
+                            error={errorTicketCounter}
+                            loading={loadingTicketCounter}
+                            data={dataTicketCounter}
+                          />
+                        </IonCol>
+                      )
+                    );
+                  case 'COUNTDOWN':
+                    return (
+                      showCountdown &&
+                      preferenceSettings['countDown'].enabled && (
+                        <IonCol size={colSize} sizeLg={'4'} key={index}>
+                          <CountdownTimer
+                            onFinish={() => setShowCountdown(false)}
+                          />
+                        </IonCol>
+                      )
+                    );
+                  default:
+                    return null;
+                }
+              })}
             </IonRow>
           </IonGrid>
         </IonContent>
