@@ -34,10 +34,6 @@ const NextEvent: React.FC<NextEventProps> = ({
     }).format(date);
   }
 
-  if (loading || error || upcomingEvents.length < 1) {
-    return null;
-  }
-
   const nextEvent = upcomingEvents[0];
   const eventStartDateTime = new Date(nextEvent.start.dateTime);
   const month = eventStartDateTime.toLocaleString('default', {
