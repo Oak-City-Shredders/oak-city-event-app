@@ -24,12 +24,18 @@ import ErrorMessage from '../components/ErrorMessage';
 import { useRefreshHandler } from '../hooks/useRefreshHandler';
 
 const ScavengerHunt: React.FC = () => {
-  const { scavengerHunt, loading, error, refetch } = useScavengerHunt();
+  const {
+    scavengerHuntPrizes,
+    scavengerHuntDetails,
+    detailsLoading,
+    detailsError,
+    detailsRefetch,
+  } = useScavengerHunt();
   const [selectedTab, setSelectedTab] = useState<string>('details');
   const handleCardClick = (route: string): void => {
     window.open(route, '_blank', 'noopener,noreferrer');
   };
-  const handleRefresh = useRefreshHandler(refetch);
+  const handleRefresh = useRefreshHandler(detailsRefetch);
   return (
     <IonPage>
       <PageHeader title="Scavenger Hunt" />
@@ -37,9 +43,9 @@ const ScavengerHunt: React.FC = () => {
         <IonRefresher slot="fixed" onIonRefresh={handleRefresh}>
           <IonRefresherContent />
         </IonRefresher>
-        {loading ? (
+        {detailsLoading ? (
           <LoadingSpinner />
-        ) : error ? (
+        ) : detailsError ? (
           <ErrorMessage message="Error loading the scavenger hunt" />
         ) : (
           <>
@@ -48,7 +54,7 @@ const ScavengerHunt: React.FC = () => {
                 margin: '16px',
                 borderRadius: '8px',
                 overflow: 'hidden',
-                maxHeight: '25vh', // Viewport-based height
+                maxHeight: '25vh',
               }}
             >
               <img
@@ -76,7 +82,7 @@ const ScavengerHunt: React.FC = () => {
                   className="ion-align-items-stretch"
                   style={{ marginBottom: '16px' }}
                 >
-                  {scavengerHunt?.map((item) => (
+                  {scavengerHuntPrizes?.map((item) => (
                     <IonCol
                       key={item.id}
                       size="6"
@@ -157,127 +163,24 @@ const ScavengerHunt: React.FC = () => {
                 <IonCard>
                   <IonCardHeader>
                     <IonCardTitle className="ion-text-center">
-                      Hunt the squirrels, unlock the fun, win the trophy!
+                      Hunt for squirrels, unlock the fun, and win prizes!
                     </IonCardTitle>
-                    {/* <IonCardSubtitle className="ion-text-center">
-                    Starts Thursday morning and runs until the awards ceremony
-                  </IonCardSubtitle> */}
                   </IonCardHeader>
 
                   <IonCardContent>
-                    <div className="ion-margin-bottom">
-                      <IonText>
-                        <p>
-                          Welcome to the wildest hunt of the weekend, the Oak
-                          City Shred Fest Scavenger Hunt! We’ve hidden hundreds
-                          of 3D printed squirrels all around the event grounds,
-                          and it’s your mission to find as many as you can.
-                        </p>
-                      </IonText>
-                    </div>
-                    <div className="ion-margin-bottom">
-                      <div className="ion-margin-bottom">
-                        <IonText>
-                          <h2
-                            style={{
-                              fontWeight: 'bold',
-                            }}
-                          >
-                            📍 Where to Hunt
+                    {scavengerHuntDetails?.map((item) => (
+                      <div
+                        key={item.id}
+                        className={`${item.title ? 'ion-margin-top' : ''}`}
+                      >
+                        <IonText className="ion-margin-bottom">
+                          <h2>
+                            <b>{item.title}</b>
                           </h2>
-                          <p>
-                            Everywhere! From the Float Track to StOak Park, and
-                            even down by the lake. Keep your eyes peeled, you
-                            never know where one might be tucked away!
-                          </p>
                         </IonText>
+                        <IonText>{item.description}</IonText>
                       </div>
-
-                      <IonText>
-                        <h2
-                          style={{
-                            fontWeight: 'bold',
-                            marginBottom: '4px',
-                          }}
-                        >
-                          🎨 Squirrel Colors & What They Mean
-                        </h2>
-
-                        <div>
-                          <p>
-                            🟣 Purple Squirrels – Standard squirrels. Most of
-                            them are this color. Collect as many as you can!
-                          </p>
-                          <p>
-                            🟢 Green Squirrels – Rare finds! Each green squirrel
-                            is worth a prize valued at $50 or more.
-                          </p>
-                          <p>
-                            🟡 Gold Squirrels – Ultra rare! There are only about
-                            15 gold squirrels out there, and each one is worth a
-                            prize valued at $150+, thanks to our amazing
-                            sponsors.
-                          </p>
-                        </div>
-                      </IonText>
-                    </div>
-                    <div className="ion-margin-bottom">
-                      <IonText>
-                        <h2
-                          style={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          🏆 Win the Trophy
-                        </h2>
-                        <p>
-                          The hunter with the most total squirrels (of any
-                          color) will be crowned Squirrel Champion and take home
-                          an epic trophy during the awards ceremony on Saturday
-                          night.
-                        </p>
-                      </IonText>
-                    </div>{' '}
-                    <div className="ion-margin-bottom">
-                      <IonText>
-                        <h2
-                          style={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          🎁 Claiming Prizes
-                        </h2>
-                        <p>
-                          Bring all your squirrels to the awards ceremony. The
-                          person with the most squirrels wins a trophy and the
-                          leather Onewheel generously provided by Solofalcon
-                          Leather!
-                        </p>
-
-                        <p style={{ marginTop: '8px' }}>
-                          All green and gold squirrel prizes can be claimed
-                          early at the oak city tent or the vendor at the StOak
-                          Park.
-                        </p>
-                      </IonText>
-                    </div>
-                    <div>
-                      <IonText>
-                        <h2
-                          style={{
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          ⏰ Hunt Duration
-                        </h2>
-                        <p>
-                          The hunt kicks off when the gates open and runs until
-                          the awards ceremony on Saturday night. You’ve got all
-                          weekend to explore, search, and squirrel away your
-                          prizes!
-                        </p>
-                      </IonText>
-                    </div>{' '}
+                    ))}
                   </IonCardContent>
                 </IonCard>
               </>

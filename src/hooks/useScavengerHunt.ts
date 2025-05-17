@@ -12,34 +12,78 @@ interface FireDBScavengerHunt {
   prize: string;
 }
 
+interface FireDBScavengerHuntDetails {
+  id: string;
+  title: string;
+  description: string;
+}
+
+const mapScavengerHuntPrizes = (
+  prizeData: FireDBScavengerHunt[] | null | undefined
+) => {
+  if (!prizeData) return [];
+
+  return prizeData
+    .filter((prize) => prize.name.trim() !== '')
+    .map((prize) => ({
+      id: prize.id,
+      imageLink: prize.image_link,
+      name: prize.name,
+      description: prize.description,
+      order: prize.order,
+      sponsorshipTier: prize.sponsorship_tier,
+      websiteLink: prize.website_link,
+      prize: prize.prize,
+    }))
+    .sort((a, b) => (parseInt(a.order) || 0) - (parseInt(b.order) || 0));
+};
+
+const mapScavengerHuntDetails = (
+  detailsData: FireDBScavengerHuntDetails[] | null | undefined
+) => {
+  if (!detailsData) return [];
+
+  return detailsData.map((detail) => ({
+    id: detail.id,
+    title: detail.title,
+    description: detail.description,
+  }));
+};
+
 const useScavengerHunt = () => {
-  const { data, loading, error, refetch } =
-    useFireStoreDB<FireDBScavengerHunt>('ScavengerHunt');
-  const scavengerHunt = useMemo(() => {
-    if (!data) return [];
+  const {
+    data: prizeData,
+    loading: prizeLoading,
+    error: prizeError,
+    refetch: prizeRefetch,
+  } = useFireStoreDB<FireDBScavengerHunt>('ScavengerHunt');
 
-    const mappedData = data
-      .filter((scavengerHuntPrize) => scavengerHuntPrize.name.trim() !== '')
-      .map((scavengerHuntPrize) => ({
-        id: scavengerHuntPrize.id,
-        imageLink: scavengerHuntPrize.image_link,
-        name: scavengerHuntPrize.name,
-        description: scavengerHuntPrize.description,
-        order: scavengerHuntPrize.order,
-        sponsorshipTier: scavengerHuntPrize.sponsorship_tier,
-        websiteLink: scavengerHuntPrize.website_link,
-        prize: scavengerHuntPrize.prize,
-      }));
+  const {
+    data: detailsData,
+    loading: detailsLoading,
+    error: detailsError,
+    refetch: detailsRefetch,
+  } = useFireStoreDB<FireDBScavengerHuntDetails>('ScavengerHuntDetails');
 
-    return mappedData.sort((a, b) => {
-      // Convert to numbers for reliable numeric comparison
-      const orderA = parseInt(a.order) || 0;
-      const orderB = parseInt(b.order) || 0;
-      return orderA - orderB;
-    });
-  }, [data]);
+  const scavengerHuntPrizes = useMemo(
+    () => mapScavengerHuntPrizes(prizeData),
+    [prizeData]
+  );
+  const scavengerHuntDetails = useMemo(
+    () => mapScavengerHuntDetails(detailsData),
+    [detailsData]
+  );
 
-  return { scavengerHunt, loading, error, refetch };
+  return {
+    scavengerHuntPrizes,
+    prizeLoading,
+    prizeError,
+    prizeRefetch,
+    scavengerHuntDetails,
+    detailsLoading,
+    detailsError,
+    detailsRefetch,
+  };
 };
 
 export default useScavengerHunt;
