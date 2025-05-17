@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonContent, IonPage, IonImg } from '@ionic/react';
+import { IonImg } from '@ionic/react';
 
 const UnderConstruction: React.FC = () => {
   return (

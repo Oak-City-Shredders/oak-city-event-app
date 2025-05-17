@@ -1,10 +1,7 @@
 import React from 'react';
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
 } from '@ionic/react';
 import './Team.css'; // Import the CSS file for styling
 

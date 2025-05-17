@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import useLocalStorage from './useLocalStorage';
 
 interface Preference {

@@ -220,7 +220,7 @@ const useNotifications = (): UseNotificationsReturn => {
         'actionPerformed.notification.id: ' + actionPerformed.notification.id
       );
       setNotifications((prev) => {
-        var r = prev;
+        const r = prev;
         if (!prev.find((n) => n.id === actionPerformed.notification.id)) {
           r.unshift(actionPerformed.notification);
         }

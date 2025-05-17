@@ -29,7 +29,6 @@ import {
 } from 'ionicons/icons';
 
 import styles from './HomePageMenu.module.css';
-import useFireStoreDB from '../hooks/useFireStoreDB';
 import { useCurrentEvent } from '../context/CurrentEventContext';
 
 const HomePageMenu: React.FC = () => {

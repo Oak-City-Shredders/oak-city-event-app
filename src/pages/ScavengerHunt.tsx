@@ -3,8 +3,6 @@ import {
   IonContent,
   IonCard,
   IonCardContent,
-  IonList,
-  IonItem,
   IonLabel,
   IonPage,
   IonText,
@@ -15,11 +13,9 @@ import {
   IonCardTitle,
   IonSegment,
   IonSegmentButton,
-  IonIcon,
   IonRefresher,
   IonRefresherContent,
 } from '@ionic/react';
-import { locationOutline, colorPaletteOutline } from 'ionicons/icons';
 
 import PageHeader from '../components/PageHeader';
 import useScavengerHunt from '../hooks/useScavengerHunt';
